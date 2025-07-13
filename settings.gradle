@@ -1,1 +1,3 @@
+include ':src:backend:common'
+
 include ':src:backend:core:product-service'

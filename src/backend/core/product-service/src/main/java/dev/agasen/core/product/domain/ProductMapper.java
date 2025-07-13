@@ -1,5 +1,6 @@
 package dev.agasen.core.product.domain;
 
+import dev.agasen.common.domain.mapper.EntityDomainMapper;
 import dev.agasen.core.product.persistence.ProductEntity;
 import org.springframework.stereotype.Component;
 

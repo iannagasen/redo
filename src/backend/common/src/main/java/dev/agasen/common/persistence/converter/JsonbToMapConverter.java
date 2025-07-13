@@ -1,4 +1,4 @@
-package dev.agasen.core.product.persistence;
+package dev.agasen.common.persistence.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ReadingConverter
-class JsonbToMapConverter implements Converter<PGobject, Map<String, Object>> {
+public class JsonbToMapConverter implements Converter<PGobject, Map<String, Object>> {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override

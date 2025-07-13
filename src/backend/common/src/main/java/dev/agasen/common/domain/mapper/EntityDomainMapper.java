@@ -1,4 +1,4 @@
-package dev.agasen.core.product.domain;
+package dev.agasen.common.domain.mapper;
 
 import java.util.List;
 
