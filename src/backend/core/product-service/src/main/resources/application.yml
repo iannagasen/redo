@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: product-service
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product_catalog?currentSchema=public&stringtype=unspecified
+    username: product_user
+    password: product_password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      leak-detection-threshold: 60000
+      connection-test-query: SELECT 1
+
+  data:
+    jdbc:
+      repositories:
+        enabled: true
+
+  sql:
+    init:
+      mode: always  # Set to 'always' if you want to run schema.sql on startup | 'never' if not
+      platform: postgresql
+      schema-locations: classpath:schema.sql  # if not using default naming
+      data-locations: classpath:data.sql    # for data inserts
+
+server:
+  port: 8081
+
+logging:
+  level:
+    org.springframework.jdbc: DEBUG
+    org.springframework.data.jdbc: DEBUG
+    dev.agasen.core.product: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# API Documentation
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    try-it-out-enabled: true
