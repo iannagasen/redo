@@ -23,4 +23,24 @@ public record Product(
         Instant updatedAt
 ) {
 
+    public static Product create(CreateProductDTO dto) {
+        return new Product(
+                UUID.randomUUID(),
+                dto.name(),
+                dto.description(),
+                dto.sku(),
+                dto.slug(),
+                dto.brand(),
+                dto.price(),
+                dto.currency(),
+                dto.stockQuantity(),
+                dto.isActive(),
+                dto.isFeatured(),
+                dto.attributesJson(),
+                UUID.fromString(dto.category()),
+                Instant.now(),
+                Instant.now()
+        );
+    }
+
 }

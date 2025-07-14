@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductMapper implements EntityDomainMapper<Product, ProductEntity> {
 
+    @Override
     public ProductEntity toEntity(Product domain) {
         return new ProductEntity(
                 domain.id(),
@@ -27,6 +28,7 @@ public class ProductMapper implements EntityDomainMapper<Product, ProductEntity>
         );
     }
 
+    @Override
     public Product toDomain(ProductEntity entity) {
         return switch (entity) {
             case ProductEntity(

@@ -1,3 +1,5 @@
 include ':src:backend:common'
 
 include ':src:backend:core:product-service'
+
+include ':src:backend:infra:auth-server'
