@@ -7,9 +7,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.UUID;
 
-public interface ProductRepository extends ListCrudRepository<ProductEntity, UUID>,
-        PagingAndSortingRepository<ProductEntity, UUID> {
+public interface ProductRepository extends ListCrudRepository< ProductEntity, UUID >,
+      PagingAndSortingRepository< ProductEntity, UUID > {
 
-    Page<ProductEntity> findAllByCategory(String category, Pageable pageable);
+   Page< ProductEntity > findAllByCategoryId( String categoryId, Pageable pageable );
 
 }

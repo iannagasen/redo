@@ -36,6 +36,8 @@ logging:
     org.springframework.jdbc: DEBUG
     org.springframework.data.jdbc: DEBUG
     dev.agasen.core.product: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
