@@ -28,6 +28,13 @@ spring:
       schema-locations: classpath:schema.sql  # if not using default naming
       data-locations: classpath:data.sql    # for data inserts
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+#          issuer-uri: http://localhost:8080
+          jwk-set-uri: http://localhost:8080/.well-known/jwks
+
 server:
   port: 8081
 

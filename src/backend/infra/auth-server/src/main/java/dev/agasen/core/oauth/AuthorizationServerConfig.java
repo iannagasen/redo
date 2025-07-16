@@ -12,16 +12,20 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -39,24 +43,17 @@ public class AuthorizationServerConfig {
    @Bean
    @Order( 1 )
    public SecurityFilterChain authorizationServerSecurityFilterChain( HttpSecurity http ) throws Exception {
-      OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer
-            .authorizationServer();
+      OAuth2AuthorizationServerConfiguration.applyDefaultSecurity( http );
 
-      http
-            .securityMatcher( authorizationServerConfigurer.getEndpointsMatcher() )
-            // Enable OpenID Connect 1.0
-            .with(
-                  authorizationServerConfigurer,
-                  as -> as.oidc( Customizer.withDefaults() ) )
-            .authorizeHttpRequests( ( authorize ) -> authorize.anyRequest().authenticated() )
-            // Redirect to the login page when not authenticated from the
-            // authorization endpoint
-            .exceptionHandling( ( exceptions ) -> exceptions
-                  .defaultAuthenticationEntryPointFor(
-                        new LoginUrlAuthenticationEntryPoint( "/login" ),
-                        new MediaTypeRequestMatcher( MediaType.TEXT_HTML )
-                  )
-            );
+      http.getConfigurer( OAuth2AuthorizationServerConfigurer.class )
+            .oidc( Customizer.withDefaults() );
+
+      http.exceptionHandling( exceptions -> exceptions
+            .defaultAuthenticationEntryPointFor(
+                  new LoginUrlAuthenticationEntryPoint( "/login" ),
+                  new MediaTypeRequestMatcher( MediaType.TEXT_HTML )
+            )
+      );
 
       return http.build();
    }
@@ -64,58 +61,47 @@ public class AuthorizationServerConfig {
    @Bean
    @Order( 2 )
    public SecurityFilterChain defaultSecurityFilterChain( HttpSecurity http ) throws Exception {
-      http.authorizeHttpRequests( authorize -> authorize.requestMatchers( "/actuator/**" ).permitAll().anyRequest().authenticated() ).formLogin( Customizer.withDefaults() );
+      http.authorizeHttpRequests( authorize -> authorize
+                  .requestMatchers( "/oauth2/**" ).permitAll()
+                  .anyRequest().authenticated()
+            )
+            .formLogin( Customizer.withDefaults() );
 
       return http.build();
    }
 
    @Bean
-   public JWKSource< SecurityContext > jwkSource() {
+   public PasswordEncoder passwordEncoder() {
+      return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+   }
+
+   @Bean
+   public RegisteredClientRepository registeredClientRepository() {
+      // Register a valid client (not "test"/"test" which should fail)
+      RegisteredClient registeredClient = RegisteredClient.withId( UUID.randomUUID().toString() )
+            .clientId( "valid-client" )
+            .clientSecret( "{noop}valid-secret" ) // {noop} means no password encoder
+            .clientAuthenticationMethod( ClientAuthenticationMethod.CLIENT_SECRET_BASIC )
+            .clientAuthenticationMethod( ClientAuthenticationMethod.CLIENT_SECRET_POST )
+            .authorizationGrantType( AuthorizationGrantType.CLIENT_CREDENTIALS )
+            .scope( "read" )
+            .scope( "write" )
+            .build();
+
+      return new InMemoryRegisteredClientRepository( registeredClient );
+   }
+
+   @Bean
+   public ImmutableJWKSet< SecurityContext > jwkSource() {
       KeyPair keyPair = generateRsaKey();
       RSAPublicKey publicKey = ( RSAPublicKey ) keyPair.getPublic();
       RSAPrivateKey privateKey = ( RSAPrivateKey ) keyPair.getPrivate();
-
-      RSAKey rsaKey = new RSAKey
-            .Builder( publicKey )
+      RSAKey rsaKey = new RSAKey.Builder( publicKey )
             .privateKey( privateKey )
             .keyID( UUID.randomUUID().toString() )
             .build();
-
       JWKSet jwkSet = new JWKSet( rsaKey );
       return new ImmutableJWKSet<>( jwkSet );
-   }
-
-   @Bean
-   public JwtDecoder jwtDecoder( JWKSource< SecurityContext > jwkSource ) {
-      return OAuth2AuthorizationServerConfiguration.jwtDecoder( jwkSource );
-   }
-
-   @Bean
-   public AuthorizationServerSettings authorizationServerSettings() {
-      return AuthorizationServerSettings.builder().issuer( "http://localhost:8080" ).build();
-   }
-
-   @Bean
-   public UserDetailsService userDetailsService() {
-      UserDetails user = User.withDefaultPasswordEncoder()
-            .username( "user" )
-            .password( "password" )
-            .roles( "USER" )
-            .build();
-
-
-      UserDetails admin = User.withDefaultPasswordEncoder()
-            .username( "admin" )
-            .password( "admin" )
-            .roles( "ADMIN", "USER" )
-            .build();
-
-      return new InMemoryUserDetailsManager( user, admin );
-   }
-
-   @Bean
-   public PasswordEncoder passwordEncoder() {
-      return new BCryptPasswordEncoder();
    }
 
    private static KeyPair generateRsaKey() {
@@ -129,4 +115,28 @@ public class AuthorizationServerConfig {
       }
       return keyPair;
    }
+
+   @Bean
+   public JwtDecoder jwtDecoder( JWKSource< SecurityContext > jwkSource ) {
+      return OAuth2AuthorizationServerConfiguration.jwtDecoder( jwkSource );
+   }
+
+   @Bean
+   public AuthorizationServerSettings authorizationServerSettings() {
+      return AuthorizationServerSettings.builder()
+            .issuer( "http://localhost:8080" )
+            .build();
+   }
+
+   @Bean
+   public OAuth2TokenCustomizer< JwtEncodingContext > jwtCustomizer() {
+      return context -> {
+         if ( context.getTokenType().equals( OAuth2TokenType.ACCESS_TOKEN ) ) {
+            context.getClaims().claims( claims -> {
+               claims.put( "custom_claim", "custom_value" );
+            } );
+         }
+      };
+   }
+
 }
