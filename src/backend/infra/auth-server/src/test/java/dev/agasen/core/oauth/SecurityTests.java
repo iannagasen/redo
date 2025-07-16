@@ -1,10 +1,13 @@
 package dev.agasen.core.oauth;
 
+import com.jayway.jsonpath.JsonPath;
+import dev.agasen.common.utility.JsonHelper;
 import org.apache.tomcat.util.http.parser.Authorization;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -18,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles( "test" )
+@ComponentScan( basePackages = { "dev.agasen.common", "dev.agasen.core" } )
 public class SecurityTests {
 
    public static final String POST_ACCESS_TOKEN = "/oauth2/token";
@@ -28,6 +32,9 @@ public class SecurityTests {
 
    @Autowired
    private MockMvc mockMvc;
+
+   @Autowired
+   private JsonHelper jsonHelper;
 
    ///  ## Request
    /// - HTTP Method = POST
@@ -91,8 +98,24 @@ public class SecurityTests {
 
    @Test
    public void testTokenIntrospectionEndpoint() throws Exception {
-      mockMvc.perform( post( "/oauth2/introspect" )
-            .param( "token", "dummy_token" ) );
+      String responseAsString = mockMvc.perform( post( POST_ACCESS_TOKEN )
+                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
+                  .param( "grant_type", "client_credentials" ) )
+            .andExpect( status().isOk() )
+            .andReturn()
+            .getResponse().getContentAsString();
+
+      String accessToken = JsonPath.read( responseAsString, "$.access_token" );
+
+      var result = mockMvc.perform( post( "/oauth2/introspect" )
+                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
+                  .param( "token", accessToken ) )
+            .andExpect( status().isOk() )
+            .andExpect( jsonPath( "$.active" ).value( true ) )
+            .andDo( print() )
+            .andReturn().getResponse().getContentAsString();
+
+      System.out.println( jsonHelper.prettyPrint( result ) );
    }
 
    @Test
