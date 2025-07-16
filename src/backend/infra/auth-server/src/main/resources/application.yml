@@ -24,3 +24,6 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
+    # For testing if config is loaded
+    root: INFO
+    org.springframework.boot.context.config: DEBUG

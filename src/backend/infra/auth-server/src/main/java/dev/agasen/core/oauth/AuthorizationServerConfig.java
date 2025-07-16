@@ -14,13 +14,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
@@ -73,23 +68,6 @@ public class AuthorizationServerConfig {
    @Bean
    public PasswordEncoder passwordEncoder() {
       return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-   }
-
-   //   @Bean
-   // See RegisteredClientRepositoryProvider
-   public RegisteredClientRepository registeredClientRepository() {
-      // Register a valid client (not "test"/"test" which should fail)
-      RegisteredClient registeredClient = RegisteredClient.withId( UUID.randomUUID().toString() )
-            .clientId( "valid-client" )
-            .clientSecret( "{noop}valid-secret" ) // {noop} means no password encoder
-            .clientAuthenticationMethod( ClientAuthenticationMethod.CLIENT_SECRET_BASIC )
-            .clientAuthenticationMethod( ClientAuthenticationMethod.CLIENT_SECRET_POST )
-            .authorizationGrantType( AuthorizationGrantType.CLIENT_CREDENTIALS )
-            .scope( "read" )
-            .scope( "write" )
-            .build();
-
-      return new InMemoryRegisteredClientRepository( registeredClient );
    }
 
    @Bean

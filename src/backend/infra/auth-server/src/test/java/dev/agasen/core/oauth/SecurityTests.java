@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -16,10 +17,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles( "test" )
 public class SecurityTests {
 
    public static final String POST_ACCESS_TOKEN = "/oauth2/token";
    public static final String GET_WELL_KNOWN_ENDPOINT = "/.well-known/openid-configuration";
+
+   public static final String CLIENT_ID = "test-id";
+   public static final String CLIENT_SECRET = "test-secret";
 
    @Autowired
    private MockMvc mockMvc;
@@ -61,7 +66,7 @@ public class SecurityTests {
    @Test
    public void testGetAccessTokenSuccess_usingClientSecretBasicForAuthentication() throws Exception {
       mockMvc.perform( post( POST_ACCESS_TOKEN )
-                  .with( httpBasic( "product-service", "product-secret" ) )
+                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
                   .param( "grant_type", "client_credentials" ) )
             .andExpect( status().isOk() )
             .andExpect( jsonPath( "$.access_token" ).exists() )
