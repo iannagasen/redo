@@ -87,4 +87,66 @@ public class SecurityTests {
             .andDo( print() );
    }
 
+//   TODO: implement test methods below this line
+
+   @Test
+   public void testTokenIntrospectionEndpoint() throws Exception {
+      mockMvc.perform( post( "/oauth2/introspect" )
+            .param( "token", "dummy_token" ) );
+   }
+
+   @Test
+   public void testTokenRevocationEndpoint() throws Exception {
+      mockMvc.perform( post( "/oauth2/revoke" )
+            .param( "token", "dummy_token" ) );
+   }
+
+   @Test
+   public void testJwksEndpoint() throws Exception {
+      mockMvc.perform( get( "/.well-known/jwks.json" ) );
+   }
+
+   @Test
+   public void testClientAuthenticationFailsWithInvalidSecret() throws Exception {
+      mockMvc.perform( post( "/oauth2/token" )
+            .with( httpBasic( "valid-client-id", "invalid-secret" ) )
+            .param( "grant_type", "client_credentials" ) );
+   }
+
+   @Test
+   public void testMissingGrantTypeReturnsError() throws Exception {
+      mockMvc.perform( post( "/oauth2/token" )
+            .with( httpBasic( "client-id", "secret" ) ) );
+   }
+
+   @Test
+   public void testUnsupportedGrantTypeReturnsError() throws Exception {
+      mockMvc.perform( post( "/oauth2/token" )
+            .with( httpBasic( "client-id", "secret" ) )
+            .param( "grant_type", "password" ) );
+   }
+
+   @Test
+   public void testInvalidClientIdReturnsError() throws Exception {
+      mockMvc.perform( post( "/oauth2/token" )
+            .with( httpBasic( "invalid-client-id", "secret" ) )
+            .param( "grant_type", "client_credentials" ) );
+   }
+
+   @Test
+   public void testAccessTokenSuccess_withScopeValidation() throws Exception {
+      mockMvc.perform( post( "/oauth2/token" )
+            .with( httpBasic( "client-id", "secret" ) )
+            .param( "grant_type", "client_credentials" )
+            .param( "scope", "read write" ) );
+   }
+
+   @Test
+   public void testAccessTokenExpiryMatchesConfiguration() throws Exception {
+      mockMvc.perform( post( "/oauth2/token" )
+            .with( httpBasic( "client-id", "secret" ) )
+            .param( "grant_type", "client_credentials" ) );
+   }
+
+
 }
