@@ -75,7 +75,8 @@ public class AuthorizationServerConfig {
       return PasswordEncoderFactories.createDelegatingPasswordEncoder();
    }
 
-   @Bean
+   //   @Bean
+   // See RegisteredClientRepositoryProvider
    public RegisteredClientRepository registeredClientRepository() {
       // Register a valid client (not "test"/"test" which should fail)
       RegisteredClient registeredClient = RegisteredClient.withId( UUID.randomUUID().toString() )
