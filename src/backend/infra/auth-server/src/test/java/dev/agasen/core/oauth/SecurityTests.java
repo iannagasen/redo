@@ -39,6 +39,8 @@ public class SecurityTests {
    // see GET_WELL_KNOWN_ENDPOINT for list of endpoints
    public static final String WELL_KNOWN_JWKS_JSON = "/oauth2/jwks";
 
+   public static final String RESULT_INVALID_CLIENT = "invalid_client";
+
    @Autowired
    private MockMvc mockMvc;
 
@@ -166,22 +168,31 @@ public class SecurityTests {
       log.info( "Introspection: \n" + jsonHelper.prettyPrint( introspect ) );
    }
 
-//   TODO: implement test methods below this line
 
    @Test
    public void testJwksEndpoint() throws Exception {
-      mockMvc.perform( get( WELL_KNOWN_JWKS_JSON ) )
+      // endpoint should be available without security
+      // TODO Q: Why is this public? because the result keys are public keys
+      var res = mockMvc.perform( get( WELL_KNOWN_JWKS_JSON ) )
+            .andExpect( status().isOk() )
             .andDo( print() )
-      ;
+            .andExpect( jsonPath( "$.keys" ).exists() )
+            .andReturn().getResponse().getContentAsString();
+
+      log.info( jsonHelper.prettyPrint( res ) );
    }
 
    @Test
    public void testClientAuthenticationFailsWithInvalidSecret() throws Exception {
       mockMvc.perform( post( "/oauth2/token" )
-            .with( httpBasic( "valid-client-id", "invalid-secret" ) )
-            .param( "grant_type", "client_credentials" ) );
+                  .with( httpBasic( CLIENT_ID, "invalid_secret" ) )
+                  .param( "grant_type", "client_credentials" ) )
+            .andExpect( status().isUnauthorized() )
+            .andExpect( jsonPath( "$.error" ).value( RESULT_INVALID_CLIENT ) )
+            .andDo( print() );
    }
 
+   //   TODO: implement test methods below this line
    @Test
    public void testMissingGrantTypeReturnsError() throws Exception {
       mockMvc.perform( post( "/oauth2/token" )
