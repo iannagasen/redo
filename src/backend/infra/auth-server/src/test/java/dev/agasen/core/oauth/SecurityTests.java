@@ -36,6 +36,9 @@ public class SecurityTests {
    public static final String OAUTH_2_REVOKE = "/oauth2/revoke";
    public static final String OAUTH_2_INTROSPECT = "/oauth2/introspect";
 
+   // see GET_WELL_KNOWN_ENDPOINT for list of endpoints
+   public static final String WELL_KNOWN_JWKS_JSON = "/oauth2/jwks";
+
    @Autowired
    private MockMvc mockMvc;
 
@@ -167,7 +170,9 @@ public class SecurityTests {
 
    @Test
    public void testJwksEndpoint() throws Exception {
-      mockMvc.perform( get( "/.well-known/jwks.json" ) );
+      mockMvc.perform( get( WELL_KNOWN_JWKS_JSON ) )
+            .andDo( print() )
+      ;
    }
 
    @Test

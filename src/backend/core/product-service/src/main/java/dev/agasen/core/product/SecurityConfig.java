@@ -9,19 +9,20 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity( prePostEnabled = true )
 public class SecurityConfig {
 
    @Bean
-   public SecurityFilterChain securityFilterChain( HttpSecurity http) throws Exception {
+   public SecurityFilterChain securityFilterChain( HttpSecurity http ) throws Exception {
       http
-            .authorizeHttpRequests(authorize -> authorize
-                  .requestMatchers("/actuator/**").permitAll()
+            .authorizeHttpRequests( authorize -> authorize
+                  .requestMatchers( "/actuator/**" ).permitAll()
+                  .requestMatchers( "/.well-known/**" ).permitAll()
                   .anyRequest().authenticated()
             )
-            .oauth2ResourceServer(oauth2 -> oauth2
-                  .jwt(jwt -> jwt
-                        .jwkSetUri("http://localhost:8080/.well-known/jwks")
+            .oauth2ResourceServer( oauth2 -> oauth2
+                  .jwt( jwt -> jwt
+                        .jwkSetUri( "http://localhost:8080/.well-known/jwks" )
                   )
             );
       return http.build();
