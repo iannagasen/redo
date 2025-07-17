@@ -12,6 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.logging.Logger;
+
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,11 +26,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ComponentScan( basePackages = { "dev.agasen.common", "dev.agasen.core" } )
 public class SecurityTests {
 
+   private static final Logger log = Logger.getLogger( SecurityTests.class.getName() );
+
    public static final String POST_ACCESS_TOKEN = "/oauth2/token";
    public static final String GET_WELL_KNOWN_ENDPOINT = "/.well-known/openid-configuration";
 
    public static final String CLIENT_ID = "test-id";
    public static final String CLIENT_SECRET = "test-secret";
+   public static final String OAUTH_2_REVOKE = "/oauth2/revoke";
+   public static final String OAUTH_2_INTROSPECT = "/oauth2/introspect";
 
    @Autowired
    private MockMvc mockMvc;
@@ -94,7 +100,6 @@ public class SecurityTests {
             .andDo( print() );
    }
 
-//   TODO: implement test methods below this line
 
    @Test
    public void testTokenIntrospectionEndpoint() throws Exception {
@@ -107,7 +112,7 @@ public class SecurityTests {
 
       String accessToken = JsonPath.read( responseAsString, "$.access_token" );
 
-      var result = mockMvc.perform( post( "/oauth2/introspect" )
+      var result = mockMvc.perform( post( OAUTH_2_INTROSPECT )
                   .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
                   .param( "token", accessToken ) )
             .andExpect( status().isOk() )
@@ -115,18 +120,50 @@ public class SecurityTests {
             .andExpect( jsonPath( "$.custom_claim" ).value( "custom_value" ) )
             .andExpect( jsonPath( "$.client_id" ).value( CLIENT_ID ) )
             .andExpect( jsonPath( "$.token_type" ).value( "Bearer" ) )
-
             .andDo( print() )
             .andReturn().getResponse().getContentAsString();
 
       System.out.println( jsonHelper.prettyPrint( result ) );
    }
 
+
    @Test
    public void testTokenRevocationEndpoint() throws Exception {
-      mockMvc.perform( post( "/oauth2/revoke" )
-            .param( "token", "dummy_token" ) );
+      // get access token
+      String responseAsString = mockMvc.perform( post( POST_ACCESS_TOKEN )
+                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
+                  .param( "grant_type", "client_credentials" ) )
+            .andExpect( status().isOk() )
+            .andReturn()
+            .getResponse().getContentAsString();
+
+      String accessToken = JsonPath.read( responseAsString, "$.access_token" );
+
+      log.info( "access token: " + accessToken );
+
+      // revoke access token
+      var revokeResult = mockMvc.perform( post( OAUTH_2_REVOKE )
+                  .param( "token", accessToken )
+                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) ) )
+            .andDo( print() )
+            .andExpect( status().isOk() )
+            .andReturn().getResponse().getContentAsString();
+
+      log.info( jsonHelper.prettyPrint( revokeResult ) );
+
+      // introspect accesstoken if its still valid, should be falsie after revoking
+      var introspect = mockMvc.perform( post( OAUTH_2_INTROSPECT )
+                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
+                  .param( "token", accessToken ) )
+            .andExpect( status().isOk() )
+            .andExpect( jsonPath( "$.active" ).value( false ) )
+            .andDo( print() )
+            .andReturn().getResponse().getContentAsString();
+
+      log.info( "Introspection: \n" + jsonHelper.prettyPrint( introspect ) );
    }
+
+//   TODO: implement test methods below this line
 
    @Test
    public void testJwksEndpoint() throws Exception {
