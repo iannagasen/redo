@@ -1,0 +1,20 @@
+### Get Access Token
+POST {{authUrl}}/oauth2/token
+Authorization: Basic cHJvZHVjdC1zZXJ2aWNlOnByb2R1Y3Qtc2VjcmV0
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=client_credentials
+
+> {%
+    console.log("Raw response body:", response.body);
+
+    const json = response.body; // no need to JSON.parse
+
+    client.test("access_token exists", function () {
+        client.assert(typeof json.access_token === "string" && json.access_token.length > 0, "access_token is missing or empty");
+    });
+
+    client.test("token_type is Bearer", function () {
+        client.assert(json.token_type === "Bearer", `Expected token_type to be Bearer but got: ${json.token_type}`);
+    });
+%}

@@ -11,43 +11,43 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/products")
+@RequestMapping( "/api/v1/products" )
 @Validated
 public class ProductController {
 
-    private final ProductService productService;
+   private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
+   public ProductController( ProductService productService ) {
+      this.productService = productService;
+   }
 
-    @GetMapping
-    @PreAuthorize("hasAuthority('SCOPE_read')")
-    public Page<Product> getProducts(
-            @RequestParam(defaultValue = "0") @Min(0) int page,
-            @RequestParam(defaultValue = "1") @Min(1) @Max(100) int size
-    ) {
-        return productService.getProducts(page, size);
-    }
+   @GetMapping
+   @PreAuthorize( "hasAuthority('SCOPE_read')" )
+   public Page< Product > getProducts(
+         @RequestParam( defaultValue = "0", name = "page" ) @Min( 0 ) int page,
+         @RequestParam( defaultValue = "1", name = "size" ) @Min( 1 ) @Max( 100 ) int size
+   ) {
+      return productService.getProducts( page, size );
+   }
 
-    @GetMapping("/{id}")
-    public Product getProduct(@PathVariable String id) {
-        return productService.getProduct(id);
-    }
+   @GetMapping( "/{id}" )
+   public Product getProduct( @PathVariable String id ) {
+      return productService.getProduct( id );
+   }
 
-    @GetMapping("/category/{category}")
-    public Page<Product> getProductsByCategory(
-            @PathVariable String category,
-            @RequestParam(defaultValue = "0") @Min(0) int page,
-            @RequestParam(defaultValue = "1") @Min(1) @Max(100) int size
-    ) {
-        return productService.getProductsByCategory(category, page, size);
-    }
+   @GetMapping( "/category/{category}" )
+   public Page< Product > getProductsByCategory(
+         @PathVariable String category,
+         @RequestParam( defaultValue = "0" ) @Min( 0 ) int page,
+         @RequestParam( defaultValue = "1" ) @Min( 1 ) @Max( 100 ) int size
+   ) {
+      return productService.getProductsByCategory( category, page, size );
+   }
 
-    @PostMapping
-    public Product addProduct(@RequestBody CreateProductDTO createProductDTO) {
-        return productService.createProduct(createProductDTO);
-    }
+   @PostMapping
+   public Product addProduct( @RequestBody CreateProductDTO createProductDTO ) {
+      return productService.createProduct( createProductDTO );
+   }
 
     /*
     Product Management:

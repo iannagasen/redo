@@ -17,7 +17,6 @@ public class SecurityConfig {
       http
             .authorizeHttpRequests( authorize -> authorize
                   .requestMatchers( "/actuator/**" ).permitAll()
-                  .requestMatchers( "/.well-known/**" ).permitAll()
                   .anyRequest().authenticated()
             )
             .oauth2ResourceServer( oauth2 -> oauth2
