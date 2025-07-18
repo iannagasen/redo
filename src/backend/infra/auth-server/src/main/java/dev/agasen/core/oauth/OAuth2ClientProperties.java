@@ -6,7 +6,10 @@ import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
+import static dev.agasen.common.utility.CollectionsHelper.isNullOrEmpty;
+import static dev.agasen.common.utility.CollectionsHelper.listOrEmpty;
+import static dev.agasen.common.utility.StringHelper.blankCoalescing;
 
 @ConfigurationProperties( prefix = "oauth2" )
 public record OAuth2ClientProperties(
@@ -23,26 +26,32 @@ public record OAuth2ClientProperties(
    public record ClientConfig(
          String clientId,
          String clientSecret,
-         Optional< String > clientAuthenticationMethod,
-         Optional< String > authorizationGrantType,
+         String clientAuthenticationMethod,
+         List< String > authorizationGrantTypes,
+         List< String > redirectUris,
          List< String > scopes,
          TokenConfig token
    ) {
 
       public ClientConfig {
-         scopes = scopes != null ? List.copyOf( scopes ) : List.of();
+         scopes = scopes != null ? scopes : java.util.List.of();
+         scopes.add( "read" );
       }
 
       public String getClientAuthenticationMethodOrDefault() {
-         return clientAuthenticationMethod.orElse( "client_secret_basic" );
+         return blankCoalescing( clientAuthenticationMethod, "client_secret_basic" );
       }
 
-      public String getAuthorizationGrantTypeOrDefault() {
-         return authorizationGrantType.orElse( "client_credentials" );
+      public List< String > getAuthorizationGrantTypesOrDefault() {
+         return isNullOrEmpty( authorizationGrantTypes ) ? List.of( "authorization_code" ) : authorizationGrantTypes;
       }
 
       public TokenConfig getToken() {
          return new TokenConfig( Duration.ofMinutes( 30 ) );
+      }
+
+      public List< String > getRedirectUris() {
+         return listOrEmpty( redirectUris );
       }
    }
 

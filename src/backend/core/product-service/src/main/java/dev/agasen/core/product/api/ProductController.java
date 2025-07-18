@@ -3,6 +3,7 @@ package dev.agasen.core.product.api;
 import dev.agasen.core.product.domain.CreateProductDTO;
 import dev.agasen.core.product.domain.Product;
 import dev.agasen.core.product.domain.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping( "/api/v1/products" )
 @Validated
+@SecurityRequirement( name = "oauth2" )
 public class ProductController {
 
    private final ProductService productService;

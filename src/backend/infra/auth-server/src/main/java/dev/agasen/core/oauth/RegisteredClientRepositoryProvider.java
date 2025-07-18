@@ -51,13 +51,19 @@ public class RegisteredClientRepositoryProvider {
                .clientAuthenticationMethod(
                      ClientAuthenticationMethod.valueOf( config.getClientAuthenticationMethodOrDefault() )
                )
-               .authorizationGrantType(
-                     new AuthorizationGrantType( config.getAuthorizationGrantTypeOrDefault() )
-               )
+               .authorizationGrantTypes( grantTypes -> {
+                  config.getAuthorizationGrantTypesOrDefault()
+                        .stream()
+                        .map( AuthorizationGrantType::new )
+                        .forEach( grantTypes::add );
+               } )
                .scopes( scopes -> scopes.addAll( config.scopes() ) )
                .tokenSettings( TokenSettings.builder()
                      .accessTokenTimeToLive( config.getToken().accessTtl() )
                      .build() )
+               .redirectUris( redirectUris -> {
+                  redirectUris.addAll( config.getRedirectUris() );
+               } )
                .build();
 
          clients.add( client );

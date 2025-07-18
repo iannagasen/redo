@@ -1,3 +1,5 @@
+server.port: 8081
+
 spring:
   application:
     name: product-service
@@ -32,11 +34,29 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-#          issuer-uri: http://localhost:8080
-          jwk-set-uri: http://localhost:8080/.well-known/jwks
+          issuer-uri: http://localhost:8080
+        # validate this value by going thru {oauthUrl}/.well-know/openid-configuration
+      # this is for Swagger UI's OAuth2 flow (client)
+      client:
+        registration:
+          swagger-ui:
+            client-id: swagger-ui
+            client-secret: swagger-secret
+            authorization-grant-type: authorization_code
+            scope:
+              - openid
+              # Add custom scopes if your OAuth2 server supports them
+              # - read
+              # - write
+            redirect-uri: http://localhost:8081/swagger-ui/oauth2-redirect.html
 
-server:
-  port: 8081
+        provider:
+          swagger-ui:
+            authorization-uri: http://localhost:8080/oauth2/authorize
+            token-uri: http://localhost:8080/oauth2/token
+            user-info-uri: http://localhost:8080/userinfo
+            jwk-set-uri: http://localhost:8080/oauth2/jwks
+
 
 logging:
   level:
@@ -64,3 +84,12 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     try-it-out-enabled: true
+    oauth2-redirect-url: http://localhost:8081/swagger-ui/oauth2-redirect.html
+    use-root-path: true
+    display-request-duration: true
+    operations-sorter: method
+    # This enables the "Authorize" button and defines OAuth2 security scheme
+    oauth:
+      client-id: swagger-ui
+      client-secret: swagger-secret
+      use-basic-authentication-with-access-code-grant: true

@@ -12,7 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
@@ -21,14 +24,19 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 import java.util.UUID;
 
 @Configuration
@@ -43,12 +51,13 @@ public class AuthorizationServerConfig {
       http.getConfigurer( OAuth2AuthorizationServerConfigurer.class )
             .oidc( Customizer.withDefaults() );
 
-      http.exceptionHandling( exceptions -> exceptions
-            .defaultAuthenticationEntryPointFor(
-                  new LoginUrlAuthenticationEntryPoint( "/login" ),
-                  new MediaTypeRequestMatcher( MediaType.TEXT_HTML )
-            )
-      );
+      http.cors( Customizer.withDefaults() )
+            .exceptionHandling( exceptions -> exceptions
+                  .defaultAuthenticationEntryPointFor(
+                        new LoginUrlAuthenticationEntryPoint( "/login" ),
+                        new MediaTypeRequestMatcher( MediaType.TEXT_HTML )
+                  )
+            );
 
       return http.build();
    }
@@ -60,14 +69,24 @@ public class AuthorizationServerConfig {
                   .requestMatchers( "/oauth2/**" ).permitAll()
                   .anyRequest().authenticated()
             )
+            .cors( Customizer.withDefaults() )
             .formLogin( Customizer.withDefaults() );
 
       return http.build();
    }
 
    @Bean
+   public UserDetailsService userDetailsService() {
+      UserDetails user = User.withUsername( "admin" )
+            .password( passwordEncoder().encode( "pass" ) ) // 👈 This part is important
+            .roles( "USER" )
+            .build();
+      return new InMemoryUserDetailsManager( user );
+   }
+
+   @Bean
    public PasswordEncoder passwordEncoder() {
-      return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+      return new BCryptPasswordEncoder();
    }
 
    @Bean
@@ -113,9 +132,22 @@ public class AuthorizationServerConfig {
          if ( context.getTokenType().equals( OAuth2TokenType.ACCESS_TOKEN ) ) {
             context.getClaims().claims( claims -> {
                claims.put( "custom_claim", "custom_value" );
+               claims.put( "scope", "read" );
             } );
          }
       };
    }
 
+   @Bean
+   public CorsConfigurationSource corsConfigurationSource() {
+      CorsConfiguration config = new CorsConfiguration();
+      config.setAllowedOrigins( List.of( "http://localhost:8081" ) );
+      config.setAllowedMethods( List.of( "GET", "POST", "PUT", "DELETE", "OPTIONS" ) );
+      config.setAllowedHeaders( List.of( "*" ) );
+      config.setAllowCredentials( true );
+
+      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+      source.registerCorsConfiguration( "/**", config );
+      return source;
+   }
 }

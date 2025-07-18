@@ -13,12 +13,23 @@ oauth2:
       client-id: product-service
       client-secret: product-secret
       client-authentication-method: client_secret_basic
-      authorization-grant-type: client_credentials
+      authorization-grant-types: client_credentials
       scopes:
         - read
         - write
       token:
         access-ttl: PT30M
+    swagger-ui:
+      client-id: swagger-ui
+      client-secret: swagger-secret
+      authorization-grant-types:
+        - authorization_code
+      redirect-uris:
+        - http://localhost:8081/swagger-ui/oauth2-redirect.html
+      scopes:
+        - openid
+        - read
+        - write
 
 logging:
   level:
