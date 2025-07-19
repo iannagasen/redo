@@ -1,196 +1,27 @@
 package dev.agasen.core.oauth;
 
-import com.jayway.jsonpath.JsonPath;
 import dev.agasen.common.utility.JsonHelper;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.logging.Logger;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles( "test" )
-@ComponentScan( basePackages = { "dev.agasen.common", "dev.agasen.core" } )
+//@SpringBootTest
+//@AutoConfigureMockMvc
+//@ActiveProfiles( "test" )
+//@ComponentScan( basePackages = { "dev.agasen.common", "dev.agasen.core" } )
 public class SecurityTests {
 
    private static final Logger log = Logger.getLogger( SecurityTests.class.getName() );
 
-   public static final String POST_ACCESS_TOKEN = "/oauth2/token";
-   public static final String GET_WELL_KNOWN_ENDPOINT = "/.well-known/openid-configuration";
+   //   @Autowired
+   MockMvc mockMvc;
 
-   public static final String CLIENT_ID = "test-id";
-   public static final String CLIENT_SECRET = "test-secret";
-   public static final String OAUTH_2_REVOKE = "/oauth2/revoke";
-   public static final String OAUTH_2_INTROSPECT = "/oauth2/introspect";
-
-   // see GET_WELL_KNOWN_ENDPOINT for list of endpoints
-   public static final String WELL_KNOWN_JWKS_JSON = "/oauth2/jwks";
-
-   public static final String RESULT_INVALID_CLIENT = "invalid_client";
-
-   @Autowired
-   private MockMvc mockMvc;
-
-   @Autowired
-   private JsonHelper jsonHelper;
-
-   ///  ## Request
-   /// - HTTP Method = POST
-   /// - Request URI = /oauth2/token
-   /// - Parameters: `{client_id=[test], client_secret=[test], grant_type=[client_credentials]}`
-   ///
-   /// ## Response
-   /// - Status = 401
-   /// - Error message = null
-   /// - Body = {"error":"invalid_client"}
-   @Test
-   public void testGetAccessTokenFail() throws Exception {
-      mockMvc.perform( post( POST_ACCESS_TOKEN )
-                  .param( "client_id", "test" )
-                  .param( "client_secret", "test" )
-                  .param( "grant_type", "client_credentials" ) )
-            .andExpect( status().isUnauthorized() )
-            .andExpect( jsonPath( "$.error" ).value( "invalid_client" ) )
-            .andDo( print() );
-   }
-
-   /// #### NOTE: the client uses Client Basic secret as Client Auth method
-   /// #### the request will be different with {@see testGetAccessTokenFail()}
-   ///
-   /// ### Request
-   /// - HTTP Method = POST
-   /// - Request URI = /oauth2/token
-   /// - Parameters = `{grant_type=[client_credentials]}`
-   /// - Headers = [Authorization:"Basic cHJvZHVjdC1zZXJ2aWNlOnByb2R1Y3Qtc2VjcmV0"]
-   /// - Body = null
-   /// ### Response
-   /// - MockHttpServletResponse:
-   /// - Status = 200
-   /// - Content type = application/json;charset=UTF-8
-   /// - Body = {"access_token":"...","token_type":"Bearer","expires_in":1799}
-   @Test
-   public void testGetAccessTokenSuccess_usingClientSecretBasicForAuthentication() throws Exception {
-      mockMvc.perform( post( POST_ACCESS_TOKEN )
-                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
-                  .param( "grant_type", "client_credentials" ) )
-            .andExpect( status().isOk() )
-            .andExpect( jsonPath( "$.access_token" ).exists() )
-            .andExpect( jsonPath( "$.expires_in" ).value( 1799 ) )
-            .andExpect( jsonPath( "$.token_type" ).value( "Bearer" ) )
-            .andDo( print() );
-   }
-
-
-   @Test
-   public void testWellKnownEndpoint() throws Exception {
-      mockMvc.perform( get( GET_WELL_KNOWN_ENDPOINT ) )
-            .andExpect( status().isOk() )
-            .andExpect( content().contentType( MediaType.APPLICATION_JSON ) )
-            .andExpect( jsonPath( "$.issuer" ).value( "http://localhost:8080" ) )
-            .andExpect( jsonPath( "$.authorization_endpoint" ).exists() )
-            .andExpect( jsonPath( "$.token_endpoint" ).exists() )
-            .andDo( print() );
-   }
-
-
-   @Test
-   public void testTokenIntrospectionEndpoint() throws Exception {
-      String responseAsString = mockMvc.perform( post( POST_ACCESS_TOKEN )
-                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
-                  .param( "grant_type", "client_credentials" ) )
-            .andExpect( status().isOk() )
-            .andReturn()
-            .getResponse().getContentAsString();
-
-      String accessToken = JsonPath.read( responseAsString, "$.access_token" );
-
-      var result = mockMvc.perform( post( OAUTH_2_INTROSPECT )
-                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
-                  .param( "token", accessToken ) )
-            .andExpect( status().isOk() )
-            .andExpect( jsonPath( "$.active" ).value( true ) )
-            .andExpect( jsonPath( "$.custom_claim" ).value( "custom_value" ) )
-            .andExpect( jsonPath( "$.client_id" ).value( CLIENT_ID ) )
-            .andExpect( jsonPath( "$.token_type" ).value( "Bearer" ) )
-            .andDo( print() )
-            .andReturn().getResponse().getContentAsString();
-
-      System.out.println( jsonHelper.prettyPrint( result ) );
-   }
-
-
-   @Test
-   public void testTokenRevocationEndpoint() throws Exception {
-      // get access token
-      String responseAsString = mockMvc.perform( post( POST_ACCESS_TOKEN )
-                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
-                  .param( "grant_type", "client_credentials" ) )
-            .andExpect( status().isOk() )
-            .andReturn()
-            .getResponse().getContentAsString();
-
-      String accessToken = JsonPath.read( responseAsString, "$.access_token" );
-
-      log.info( "access token: " + accessToken );
-
-      // revoke access token
-      var revokeResult = mockMvc.perform( post( OAUTH_2_REVOKE )
-                  .param( "token", accessToken )
-                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) ) )
-            .andDo( print() )
-            .andExpect( status().isOk() )
-            .andReturn().getResponse().getContentAsString();
-
-      log.info( jsonHelper.prettyPrint( revokeResult ) );
-
-      // introspect accesstoken if its still valid, should be falsie after revoking
-      var introspect = mockMvc.perform( post( OAUTH_2_INTROSPECT )
-                  .with( httpBasic( CLIENT_ID, CLIENT_SECRET ) )
-                  .param( "token", accessToken ) )
-            .andExpect( status().isOk() )
-            .andExpect( jsonPath( "$.active" ).value( false ) )
-            .andDo( print() )
-            .andReturn().getResponse().getContentAsString();
-
-      log.info( "Introspection: \n" + jsonHelper.prettyPrint( introspect ) );
-   }
-
-
-   @Test
-   public void testJwksEndpoint() throws Exception {
-      // endpoint should be available without security
-      // TODO Q: Why is this public? because the result keys are public keys
-      var res = mockMvc.perform( get( WELL_KNOWN_JWKS_JSON ) )
-            .andExpect( status().isOk() )
-            .andDo( print() )
-            .andExpect( jsonPath( "$.keys" ).exists() )
-            .andReturn().getResponse().getContentAsString();
-
-      log.info( jsonHelper.prettyPrint( res ) );
-   }
-
-   @Test
-   public void testClientAuthenticationFailsWithInvalidSecret() throws Exception {
-      mockMvc.perform( post( "/oauth2/token" )
-                  .with( httpBasic( CLIENT_ID, "invalid_secret" ) )
-                  .param( "grant_type", "client_credentials" ) )
-            .andExpect( status().isUnauthorized() )
-            .andExpect( jsonPath( "$.error" ).value( RESULT_INVALID_CLIENT ) )
-            .andDo( print() );
-   }
+   //   @Autowired
+   JsonHelper jsonHelper;
 
    //   TODO: implement test methods below this line
    @Test

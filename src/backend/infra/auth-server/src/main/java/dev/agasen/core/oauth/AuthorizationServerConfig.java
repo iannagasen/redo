@@ -132,7 +132,7 @@ public class AuthorizationServerConfig {
          if ( context.getTokenType().equals( OAuth2TokenType.ACCESS_TOKEN ) ) {
             context.getClaims().claims( claims -> {
                claims.put( "custom_claim", "custom_value" );
-               claims.put( "scope", "read" );
+//               claims.put( "scope", "read" );
             } );
          }
       };

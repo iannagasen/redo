@@ -3,10 +3,21 @@ oauth2:
     test-client:
       client-id: test-id
       client-secret: test-secret
-      client-authentication-method: client_secret_basic
-      authorization-grant-type: client_credentials
+      client-authentication-method: none
+      authorization-grant-types:
+        - client_credentials
+        - authorization_code
       scopes:
         - read
         - write
       token:
         access-ttl: PT30M
+      redirect-uris:
+        - http://localhost:8080/someshit
+
+
+spring:
+  security:
+    user:
+      name: admin
+      password: pass
