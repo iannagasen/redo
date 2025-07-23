@@ -6,11 +6,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.function.Supplier;
 
 @Service
 public record ProductService(
       ProductRepository productRepository,
-      ProductMapper productMapper
+      ProductMapper productMapper,
+      ProductCacheService productCacheService
 ) {
    public Page< Product > getProducts( int page, int size ) {
       return productRepository.findAll( PageRequest.of( page, size ) )
@@ -23,10 +25,11 @@ public record ProductService(
    }
 
    public Product getProduct( String id ) {
-      UUID uuid = UUID.fromString( id );
-      return productRepository.findById( uuid )
+      Supplier< Product > findByProductInDb = () -> productRepository.findById( UUID.fromString( id ) )
             .map( productMapper::toDomain )
             .orElseThrow( () -> new RuntimeException( "Product not found with id: " + id ) );
+
+      return productCacheService.getCachedOrCompute( id, findByProductInDb );
    }
 
    public Product createProduct( CreateProductDTO createProductDTO ) {

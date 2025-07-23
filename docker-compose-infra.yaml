@@ -18,7 +18,7 @@ services:
       - product-network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U product_user -d product_catalog"]
+      test: [ "CMD-SHELL", "pg_isready -U product_user -d product_catalog" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -38,6 +38,17 @@ services:
     networks:
       - product-network
     restart: unless-stopped
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  redis-insight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - "8001:8001"
 
 volumes:
   postgres_data:
