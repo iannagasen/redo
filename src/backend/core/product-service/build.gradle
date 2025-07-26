@@ -29,6 +29,7 @@ dependencies {
 
     // Database
     implementation 'org.postgresql:postgresql'
+
     // JSON Processing (for JSONB columns)
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
@@ -37,11 +38,6 @@ dependencies {
 
     // API Documentation
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
-    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
     // Development Tools

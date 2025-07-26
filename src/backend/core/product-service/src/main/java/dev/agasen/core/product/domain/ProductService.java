@@ -1,5 +1,6 @@
 package dev.agasen.core.product.domain;
 
+import dev.agasen.common.cache.CachingService;
 import dev.agasen.core.product.persistence.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,8 +13,9 @@ import java.util.function.Supplier;
 public record ProductService(
       ProductRepository productRepository,
       ProductMapper productMapper,
-      ProductCacheService productCacheService
+      CachingService< String, Product > productCachingService
 ) {
+
    public Page< Product > getProducts( int page, int size ) {
       return productRepository.findAll( PageRequest.of( page, size ) )
             .map( productMapper::toDomain );
@@ -29,7 +31,7 @@ public record ProductService(
             .map( productMapper::toDomain )
             .orElseThrow( () -> new RuntimeException( "Product not found with id: " + id ) );
 
-      return productCacheService.getCachedOrCompute( id, findByProductInDb );
+      return productCachingService.getCachedOrCompute( id, findByProductInDb );
    }
 
    public Product createProduct( CreateProductDTO createProductDTO ) {
@@ -37,6 +39,15 @@ public record ProductService(
       var entity = productMapper.toEntity( product );
       var saved = productRepository.save( entity );
       return productMapper.toDomain( saved );
+   }
+
+   private String getCachedKey( Object id ) {
+      String prefix = "product-";
+      return switch ( id ) {
+         case String s -> prefix + s;
+         case UUID uuid -> prefix + uuid;
+         default -> throw new IllegalStateException( "Unsupported type: " + id.getClass() );
+      };
    }
 
 }

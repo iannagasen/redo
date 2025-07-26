@@ -28,8 +28,13 @@ dependencies {
     // JSON Processing (for JSONB columns)
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
+    // Redis synchronous
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core'
 }
 
 test {
