@@ -1,31 +1,43 @@
 package dev.agasen.core.product.persistence;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
-import org.springframework.data.relational.core.mapping.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Table("products")
-public record ProductEntity(
-        @Id UUID id,
-        String name,
-        String description,
-        String sku,
-        String slug,
-        String brand,
-        BigDecimal price,
-        String currency,
-        @Column("stock_quantity") Integer stockQuantity,
-        @Column("is_active") Boolean isActive,
-        @Column("is_featured") Boolean isFeatured,
-        @Column("attributes") Map<String, Object> attributesJson,
-        @Column("category_id") UUID categoryId,
-        @Column("created_at") Instant createdAt,
-        @Column("updated_at") Instant updatedAt
-) {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table( name = "products" )
+public class ProductEntity {
 
+   @Id
+   @Column( columnDefinition = "uuid", updatable = false, nullable = false )
+   private UUID id;
+
+   private String name;
+   private String description;
+   private String sku;
+   private String slug;
+   private String brand;
+   private BigDecimal price;
+   private String currency;
+   private Integer stockQuantity;
+
+   @Convert( converter = MapToJsonbConverter.class )
+   @Column( columnDefinition = "jsonb" )
+   private Map< String, Object > attributesJson = new HashMap<>();
+
+   private UUID categoryId;
+   private Instant createdAt;
+   private Instant updatedAt;
 }

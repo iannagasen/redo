@@ -15,14 +15,11 @@ public record Product(
       BigDecimal price,
       String currency,
       Integer stockQuantity,
-      Boolean isActive,
-      Boolean isFeatured,
       Map< String, Object > attributesJson,
       UUID categoryId,
       Instant createdAt,
       Instant updatedAt
 ) {
-
    public static Product create( CreateProductDTO dto ) {
       return new Product(
             UUID.randomUUID(),
@@ -34,8 +31,6 @@ public record Product(
             dto.price(),
             dto.currency(),
             dto.stockQuantity(),
-            dto.isActive(),
-            dto.isFeatured(),
             dto.attributesJson(),
             UUID.fromString( dto.category() ),
             Instant.now(),

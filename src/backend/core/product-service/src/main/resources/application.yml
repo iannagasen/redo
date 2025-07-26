@@ -18,11 +18,12 @@ spring:
       leak-detection-threshold: 60000
       connection-test-query: SELECT 1
 
-  data:
-    jdbc:
-      repositories:
-        enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update  # SET none for PROD - options: none | validate | update | create | create-drop
+    show-sql: true
 
+  data:
     redis:
       host: localhost
       port: 6379
@@ -31,8 +32,8 @@ spring:
     init:
       mode: always  # Set to 'always' if you want to run schema.sql on startup | 'never' if not
       platform: postgresql
-      schema-locations: classpath:schema.sql  # if not using default naming
-      data-locations: classpath:data.sql    # for data inserts
+  #      schema-locations: classpath:schema.sql  # if not using default naming
+  #      data-locations: classpath:data.sql    # for data inserts
 
   security:
     oauth2:

@@ -35,6 +35,9 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-core'
+
+    testImplementation 'it.ozimov:embedded-redis:0.7.2'
+
 }
 
 test {

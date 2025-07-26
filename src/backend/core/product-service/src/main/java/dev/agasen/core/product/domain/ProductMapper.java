@@ -5,65 +5,43 @@ import dev.agasen.core.product.persistence.ProductEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductMapper implements EntityDomainMapper<Product, ProductEntity> {
+public class ProductMapper implements EntityDomainMapper< Product, ProductEntity > {
 
-    @Override
-    public ProductEntity toEntity(Product domain) {
-        return new ProductEntity(
-                domain.id(),
-                domain.name(),
-                domain.description(),
-                domain.sku(),
-                domain.slug(),
-                domain.brand(),
-                domain.price(),
-                domain.currency(),
-                domain.stockQuantity(),
-                domain.isActive(),
-                domain.isFeatured(),
-                domain.attributesJson(),
-                domain.categoryId(),
-                domain.createdAt(),
-                domain.updatedAt()
-        );
-    }
+   @Override
+   public ProductEntity toEntity( Product domain ) {
+      ProductEntity entity = new ProductEntity();
+      entity.setId( domain.id() );
+      entity.setName( domain.name() );
+      entity.setDescription( domain.description() );
+      entity.setSku( domain.sku() );
+      entity.setSlug( domain.slug() );
+      entity.setBrand( domain.brand() );
+      entity.setPrice( domain.price() );
+      entity.setCurrency( domain.currency() );
+      entity.setStockQuantity( domain.stockQuantity() );
+      entity.setAttributesJson( domain.attributesJson() );
+      entity.setCategoryId( domain.categoryId() );
+      entity.setCreatedAt( domain.createdAt() );
+      entity.setUpdatedAt( domain.updatedAt() );
+      return entity;
+   }
 
-    @Override
-    public Product toDomain(ProductEntity entity) {
-        return switch (entity) {
-            case ProductEntity(
-                    var id,
-                    var name,
-                    var description,
-                    var sku,
-                    var slug,
-                    var brand,
-                    var price,
-                    var currency,
-                    var stockQuantity,
-                    var isActive,
-                    var isFeatured,
-                    var attributesJson,
-                    var categoryId,
-                    var createdAt,
-                    var updatedAt
-            ) -> new Product(
-                    id,
-                    name,
-                    description,
-                    sku,
-                    slug,
-                    brand,
-                    price,
-                    currency,
-                    stockQuantity,
-                    isActive,
-                    isFeatured,
-                    attributesJson,
-                    categoryId,
-                    createdAt,
-                    updatedAt
-            );
-        };
-    }
+   @Override
+   public Product toDomain( ProductEntity entity ) {
+      return new Product(
+            entity.getId(),
+            entity.getName(),
+            entity.getDescription(),
+            entity.getSku(),
+            entity.getSlug(),
+            entity.getBrand(),
+            entity.getPrice(),
+            entity.getCurrency(),
+            entity.getStockQuantity(),
+            entity.getAttributesJson(),
+            entity.getCategoryId(),
+            entity.getCreatedAt(),
+            entity.getUpdatedAt()
+      );
+   }
 }

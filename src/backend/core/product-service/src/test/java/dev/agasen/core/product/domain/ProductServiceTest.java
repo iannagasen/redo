@@ -70,6 +70,4 @@ class ProductServiceTest {
             Instant.parse( "2023-01-02T00:00:00Z" )
       );
    }
-
-
 }
