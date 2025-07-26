@@ -1,5 +1,6 @@
 package dev.agasen.core.product.persistence;
 
+import dev.agasen.common.persistence.converter.MapToJsonbConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

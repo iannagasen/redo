@@ -1,27 +1,33 @@
 package dev.agasen.common.persistence.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.postgresql.util.PGobject;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.convert.WritingConverter;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
-import java.sql.SQLException;
+import java.io.IOException;
 import java.util.Map;
 
-@WritingConverter
-public class MapToJsonbConverter implements Converter<Map<String, Object>, PGobject> {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+@Converter( autoApply = true )
+public class MapToJsonbConverter implements AttributeConverter< Map< String, Object >, String > {
 
-    @Override
-    public PGobject convert(Map<String, Object> source) {
-        PGobject jsonObject = new PGobject();
-        jsonObject.setType("jsonb");
-        try {
-            jsonObject.setValue(objectMapper.writeValueAsString(source));
-        } catch (SQLException | JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        return jsonObject;
-    }
+   @Override
+   public String convertToDatabaseColumn( Map< String, Object > attribute ) {
+      try {
+         return new ObjectMapper().writeValueAsString( attribute );
+      } catch ( JsonProcessingException e ) {
+         throw new IllegalArgumentException( "Unable to convert map to JSON", e );
+      }
+   }
+
+   @Override
+   public Map< String, Object > convertToEntityAttribute( String dbData ) {
+      try {
+         return new ObjectMapper().readValue( dbData, new TypeReference< Map< String, Object > >() {
+         } );
+      } catch ( IOException e ) {
+         throw new IllegalArgumentException( "Unable to convert JSON to map", e );
+      }
+   }
 }

@@ -34,11 +34,11 @@ public record ProductService(
       return productCachingService.getCachedOrCompute( id, findByProductInDb );
    }
 
-   public Product createProduct( CreateProductDTO createProductDTO ) {
-      var product = Product.create( createProductDTO );
+   public Product createProduct( ProductCreationData productCreationData ) {
+      var product = Product.create( productCreationData );
       var entity = productMapper.toEntity( product );
       var saved = productRepository.save( entity );
       return productMapper.toDomain( saved );
    }
-   
+
 }

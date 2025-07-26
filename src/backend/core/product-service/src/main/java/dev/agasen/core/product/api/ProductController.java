@@ -1,7 +1,7 @@
 package dev.agasen.core.product.api;
 
-import dev.agasen.core.product.domain.CreateProductDTO;
 import dev.agasen.core.product.domain.Product;
+import dev.agasen.core.product.domain.ProductCreationData;
 import dev.agasen.core.product.domain.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Max;
@@ -47,8 +47,8 @@ public class ProductController {
    }
 
    @PostMapping
-   public Product addProduct( @RequestBody CreateProductDTO createProductDTO ) {
-      return productService.createProduct( createProductDTO );
+   public Product addProduct( @RequestBody ProductCreationData productCreationData ) {
+      return productService.createProduct( productCreationData );
    }
 
     /*

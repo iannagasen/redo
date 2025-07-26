@@ -20,7 +20,7 @@ public record Product(
       Instant createdAt,
       Instant updatedAt
 ) {
-   public static Product create( CreateProductDTO dto ) {
+   public static Product create( ProductCreationData dto ) {
       return new Product(
             UUID.randomUUID(),
             dto.name(),
