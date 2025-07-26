@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith( MockitoExtension.class )
-class ProductServiceTest {
+class ProductDetailsServiceTest {
 
    @Mock
    private ProductRepository productRepository;
@@ -28,7 +28,7 @@ class ProductServiceTest {
    private ProductMapper productMapper;
 
    @Mock
-   private CachingService< String, Product > cachingService;
+   private CachingService< String, ProductDetails > cachingService;
 
    @InjectMocks
    private ProductService sut;
@@ -37,22 +37,22 @@ class ProductServiceTest {
    void testGetProduct_whenInCache_thenCachedProduct() {
       // setup
       String id = UUID.randomUUID().toString();
-      Product cachedProduct = createTestProduct();
+      ProductDetails cachedProductDetails = createTestProduct();
       when( cachingService.getCachedOrCompute( eq( id ), any() ) )
-            .thenReturn( cachedProduct );
+            .thenReturn( cachedProductDetails );
 
       // execute
-      Product result = sut.getProduct( id );
+      ProductDetails result = sut.getProduct( id );
 
       // assert
-      assertEquals( cachedProduct, result );
+      assertEquals( cachedProductDetails, result );
       verify( cachingService ).getCachedOrCompute( eq( id ), any() );
       verifyNoInteractions( productRepository );
       verifyNoInteractions( productMapper );
    }
 
-   private Product createTestProduct() {
-      return new Product(
+   private ProductDetails createTestProduct() {
+      return new ProductDetails(
             UUID.fromString( "11111111-1111-1111-1111-111111111111" ),
             "Test Product",
             "This is a test product.",
@@ -62,10 +62,7 @@ class ProductServiceTest {
             new BigDecimal( "99.99" ),
             "USD",
             100,
-            true,
-            false,
             Map.of( "color", "red", "size", "M" ),
-            UUID.fromString( "22222222-2222-2222-2222-222222222222" ),
             Instant.parse( "2023-01-01T00:00:00Z" ),
             Instant.parse( "2023-01-02T00:00:00Z" )
       );

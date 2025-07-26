@@ -20,7 +20,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update  # SET none for PROD - options: none | validate | update | create | create-drop
+      ddl-auto: create  # SET none for PROD - options: none | validate | update | create | create-drop
     show-sql: true
 
   data:

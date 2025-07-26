@@ -3,7 +3,7 @@ package dev.agasen.core.product;
 import dev.agasen.common.cache.CachingService;
 import dev.agasen.common.cache.CachingTemplate;
 import dev.agasen.common.cache.redis.RedisCachingTemplate;
-import dev.agasen.core.product.domain.Product;
+import dev.agasen.core.product.domain.ProductDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -17,12 +17,12 @@ import java.time.Duration;
 public class CachingServiceConfig {
 
    @Bean
-   public CachingTemplate< String, Product > configureRedisCachingTemplate( RedisTemplate< String, Product > template ) {
+   public CachingTemplate< String, ProductDetails > configureRedisCachingTemplate( RedisTemplate< String, ProductDetails > template ) {
       return new RedisCachingTemplate<>( template );
    }
 
    @Bean
-   public CachingService< String, Product > configureProductCachingService( CachingTemplate< String, Product > template ) {
+   public CachingService< String, ProductDetails > configureProductCachingService( CachingTemplate< String, ProductDetails > template ) {
       return new CachingService<>(
             template,
             Duration.ofMinutes( 10 ),
@@ -31,8 +31,8 @@ public class CachingServiceConfig {
    }
 
    @Bean
-   public RedisTemplate< String, Product > redisTemplate( RedisConnectionFactory connectionFactory ) {
-      RedisTemplate< String, Product > template = new RedisTemplate<>();
+   public RedisTemplate< String, ProductDetails > redisTemplate( RedisConnectionFactory connectionFactory ) {
+      RedisTemplate< String, ProductDetails > template = new RedisTemplate<>();
       template.setConnectionFactory( connectionFactory );
       template.setKeySerializer( new StringRedisSerializer() );
       template.setValueSerializer( new GenericJackson2JsonRedisSerializer() );

@@ -1,9 +1,10 @@
 package dev.agasen.core.product.domain;
 
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.UUID;
 
-public record ProductCreationData(
+public record ProductDetails(
+      UUID id,
       String name,
       String description,
       String sku,
@@ -11,11 +12,10 @@ public record ProductCreationData(
       String brand,
       BigDecimal price,
       String currency,
-      Integer stockQuantity,
-      Boolean isActive,
-      Boolean isFeatured,
-      Map< String, Object > attributesJson,
-      String category
+      int stock,
+      int bought,
+      int cart
+//      Map< String, Object > attributesJson
 ) {
 
 }

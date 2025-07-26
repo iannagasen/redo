@@ -1,7 +1,7 @@
 package dev.agasen.core.product.api;
 
-import dev.agasen.core.product.domain.Product;
-import dev.agasen.core.product.domain.ProductCreationData;
+import dev.agasen.core.product.domain.ProductCreationDetails;
+import dev.agasen.core.product.domain.ProductDetails;
 import dev.agasen.core.product.domain.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Max;
@@ -25,7 +25,7 @@ public class ProductController {
 
    @GetMapping
    @PreAuthorize( "hasAuthority('SCOPE_read')" )
-   public Page< Product > getProducts(
+   public Page< ProductDetails > getProducts(
          @RequestParam( defaultValue = "0", name = "page" ) @Min( 0 ) int page,
          @RequestParam( defaultValue = "1", name = "size" ) @Min( 1 ) @Max( 100 ) int size
    ) {
@@ -33,12 +33,12 @@ public class ProductController {
    }
 
    @GetMapping( "/{id}" )
-   public Product getProduct( @PathVariable String id ) {
+   public ProductDetails getProduct( @PathVariable String id ) {
       return productService.getProduct( id );
    }
 
    @GetMapping( "/category/{category}" )
-   public Page< Product > getProductsByCategory(
+   public Page< ProductDetails > getProductsByCategory(
          @PathVariable String category,
          @RequestParam( defaultValue = "0" ) @Min( 0 ) int page,
          @RequestParam( defaultValue = "1" ) @Min( 1 ) @Max( 100 ) int size
@@ -47,8 +47,8 @@ public class ProductController {
    }
 
    @PostMapping
-   public Product addProduct( @RequestBody ProductCreationData productCreationData ) {
-      return productService.createProduct( productCreationData );
+   public ProductDetails addProduct( @RequestBody ProductCreationDetails productCreationDetails ) {
+      return productService.createProduct( productCreationDetails );
    }
 
     /*
