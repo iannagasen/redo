@@ -40,14 +40,5 @@ public record ProductService(
       var saved = productRepository.save( entity );
       return productMapper.toDomain( saved );
    }
-
-   private String getCachedKey( Object id ) {
-      String prefix = "product-";
-      return switch ( id ) {
-         case String s -> prefix + s;
-         case UUID uuid -> prefix + uuid;
-         default -> throw new IllegalStateException( "Unsupported type: " + id.getClass() );
-      };
-   }
-
+   
 }

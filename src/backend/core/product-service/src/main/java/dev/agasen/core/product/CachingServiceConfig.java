@@ -11,6 +11,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+import java.time.Duration;
+
 @Configuration
 public class CachingServiceConfig {
 
@@ -21,7 +23,11 @@ public class CachingServiceConfig {
 
    @Bean
    public CachingService< String, Product > configureProductCachingService( CachingTemplate< String, Product > template ) {
-      return new CachingService<>( template );
+      return new CachingService<>(
+            template,
+            Duration.ofMinutes( 10 ),
+            key -> "product:" + key
+      );
    }
 
    @Bean
