@@ -30,6 +30,16 @@ oauth2:
         - openid
         - read
         - write
+    # refactor product-service client to 'product-client'
+    gateway-client:
+      client-id: gateway-client
+      client-secret: gateway-secret
+      authorization-grant-types:
+        - client_credentials
+      scopes:
+        - read
+      token:
+        - access-ttl: PT30M
 
 logging:
   level:
