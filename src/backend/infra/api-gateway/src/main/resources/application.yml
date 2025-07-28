@@ -1,0 +1,68 @@
+spring.application.name: api-gateway
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          gateway-client:
+            client-id: gateway-client
+            client-secret: gateway-secret
+            authorization-grant-type: client_credentials
+            scope:
+              - read
+            provider: my-auth-provider
+        provider:
+          my-auth-provider:
+            issuer-uri: http://localhost:8080
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080
+  cloud:
+    gateway:
+      server:
+        webflux:
+          default-filters:
+            - TokenRelay
+          routes:
+            # Main Swagger UI HTML
+            - id: product-service-swagger-ui
+              uri: http://localhost:8081
+              predicates:
+                - Path=/swagger-ui.html
+              filters:
+                - RewritePath=/swagger-ui.html, /swagger-ui.html
+
+            # API docs
+            - id: product-service-docs
+              uri: http://localhost:8081
+              predicates:
+                - Path=/v3/api-docs
+              filters:
+                - RewritePath=/v3/api-docs, /v3/api-docs
+
+            # Swagger UI config (needed for Swagger UI to know where to get APIs)
+            - id: product-service-swagger-config
+              uri: http://localhost:8081
+              predicates:
+                - Path=/v3/api-docs/swagger-config
+              filters:
+                - RewritePath=/v3/api-docs/swagger-config, /v3/api-docs/swagger-config
+
+            # JS, CSS, etc. needed for Swagger UI to render
+            - id: product-service-swagger-assets
+              uri: http://localhost:8081
+              predicates:
+                - Path=/swagger-ui/**
+              filters:
+                - RewritePath=/swagger-ui/(?<segment>.*), /swagger-ui/${segment}
+
+            # Optional: Webjars (icons, fonts, etc. used by older Swagger versions)
+            - id: product-service-webjars
+              uri: http://localhost:8081
+              predicates:
+                - Path=/webjars/**
+              filters:
+                - RewritePath=/webjars/(?<segment>.*), /webjars/${segment}
+server:
+  port: 8000
