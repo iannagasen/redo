@@ -1,15 +1,15 @@
-package dev.agasen.core.user;
+package dev.agasen.api.user;
 
-import dev.agasen.core.user.domain.RoleCreationDetails;
-import dev.agasen.core.user.domain.RoleDetails;
-import dev.agasen.core.user.domain.RoleModificationDetails;
-import dev.agasen.core.user.domain.RoleRemovalDetails;
+import dev.agasen.api.user.role.RoleCreationDetails;
+import dev.agasen.api.user.role.RoleDetails;
+import dev.agasen.api.user.role.RoleModificationDetails;
+import dev.agasen.api.user.role.RoleRemovalDetails;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public interface RoleManagementSpec {
+public interface RoleRestControllerSpec {
 
    @GetMapping( "/roles" )
    List< RoleDetails > getRoles();
@@ -29,4 +29,5 @@ public interface RoleManagementSpec {
          @PathVariable long id,
          @RequestBody RoleRemovalDetails roleRemovalDetails
    );
+
 }

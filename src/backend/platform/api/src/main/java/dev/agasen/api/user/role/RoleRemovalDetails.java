@@ -1,4 +1,4 @@
-package dev.agasen.core.user.domain;
+package dev.agasen.api.user.role;
 
 public class RoleRemovalDetails {
 }

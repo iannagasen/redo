@@ -1,4 +1,5 @@
-include ':src:backend:common'
+include ':src:backend:platform:common'
+include ':src:backend:platform:api'
 
 include ':src:backend:core:product-service'
 include ':src:backend:core:user-service'

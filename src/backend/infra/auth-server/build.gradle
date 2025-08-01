@@ -21,7 +21,8 @@ dependencies {
     // commenting for the mean time
 //	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 
-    implementation project(':src:backend:common')
+    implementation project(':src:backend:platform:common')
+
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
     implementation 'org.springframework.boot:spring-boot-starter-security'

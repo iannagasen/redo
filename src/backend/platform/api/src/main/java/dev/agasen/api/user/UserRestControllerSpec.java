@@ -1,6 +1,6 @@
-package dev.agasen.core.user;
+package dev.agasen.api.user;
 
-import dev.agasen.core.user.domain.*;
+import dev.agasen.api.user.user.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.data.domain.Page;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public interface UserManagementSpec {
+public interface UserRestControllerSpec {
 
    @GetMapping( "/users" )
    Page< UserDetails > getUsers(
@@ -53,5 +53,6 @@ public interface UserManagementSpec {
    List< UserRolesDetails > getUserRoles(
          @PathVariable( name = "id" ) long id
    );
-   
+
+
 }

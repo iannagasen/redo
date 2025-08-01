@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':src:backend:common')
+    implementation project(':src:backend:platform:common')
 
     // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-web'
