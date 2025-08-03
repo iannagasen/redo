@@ -28,6 +28,12 @@ public interface UserRestControllerSpec {
          @RequestBody UserCreationDetails userCreationDetails
    );
 
+   @PostMapping( "/users/{id}/password" )
+   void updateUserPassword(
+         @PathVariable( name = "id" ) long id,
+         @RequestBody UserPasswordChange userPasswordChange
+   );
+
    @PutMapping( "/users" )
    void updateUser(
          @RequestBody UserModificationDetails userModificationDetails

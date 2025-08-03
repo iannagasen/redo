@@ -2,13 +2,13 @@ package dev.agasen.core.user;
 
 import dev.agasen.api.user.UserRestControllerSpec;
 import dev.agasen.api.user.user.*;
+import dev.agasen.common.utility.Exceptions;
 import dev.agasen.core.user.persistence.RoleRepository;
 import dev.agasen.core.user.persistence.UserRepository;
 import dev.agasen.core.user.persistence.entity.Role;
 import dev.agasen.core.user.persistence.entity.User;
 import dev.agasen.core.user.persistence.entity.UserRole;
 import dev.agasen.core.user.service.UserMapper;
-import dev.agasen.core.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -28,7 +29,6 @@ public class UserRestController implements UserRestControllerSpec {
    private final UserRepository userRepository;
    private final RoleRepository roleRepository;
    private final UserMapper userMapper;
-   private final UserService userService;
 
    @Override
    public Page< UserDetails > getUsers( int page, int size, List< String > roles, List< String > permissions ) {
@@ -38,7 +38,9 @@ public class UserRestController implements UserRestControllerSpec {
 
    @Override
    public UserDetails getUser( long id ) {
-      return null;
+      return userRepository.findById( id )
+            .map( userMapper::toUserDetails )
+            .orElseThrow( Exceptions.notFound( "User", id ) );
    }
 
    @Override
@@ -55,6 +57,20 @@ public class UserRestController implements UserRestControllerSpec {
    }
 
    @Override
+   public void updateUserPassword( long id, UserPasswordChange userPasswordChange ) {
+      User user = userRepository.findById( id )
+            .orElseThrow( Exceptions.notFound( "User", id ) );
+
+      // TODO: use encoding , hashes , etc
+      if ( user.getPassword().equals( userPasswordChange.getCurrentPassword() ) ) {
+         user.setPassword( userPasswordChange.getCurrentPassword() );
+         log.debug( "Password changed for user with id {}", id );
+      } else {
+         throw new RuntimeException( "password did not match" );
+      }
+   }
+
+   @Override
    public void updateUser( UserModificationDetails userModificationDetails ) {
 
    }
@@ -62,7 +78,7 @@ public class UserRestController implements UserRestControllerSpec {
    @Override
    public void deleteUser( long id ) {
       userRepository.findById( id )
-            .orElseThrow( () -> new IllegalArgumentException( "User with id " + id + " not found." ) )
+            .orElseThrow( Exceptions.notFound( "User", id ) )
             .setDeleted( true );
    }
 
@@ -70,14 +86,14 @@ public class UserRestController implements UserRestControllerSpec {
    @Transactional
    public void enableUser( long id ) {
       userRepository.findById( id )
-            .orElseThrow( () -> new RuntimeException( "User not found with id " + id ) )
+            .orElseThrow( Exceptions.notFound( "User", id ) )
             .setEnabled( true );
    }
 
    @Override
    public void addRole( long id, UserRoleAssignmentDetails userRoleAssignmentDetails ) {
       userRepository.findById( id )
-            .orElseThrow( () -> new RuntimeException( "User not found with id " + id ) )
+            .orElseThrow( Exceptions.notFound( "User", id ) )
             .addRoles( roleRepository.findAllExistByNameIn( userRoleAssignmentDetails.getRoles() ) );
    }
 
