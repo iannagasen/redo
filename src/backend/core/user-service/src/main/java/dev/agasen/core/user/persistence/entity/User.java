@@ -30,6 +30,6 @@ public class User {
    private boolean enabled;
    private boolean locked;
 
-   @OneToMany( mappedBy = "user" )
-   private Set< UserRole > roles = new HashSet<>();
+   @OneToMany( mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true )
+   private Set< UserRole > userRoles = new HashSet<>();
 }
