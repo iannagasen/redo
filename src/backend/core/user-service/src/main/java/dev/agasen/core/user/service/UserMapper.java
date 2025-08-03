@@ -8,21 +8,30 @@ import dev.agasen.core.user.persistence.entity.UserRole;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper( componentModel = "spring", uses = { RoleMapper.class } )
+@Mapper(
+      componentModel = "spring",
+      uses = { RoleMapper.class },
+      unmappedTargetPolicy = ReportingPolicy.ERROR
+)
 public interface UserMapper {
 
    UserMapper INSTANCE = Mappers.getMapper( UserMapper.class );
 
-   @Mapping( target = "password", ignore = true )
-   @Mapping( source = "userRoles", target = "roles", qualifiedByName = "userRolesToRoles" )
+   @Mapping( target = "roles", source = "userRoles", qualifiedByName = "userRolesToRoles" )
    UserDetails toUserDetails( User user );
 
+   @Mapping( target = "id", ignore = true )
+   @Mapping( target = "userRoles", ignore = true ) // handled in logic
+   @Mapping( target = "locked", ignore = true )
+   @Mapping( target = "enabled", ignore = true )
+   @Mapping( target = "deleted", ignore = true )
    User toUser( UserCreationDetails userCreationDetails );
 
    @Named( "userRolesToRoles" )

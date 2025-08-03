@@ -9,5 +9,5 @@ import java.util.Set;
 public class RoleDetails {
    private String name;
    private String description;
-   private Set< PermissionDetails > roles;
+   private Set< PermissionDetails > permissions;
 }

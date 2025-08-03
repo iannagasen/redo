@@ -2,12 +2,14 @@ package dev.agasen.api.user.user;
 
 import dev.agasen.api.user.role.RoleDetails;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class UserDetails {
    private String username;
    private String email;

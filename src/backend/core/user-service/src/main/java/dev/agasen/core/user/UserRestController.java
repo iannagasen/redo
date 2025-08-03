@@ -10,17 +10,19 @@ import dev.agasen.core.user.persistence.entity.UserRole;
 import dev.agasen.core.user.service.UserMapper;
 import dev.agasen.core.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserRestController implements UserRestControllerSpec {
 
    private final UserRepository userRepository;
@@ -42,15 +44,7 @@ public class UserRestController implements UserRestControllerSpec {
    @Override
    public void createUser( UserCreationDetails userCreationDetails ) {
       User user = userMapper.toUser( userCreationDetails );
-      Collection< Role > roles = roleRepository.findByNameIn( userCreationDetails.getRoles() );
-
-      boolean hasMissing = userCreationDetails.getRoles().size() != roles.size();
-      if ( hasMissing ) {
-         var found = roles.stream().map( Role::getName ).collect( Collectors.toSet() );
-         var missing = new HashSet<>( userCreationDetails.getRoles() );
-         missing.removeAll( found );
-         throw new IllegalArgumentException( "Missing roles: " + missing );
-      }
+      Collection< Role > roles = roleRepository.findAllExistByNameIn( userCreationDetails.getRoles() );
 
       var userRoles = roles.stream()
             .map( r -> new UserRole( null, user, r ) )
@@ -67,17 +61,24 @@ public class UserRestController implements UserRestControllerSpec {
 
    @Override
    public void deleteUser( long id ) {
-
+      userRepository.findById( id )
+            .orElseThrow( () -> new IllegalArgumentException( "User with id " + id + " not found." ) )
+            .setDeleted( true );
    }
 
    @Override
+   @Transactional
    public void enableUser( long id ) {
-
+      userRepository.findById( id )
+            .orElseThrow( () -> new RuntimeException( "User not found with id " + id ) )
+            .setEnabled( true );
    }
 
    @Override
    public void addRole( long id, UserRoleAssignmentDetails userRoleAssignmentDetails ) {
-
+      userRepository.findById( id )
+            .orElseThrow( () -> new RuntimeException( "User not found with id " + id ) )
+            .addRoles( roleRepository.findAllExistByNameIn( userRoleAssignmentDetails.getRoles() ) );
    }
 
    @Override

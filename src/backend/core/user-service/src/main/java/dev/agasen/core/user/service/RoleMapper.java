@@ -7,6 +7,7 @@ import dev.agasen.core.user.persistence.entity.RolePermission;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.HashSet;
@@ -14,7 +15,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper( componentModel = "spring", uses = { PermissionMapper.class } )
+@Mapper(
+      componentModel = "spring",
+      uses = { PermissionMapper.class },
+      unmappedTargetPolicy = ReportingPolicy.ERROR
+)
 public interface RoleMapper {
 
    RoleMapper INSTANCE = Mappers.getMapper( RoleMapper.class );
@@ -25,7 +30,7 @@ public interface RoleMapper {
    List< RoleDetails > rolesToRoleDetails( List< Role > roles );
 
    @Named( "rolePermissionsToPermissions" )
-   default Set< PermissionDetails > rolePermissionsToPermissions( Set< RolePermission > rolePermissions ) {
+   static Set< PermissionDetails > rolePermissionsToPermissions( Set< RolePermission > rolePermissions ) {
       if ( rolePermissions == null ) {
          return new HashSet<>();
       }
