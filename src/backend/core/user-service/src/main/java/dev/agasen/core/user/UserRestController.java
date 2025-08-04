@@ -31,12 +31,14 @@ public class UserRestController implements UserRestControllerSpec {
    private final UserMapper userMapper;
 
    @Override
+   @Transactional( readOnly = true )
    public Page< UserDetails > getUsers( int page, int size, List< String > roles, List< String > permissions ) {
       return userRepository.findFilteredUsers( roles, permissions, PageRequest.of( page, size ) )
             .map( userMapper::toUserDetails );
    }
 
    @Override
+   @Transactional( readOnly = true )
    public UserDetails getUser( long id ) {
       return userRepository.findById( id )
             .map( userMapper::toUserDetails )
