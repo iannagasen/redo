@@ -55,10 +55,10 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // Test Containers
-    testImplementation 'org.testcontainers:testcontainers'
-    testImplementation 'org.testcontainers:postgresql'
-    testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'org.testcontainers:redis'
+    testImplementation "org.testcontainers:testcontainers"
+    testImplementation "org.testcontainers:postgresql"
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "com.redis:testcontainers-redis"
 }
 
 tasks.named('test') {

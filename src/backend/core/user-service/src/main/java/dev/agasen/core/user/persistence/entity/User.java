@@ -17,6 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Slf4j
+@Table( name = "users" )
 public class User {
 
    @Id
@@ -38,7 +39,7 @@ public class User {
    private Set< UserRole > userRoles = new HashSet<>();
 
    public void addRole( Role role ) {
-      if ( roleExists( role ) ) {
+      if ( hasRole( role ) ) {
          log.warn( "User {} role already exists: {}", this, role );
          return;
       }
@@ -47,7 +48,7 @@ public class User {
       log.debug( "User {} role added: {}", this, userRole );
    }
 
-   public boolean roleExists( Role role ) {
+   public boolean hasRole( Role role ) {
       return role.getUserRoles().stream().anyMatch( ur -> ur.getRole().equals( role ) );
    }
 

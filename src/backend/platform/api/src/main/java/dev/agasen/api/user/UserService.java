@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public interface UserRestControllerSpec {
+public interface UserService {
 
    @GetMapping( "/users" )
    Page< UserDetails > getUsers(
@@ -59,6 +59,5 @@ public interface UserRestControllerSpec {
    List< UserRolesDetails > getUserRoles(
          @PathVariable( name = "id" ) long id
    );
-
 
 }

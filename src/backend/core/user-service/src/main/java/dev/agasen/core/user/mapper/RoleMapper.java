@@ -1,6 +1,7 @@
-package dev.agasen.core.user.service;
+package dev.agasen.core.user.mapper;
 
 import dev.agasen.api.user.permission.PermissionDetails;
+import dev.agasen.api.user.role.RoleCreationDetails;
 import dev.agasen.api.user.role.RoleDetails;
 import dev.agasen.core.user.persistence.entity.Role;
 import dev.agasen.core.user.persistence.entity.RolePermission;
@@ -28,6 +29,11 @@ public interface RoleMapper {
    RoleDetails roleToRoleDetails( Role role );
 
    List< RoleDetails > rolesToRoleDetails( List< Role > roles );
+
+   @Mapping( target = "id", ignore = true )
+   @Mapping( target = "rolePermissions", ignore = true )
+   @Mapping( target = "userRoles", ignore = true )
+   Role toRole( RoleCreationDetails roleCreationDetails );
 
    @Named( "rolePermissionsToPermissions" )
    static Set< PermissionDetails > rolePermissionsToPermissions( Set< RolePermission > rolePermissions ) {

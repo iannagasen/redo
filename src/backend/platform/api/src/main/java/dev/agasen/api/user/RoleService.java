@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-public interface RoleRestControllerSpec {
+public interface RoleService {
 
    @GetMapping( "/roles" )
    List< RoleDetails > getRoles();

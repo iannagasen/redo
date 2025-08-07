@@ -1,14 +1,14 @@
 package dev.agasen.core.user;
 
-import dev.agasen.api.user.UserRestControllerSpec;
+import dev.agasen.api.user.UserService;
 import dev.agasen.api.user.user.*;
-import dev.agasen.common.utility.Exceptions;
+import dev.agasen.common.exceptions.Exceptions;
+import dev.agasen.core.user.mapper.UserMapper;
 import dev.agasen.core.user.persistence.RoleRepository;
 import dev.agasen.core.user.persistence.UserRepository;
 import dev.agasen.core.user.persistence.entity.Role;
 import dev.agasen.core.user.persistence.entity.User;
 import dev.agasen.core.user.persistence.entity.UserRole;
-import dev.agasen.core.user.service.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class UserRestController implements UserRestControllerSpec {
+public class UserRestService implements UserService {
 
    private final UserRepository userRepository;
    private final RoleRepository roleRepository;
@@ -101,6 +101,6 @@ public class UserRestController implements UserRestControllerSpec {
 
    @Override
    public List< UserRolesDetails > getUserRoles( long id ) {
-      return List.of();
+      throw new UnsupportedOperationException( "not yet supported" );
    }
 }

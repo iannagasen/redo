@@ -22,4 +22,9 @@ public class RolePermission {
 
    @ManyToOne
    private Permission permission;
+
+   public RolePermission( Role role, Permission permission ) {
+      this.role = role;
+      this.permission = permission;
+   }
 }

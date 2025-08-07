@@ -1,4 +1,4 @@
-package dev.agasen.core.user.service;
+package dev.agasen.core.user.mapper;
 
 import dev.agasen.api.user.role.RoleDetails;
 import dev.agasen.api.user.user.UserCreationDetails;
