@@ -1,6 +1,6 @@
 package dev.agasen.core.product.persistence.entity;
 
-import dev.agasen.common.persistence.entity.Auditable;
+import dev.agasen.common.persistence.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -18,15 +17,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table( name = "products" )
-public class Product extends Auditable {
-
-   @Id
-   @Column( columnDefinition = "uuid", updatable = false, nullable = false )
-   private UUID id;
+public class Product extends BaseEntity {
 
    @Column( nullable = false )
    private String name;
 
+   @Column( columnDefinition = "TEXT" )
    private String description;
 
    @Column( nullable = false )

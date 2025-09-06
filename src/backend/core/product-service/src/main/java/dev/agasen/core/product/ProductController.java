@@ -1,7 +1,7 @@
-package dev.agasen.core.product.api;
+package dev.agasen.core.product;
 
-import dev.agasen.core.product.domain.ProductCreationDetails;
-import dev.agasen.core.product.domain.ProductDetails;
+import dev.agasen.api.product.product.ProductCreationDetails;
+import dev.agasen.api.product.product.ProductDetails;
 import dev.agasen.core.product.domain.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Max;

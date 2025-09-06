@@ -1,21 +1,22 @@
-package dev.agasen.core.product.domain;
+package dev.agasen.api.product.product;
+
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public record ProductDetails(
-      UUID id,
-      String name,
-      String description,
-      String sku,
-      String slug,
-      String brand,
-      BigDecimal price,
-      String currency,
-      int stock,
-      int bought,
-      int cart
+@Data
+public class ProductDetails {
+   private UUID id;
+   private String name;
+   private String description;
+   private String sku;
+   private String slug;
+   private String brand;
+   private BigDecimal price;
+   private String currency;
+   private int stock;
+   private int bought;
+   private int cart;
 //      Map< String, Object > attributesJson
-) {
-
 }

@@ -1,5 +1,7 @@
 package dev.agasen.core.product.domain;
 
+import dev.agasen.api.product.product.ProductCreationDetails;
+import dev.agasen.api.product.product.ProductDetails;
 import dev.agasen.common.cache.CachingService;
 import dev.agasen.core.product.persistence.ProductRepository;
 import dev.agasen.core.product.persistence.entity.Product;

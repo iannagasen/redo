@@ -19,6 +19,7 @@ repositories {
 
 dependencies {
     implementation project(':src:backend:platform:common')
+    implementation project(':src:backend:platform:api')
 
     // Spring Boot Starters
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -30,9 +31,13 @@ dependencies {
     // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // mapstruct
+    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
     // Database
     implementation 'org.postgresql:postgresql'

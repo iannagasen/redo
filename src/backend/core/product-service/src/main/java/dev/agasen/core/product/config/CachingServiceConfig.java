@@ -1,4 +1,4 @@
-package dev.agasen.core.product;
+package dev.agasen.core.product.config;
 
 import dev.agasen.common.cache.CachingService;
 import dev.agasen.common.cache.CachingTemplate;

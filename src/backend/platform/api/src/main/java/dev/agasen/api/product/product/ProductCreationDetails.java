@@ -1,17 +1,19 @@
-package dev.agasen.core.product.domain;
+package dev.agasen.api.product.product;
+
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
-public record ProductCreationDetails(
-      String name,
-      String description,
-      String sku,
-      String slug,
-      String brand,
-      BigDecimal price,
-      String currency,
-      int stock,
-      Map< String, Object > attributesJson
-) {
+@Data
+public class ProductCreationDetails {
+   private String name;
+   private String description;
+   private String sku;
+   private String slug;
+   private String brand;
+   private BigDecimal price;
+   private String currency;
+   private int stock;
+   private Map< String, Object > attributesJson;
 }

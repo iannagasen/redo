@@ -9,8 +9,8 @@ import java.time.Instant;
 
 @MappedSuperclass
 @EntityListeners( AuditingEntityListener.class )
-public abstract class Auditable {
-   
+public abstract class BaseEntity {
+
    @Id
    @GeneratedValue( strategy = GenerationType.IDENTITY )
    private Long id;
@@ -21,6 +21,10 @@ public abstract class Auditable {
 
    @LastModifiedDate
    protected Instant updatedAt;
+
+   public Long getId() {
+      return id;
+   }
 
    public Instant getCreatedAt() {
       return createdAt;
