@@ -40,6 +40,19 @@ oauth2:
         - read
       token:
         - access-ttl: PT30M
+    angular-client:
+      client-id: angular-client
+      client-secret: angular-secret
+      client-authentication-method: client_secret_basic
+      authorization-grant-types:
+        - authorization_code
+        - refresh_token
+      redirect-uris:
+        - http://localhost:4200/login/callback
+      scopes:
+        - openid
+        - read
+
 
 logging:
   level:

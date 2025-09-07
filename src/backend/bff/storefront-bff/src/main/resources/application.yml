@@ -1,0 +1,4 @@
+spring.application.name: storefront-bff
+
+server:
+  port: 7001
