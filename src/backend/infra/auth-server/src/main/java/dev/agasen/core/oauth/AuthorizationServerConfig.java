@@ -8,6 +8,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,6 +27,7 @@ import org.springframework.security.oauth2.server.authorization.token.JwtEncodin
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -57,7 +59,15 @@ public class AuthorizationServerConfig {
                         new LoginUrlAuthenticationEntryPoint( "/login" ),
                         new MediaTypeRequestMatcher( MediaType.TEXT_HTML )
                   )
+                  .defaultAuthenticationEntryPointFor(
+                        new HttpStatusEntryPoint( HttpStatus.UNAUTHORIZED ),
+                        new MediaTypeRequestMatcher( MediaType.APPLICATION_JSON )
+                  )
             );
+
+      http.formLogin()
+            .loginPage( "/login" )
+            .defaultSuccessUrl( "/home", true ); // always go here after login
 
       return http.build();
    }
@@ -66,8 +76,12 @@ public class AuthorizationServerConfig {
    @Order( 2 )
    public SecurityFilterChain defaultSecurityFilterChain( HttpSecurity http ) throws Exception {
       http.authorizeHttpRequests( authorize -> authorize
-                  .requestMatchers( "/oauth2/**" ).permitAll()
-                  .anyRequest().authenticated()
+                        .requestMatchers( "/oauth2/**" ).permitAll()
+                        .requestMatchers( "/.well-known/appspecific/**" ).permitAll()
+//
+//                  // for the angular to introspect the token if it is still valid
+                        .requestMatchers( "/oauth2/introspect" ).permitAll()
+                        .anyRequest().authenticated()
             )
             .cors( Customizer.withDefaults() )
             .formLogin( Customizer.withDefaults() );
@@ -141,7 +155,7 @@ public class AuthorizationServerConfig {
    @Bean
    public CorsConfigurationSource corsConfigurationSource() {
       CorsConfiguration config = new CorsConfiguration();
-      config.setAllowedOrigins( List.of( "http://localhost:8081" ) );
+      config.setAllowedOrigins( List.of( "http://localhost:8081", "http://localhost:4200" ) );
       config.setAllowedMethods( List.of( "GET", "POST", "PUT", "DELETE", "OPTIONS" ) );
       config.setAllowedHeaders( List.of( "*" ) );
       config.setAllowCredentials( true );

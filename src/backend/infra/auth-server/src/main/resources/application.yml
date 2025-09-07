@@ -42,8 +42,9 @@ oauth2:
         - access-ttl: PT30M
     angular-client:
       client-id: angular-client
+      #      no client-secret and client authentication method for PKCE
       client-secret: angular-secret
-      client-authentication-method: client_secret_basic
+      client-authentication-method: none
       authorization-grant-types:
         - authorization_code
         - refresh_token
@@ -52,6 +53,10 @@ oauth2:
       scopes:
         - openid
         - read
+      # PKCE
+      client-settings:
+        require-authorization-consent: true
+        require-proof-key: true
 
 
 logging:

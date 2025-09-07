@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.stereotype.Component;
 
@@ -45,11 +46,13 @@ public class RegisteredClientRepositoryProvider {
       List< RegisteredClient > clients = new ArrayList<>();
 
       properties.clients().forEach( ( clientName, config ) -> {
-         RegisteredClient client = RegisteredClient.withId( UUID.randomUUID().toString() )
+         RegisteredClient.Builder clientBuilder = RegisteredClient.withId( UUID.randomUUID().toString() )
                .clientId( config.clientId() )
-               .clientSecret( passwordEncoder.encode( config.clientSecret() ) )
-               .clientAuthenticationMethod(
-                     ClientAuthenticationMethod.valueOf( config.getClientAuthenticationMethodOrDefault() )
+               // PKCE
+               .clientSettings( ClientSettings.builder()
+                     .requireAuthorizationConsent( config.getClientSettingsConfig().requireAuthorizationConsent() )
+                     .requireProofKey( config.getClientSettingsConfig().requireProofKey() )
+                     .build()
                )
                .authorizationGrantTypes( grantTypes -> {
                   config.getAuthorizationGrantTypesOrDefault()
@@ -63,10 +66,17 @@ public class RegisteredClientRepositoryProvider {
                      .build() )
                .redirectUris( redirectUris -> {
                   redirectUris.addAll( config.getRedirectUris() );
-               } )
-               .build();
+               } );
 
-         clients.add( client );
+         if ( config.clientSecret() != null ) {
+            clientBuilder.clientSecret( passwordEncoder.encode( config.clientSecret() ) );
+         }
+
+         if ( config.clientAuthenticationMethod() != null ) {
+            clientBuilder.clientAuthenticationMethod( ClientAuthenticationMethod.valueOf( config.clientAuthenticationMethod() ) );
+         }
+
+         clients.add( clientBuilder.build() );
       } );
 
       return new InMemoryRegisteredClientRepository( clients );

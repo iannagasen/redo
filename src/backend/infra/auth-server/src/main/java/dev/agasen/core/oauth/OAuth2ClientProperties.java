@@ -30,7 +30,8 @@ public record OAuth2ClientProperties(
          List< String > authorizationGrantTypes,
          List< String > redirectUris,
          List< String > scopes,
-         TokenConfig token
+         TokenConfig token,
+         ClientSettingsConfig clientSettings
    ) {
 
       public ClientConfig {
@@ -43,7 +44,7 @@ public record OAuth2ClientProperties(
       }
 
       public List< String > getAuthorizationGrantTypesOrDefault() {
-         return isNullOrEmpty( authorizationGrantTypes ) ? List.of( "authorization_code" ) : authorizationGrantTypes;
+         return isNullOrEmpty( authorizationGrantTypes ) ? java.util.List.of( "authorization_code" ) : authorizationGrantTypes;
       }
 
       public TokenConfig getToken() {
@@ -53,6 +54,10 @@ public record OAuth2ClientProperties(
       public List< String > getRedirectUris() {
          return listOrEmpty( redirectUris );
       }
+
+      public ClientSettingsConfig getClientSettingsConfig() {
+         return clientSettings == null ? new ClientSettingsConfig( false, false ) : clientSettings;
+      }
    }
 
    public record TokenConfig( Duration accessTtl ) {
@@ -60,6 +65,21 @@ public record OAuth2ClientProperties(
       public TokenConfig {
          if ( accessTtl == null ) {
             accessTtl = Duration.ofMinutes( 30 );
+         }
+      }
+   }
+
+   public record ClientSettingsConfig(
+         Boolean requireAuthorizationConsent,
+         Boolean requireProofKey ) {
+
+      public ClientSettingsConfig {
+         if ( requireAuthorizationConsent == null ) {
+            requireAuthorizationConsent = false;
+         }
+
+         if ( requireProofKey == null ) {
+            requireProofKey = false;
          }
       }
    }

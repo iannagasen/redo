@@ -3,7 +3,7 @@ oauth2:
     test-client:
       client-id: test-id
       client-secret: test-secret
-      client-authentication-method: none
+      client-authentication-method: client_secret_basic
       authorization-grant-types:
         - client_credentials
         - authorization_code
