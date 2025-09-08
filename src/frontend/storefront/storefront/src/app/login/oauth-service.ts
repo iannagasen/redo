@@ -72,6 +72,8 @@ export class OauthService {
     if ( tokens.id_token ) {
       sessionStorage.setItem( 'id_token', tokens.id_token );
     }
+    const expiryTime = Date.now() + ( tokens.expires_in * 1000 )
+    sessionStorage.setItem( 'expiry', expiryTime.toString() );
   }
 
   getAccessToken(): string | null {
@@ -79,22 +81,12 @@ export class OauthService {
   }
 
   isLoggedIn(): boolean {
-    return true;
-    // const token = sessionStorage.getItem( 'access_token' );
-    // if ( !token ) {
-    //   return of( false );
-    // }
-    //
-    // const body = new URLSearchParams();
-    // body.set( 'token', token );
-    // body.set( 'client_id', 'angular-client' );
-    //
-    // return this.http.post<any>( `${ this.authServer }/oauth2/introspect`, body.toString(), {
-    //   headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    // } ).pipe(
-    //   tap( res => console.log( 'Raw introspect response: ', res ) ),
-    //   map( res => res.active === true )
-    // );
+    const token = sessionStorage.getItem( 'access_token' );
+    const expiry = sessionStorage.getItem( 'expiry' );
+
+    if ( !token || !expiry ) return false;
+
+    return Date.now() < parseInt( expiry, 10 );
   }
 
   logout(): void {
