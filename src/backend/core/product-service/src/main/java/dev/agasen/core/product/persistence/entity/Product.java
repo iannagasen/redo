@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -45,8 +43,8 @@ public class Product extends BaseEntity {
    @JoinColumn( name = "product_model_id", nullable = false )
    private ProductModel productModel;
 
-   // Product's actual attribute values
-   @OneToMany( mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true )
-   private List< Attribute > attributes = new ArrayList<>();
+//   // Product's actual attribute values
+//   @OneToMany( mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true )
+//   private List< Attribute > attributes = new ArrayList<>();
 
 }

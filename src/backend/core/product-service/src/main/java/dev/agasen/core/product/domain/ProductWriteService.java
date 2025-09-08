@@ -33,8 +33,6 @@ public class ProductWriteService {
    }
 
    public Long update( ProductStatusUpdate dto ) {
-
+      return null;
    }
-
-
 }

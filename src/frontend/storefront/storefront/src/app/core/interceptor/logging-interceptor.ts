@@ -18,6 +18,8 @@ export const loggingInterceptor: HttpInterceptorFn = ( req, next ) => {
             status: event.status,
             body: event.body
           } );
+
+          console.log( event.body );
         }
       },
       error: ( err ) => {

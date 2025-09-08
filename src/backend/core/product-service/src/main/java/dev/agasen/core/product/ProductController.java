@@ -3,18 +3,19 @@ package dev.agasen.core.product;
 import dev.agasen.api.product.product.ProductCreationDetails;
 import dev.agasen.api.product.product.ProductDetails;
 import dev.agasen.core.product.domain.ProductService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping( "/api/v1/products" )
 @Validated
-@SecurityRequirement( name = "oauth2" )
+//@SecurityRequirement( name = "oauth2" )
+@Slf4j
 public class ProductController {
 
    private final ProductService productService;
@@ -24,16 +25,16 @@ public class ProductController {
    }
 
    @GetMapping
-   @PreAuthorize( "hasAuthority('SCOPE_read')" )
    public Page< ProductDetails > getProducts(
          @RequestParam( defaultValue = "0", name = "page" ) @Min( 0 ) int page,
          @RequestParam( defaultValue = "1", name = "size" ) @Min( 1 ) @Max( 100 ) int size
    ) {
+      log.info( "User is {}", SecurityContextHolder.getContext().getAuthentication() );
       return productService.getProducts( page, size );
    }
 
    @GetMapping( "/{id}" )
-   public ProductDetails getProduct( @PathVariable String id ) {
+   public ProductDetails getProduct( @PathVariable Long id ) {
       return productService.getProduct( id );
    }
 

@@ -19,15 +19,17 @@ public interface ProductMapper {
    ProductDetails toProductDetails( Product product );
 
    @Mapping( target = "productModel", ignore = true )
-   @Mapping( target = "attributes", ignore = true )
+//   @Mapping( target = "attributes", ignore = true )
    Product toEntity( ProductDetails productDetails );
 
    @Mapping( target = "productModel", ignore = true )
-   @Mapping( target = "id", ignore = true )
+//   @Mapping( target = "id", ignore = true )
    @Mapping( target = "cart", ignore = true )
    @Mapping( target = "bought", ignore = true )
-   @Mapping( target = "attributes", ignore = true )
+//   @Mapping( target = "attributes", ignore = true )
    Product toEntity( ProductCreationDetails productCreationDetails );
+
+   ProductDetails toDomain( Product product );
 
 }
 

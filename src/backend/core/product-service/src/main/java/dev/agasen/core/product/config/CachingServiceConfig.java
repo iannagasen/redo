@@ -1,9 +1,9 @@
 package dev.agasen.core.product.config;
 
+import dev.agasen.api.product.product.ProductDetails;
 import dev.agasen.common.cache.CachingService;
 import dev.agasen.common.cache.CachingTemplate;
 import dev.agasen.common.cache.redis.RedisCachingTemplate;
-import dev.agasen.core.product.domain.ProductDetails;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

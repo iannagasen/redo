@@ -3,16 +3,17 @@ package dev.agasen.core.product.domain;
 import dev.agasen.api.product.product.ProductCreationDetails;
 import dev.agasen.api.product.product.ProductDetails;
 import dev.agasen.common.cache.CachingService;
+import dev.agasen.core.product.mapper.ProductMapper;
 import dev.agasen.core.product.persistence.ProductRepository;
 import dev.agasen.core.product.persistence.entity.Product;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Supplier;
 
 @Service
@@ -32,6 +33,7 @@ public class ProductService {
       return products;
    }
 
+   @PreAuthorize( "hasAnyAuthority('SCOPE_read', 'SCOPE_openid')" )
    public Page< ProductDetails > getProducts( int page, int size ) {
       return productRepository.findAll( PageRequest.of( page, size ) )
             .map( productMapper::toDomain );
@@ -43,12 +45,12 @@ public class ProductService {
       return null;
    }
 
-   public ProductDetails getProduct( String id ) {
-      Supplier< ProductDetails > findByProductInDb = () -> productRepository.findById( UUID.fromString( id ) )
+   public ProductDetails getProduct( Long id ) {
+      Supplier< ProductDetails > findByProductInDb = () -> productRepository.findById( id )
             .map( productMapper::toDomain )
             .orElseThrow( () -> new RuntimeException( "Product not found with id: " + id ) );
 
-      return productCachingService.getCachedOrCompute( id, findByProductInDb );
+      return productCachingService.getCachedOrCompute( id.toString(), findByProductInDb );
    }
 
    public ProductDetails createProduct( ProductCreationDetails productCreationDetails ) {

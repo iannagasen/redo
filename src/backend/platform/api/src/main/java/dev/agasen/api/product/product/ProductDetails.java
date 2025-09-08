@@ -3,11 +3,10 @@ package dev.agasen.api.product.product;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Data
 public class ProductDetails {
-   private UUID id;
+   private Long id;
    private String name;
    private String description;
    private String sku;
