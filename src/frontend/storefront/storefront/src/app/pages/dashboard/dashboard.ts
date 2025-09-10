@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { OauthService } from '../login/oauth-service';
+import { OauthService } from '../../core/service/oauth-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../core/service/product-service';
