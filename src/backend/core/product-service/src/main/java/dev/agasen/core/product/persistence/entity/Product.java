@@ -1,7 +1,9 @@
 package dev.agasen.core.product.persistence.entity;
 
 import dev.agasen.common.persistence.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,9 +41,9 @@ public class Product extends BaseEntity {
    private int bought = 0;
    private int cart = 0;
 
-   @ManyToOne( fetch = FetchType.LAZY, optional = false )
-   @JoinColumn( name = "product_model_id", nullable = false )
-   private ProductModel productModel;
+//   @ManyToOne( fetch = FetchType.LAZY, optional = false )
+//   @JoinColumn( name = "product_model_id", nullable = false )
+//   private ProductModel productModel;
 
 //   // Product's actual attribute values
 //   @OneToMany( mappedBy = "product", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true )

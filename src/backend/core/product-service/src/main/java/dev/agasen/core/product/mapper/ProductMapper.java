@@ -18,11 +18,11 @@ public interface ProductMapper {
 
    ProductDetails toProductDetails( Product product );
 
-   @Mapping( target = "productModel", ignore = true )
+   //   @Mapping( target = "productModel", ignore = true )
 //   @Mapping( target = "attributes", ignore = true )
    Product toEntity( ProductDetails productDetails );
 
-   @Mapping( target = "productModel", ignore = true )
+   //   @Mapping( target = "productModel", ignore = true )
 //   @Mapping( target = "id", ignore = true )
    @Mapping( target = "cart", ignore = true )
    @Mapping( target = "bought", ignore = true )

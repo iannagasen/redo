@@ -27,9 +27,7 @@ public class ProductService {
    @Transactional
    public List< Product > getAllProducts() {
       var products = productRepository.findAll();
-      var productModel = products.get( 0 ).getProductModel();
-      System.out.println( productModel );  // will now work
-      System.out.println( products );
+//      var productModel = products.get( 0 ).getProductModel();
       return products;
    }
 

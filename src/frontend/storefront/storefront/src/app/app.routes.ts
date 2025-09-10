@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { LoginCallback } from './login/callback';
-import { Login } from './login/login';
-import { Dashboard } from './dashboard/dashboard';
-import { authGuard } from './login/auth-guard';
+import { LoginCallback } from './pages/login/callback';
+import { Login } from './pages/login/login';
+import { Dashboard } from './pages/dashboard/dashboard';
+import { authGuard } from './pages/login/auth-guard';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },

@@ -1,7 +1,6 @@
 package dev.agasen.core.product;
 
 import dev.agasen.core.product.persistence.CategoryRepository;
-import dev.agasen.core.product.persistence.ProductModelRepository;
 import dev.agasen.core.product.persistence.ProductRepository;
 import dev.agasen.core.product.persistence.entity.Category;
 import dev.agasen.core.product.persistence.entity.Product;
@@ -13,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -21,7 +21,7 @@ import java.util.List;
 public class DataInitializer {
 
    private final ProductRepository productRepository;
-   private final ProductModelRepository productModelRepository;
+   //   private final ProductModelRepository productModelRepository;
    private final CategoryRepository categoryRepository;
 
 
@@ -49,7 +49,7 @@ public class DataInitializer {
    private boolean shouldSkipInitialization() {
       // Skip if any data already exists
       return categoryRepository.count() > 0 ||
-             productModelRepository.count() > 0 ||
+//             productModelRepository.count() > 0 ||
              productRepository.count() > 0;
    }
 
@@ -91,70 +91,71 @@ public class DataInitializer {
    }
 
    private List< ProductModel > createProductModels() {
-      log.info( "Creating product models..." );
-
-      // Electronics Product Models
-      ProductModel iphoneModel = createAndSaveProductModel(
-            "iPhone",
-            "IPHONE",
-            "Apple iPhone smartphone series"
-      );
-
-      ProductModel samsungModel = createAndSaveProductModel(
-            "Galaxy",
-            "GALAXY",
-            "Samsung Galaxy smartphone series"
-      );
-
-      ProductModel macbookModel = createAndSaveProductModel(
-            "MacBook",
-            "MACBOOK",
-            "Apple MacBook laptop series"
-      );
-
-      ProductModel dellModel = createAndSaveProductModel(
-            "Dell XPS",
-            "DELL_XPS",
-            "Dell XPS laptop series"
-      );
-
-      // Clothing Product Models
-      ProductModel tshirtModel = createAndSaveProductModel(
-            "T-Shirt",
-            "TSHIRT",
-            "Basic t-shirt design"
-      );
-
-      ProductModel jeansModel = createAndSaveProductModel(
-            "Jeans",
-            "JEANS",
-            "Denim jeans"
-      );
-
-      // Book Product Models
-      ProductModel programmingBookModel = createAndSaveProductModel(
-            "Programming Books",
-            "PROG_BOOK",
-            "Technical programming books"
-      );
-
-      // Create some model variants (parent-child relationships)
-      ProductModel iphone15Model = createAndSaveProductModel(
-            "iPhone 15",
-            "IPHONE15",
-            "iPhone 15 series",
-            iphoneModel
-      );
-
-      ProductModel iphone14Model = createAndSaveProductModel(
-            "iPhone 14",
-            "IPHONE14",
-            "iPhone 14 series",
-            iphoneModel
-      );
-
-      return List.of( iphoneModel, samsungModel, macbookModel, dellModel, tshirtModel,
-            jeansModel, programmingBookModel, iphone15Model, iphone14Model );
+      return new ArrayList<>();
+//      log.info( "Creating product models..." );
+//
+//      // Electronics Product Models
+//      ProductModel iphoneModel = createAndSaveProductModel(
+//            "iPhone",
+//            "IPHONE",
+//            "Apple iPhone smartphone series"
+//      );
+//
+//      ProductModel samsungModel = createAndSaveProductModel(
+//            "Galaxy",
+//            "GALAXY",
+//            "Samsung Galaxy smartphone series"
+//      );
+//
+//      ProductModel macbookModel = createAndSaveProductModel(
+//            "MacBook",
+//            "MACBOOK",
+//            "Apple MacBook laptop series"
+//      );
+//
+//      ProductModel dellModel = createAndSaveProductModel(
+//            "Dell XPS",
+//            "DELL_XPS",
+//            "Dell XPS laptop series"
+//      );
+//
+//      // Clothing Product Models
+//      ProductModel tshirtModel = createAndSaveProductModel(
+//            "T-Shirt",
+//            "TSHIRT",
+//            "Basic t-shirt design"
+//      );
+//
+//      ProductModel jeansModel = createAndSaveProductModel(
+//            "Jeans",
+//            "JEANS",
+//            "Denim jeans"
+//      );
+//
+//      // Book Product Models
+//      ProductModel programmingBookModel = createAndSaveProductModel(
+//            "Programming Books",
+//            "PROG_BOOK",
+//            "Technical programming books"
+//      );
+//
+//      // Create some model variants (parent-child relationships)
+//      ProductModel iphone15Model = createAndSaveProductModel(
+//            "iPhone 15",
+//            "IPHONE15",
+//            "iPhone 15 series",
+//            iphoneModel
+//      );
+//
+//      ProductModel iphone14Model = createAndSaveProductModel(
+//            "iPhone 14",
+//            "IPHONE14",
+//            "iPhone 14 series",
+//            iphoneModel
+//      );
+//
+//      return List.of( iphoneModel, samsungModel, macbookModel, dellModel, tshirtModel,
+//            jeansModel, programmingBookModel, iphone15Model, iphone14Model );
    }
 
    private ProductModel createAndSaveProductModel( String name, String reference, String description ) {
@@ -163,29 +164,33 @@ public class DataInitializer {
 
    private ProductModel createAndSaveProductModel( String name, String reference, String description, ProductModel parent ) {
       ProductModel model = new ProductModel();
-      model.setId( null );
-      model.setName( name );
-      model.setReference( reference );
-      model.setDescription( description );
-      model.setParentModel( parent );
-      return productModelRepository.save( model );
+//      model.setId( null );
+//      model.setName( name );
+//      model.setReference( reference );
+//      model.setDescription( description );
+//      model.setParentModel( parent );
+//      return productModelRepository.save( model );
+      return null;
    }
 
    private void createProducts( List< ProductModel > productModels ) {
       log.info( "Creating products..." );
 
       // Find specific models
-      ProductModel iphoneModel = productModels.stream()
-            .filter( pm -> "IPHONE15".equals( pm.getReference() ) )
-            .findFirst().orElse( productModels.get( 0 ) );
+      ProductModel iphoneModel = null;
+//            productModels.stream()
+//            .filter( pm -> "IPHONE15".equals( pm.getReference() ) )
+//            .findFirst().orElse( productModels.get( 0 ) );
 
-      ProductModel samsungModel = productModels.stream()
-            .filter( pm -> "GALAXY".equals( pm.getReference() ) )
-            .findFirst().orElse( productModels.get( 1 ) );
+      ProductModel samsungModel = null;
+//            productModels.stream()
+//            .filter( pm -> "GALAXY".equals( pm.getReference() ) )
+//            .findFirst().orElse( productModels.get( 1 ) );
 
-      ProductModel macbookModel = productModels.stream()
-            .filter( pm -> "MACBOOK".equals( pm.getReference() ) )
-            .findFirst().orElse( productModels.get( 2 ) );
+      ProductModel macbookModel = null;
+//            productModels.stream()
+//            .filter( pm -> "MACBOOK".equals( pm.getReference() ) )
+//            .findFirst().orElse( productModels.get( 2 ) );
 
       // iPhone Products
       createAndSaveProduct(
@@ -252,7 +257,7 @@ public class DataInitializer {
 
       // Clothing Products
       ProductModel tshirtModel = productModels.stream()
-            .filter( pm -> "TSHIRT".equals( pm.getReference() ) )
+//            .filter( pm -> "TSHIRT".equals( pm.getReference() ) )
             .findFirst().orElse( null );
 
       if ( tshirtModel != null ) {
@@ -283,7 +288,7 @@ public class DataInitializer {
 
       // Book Products
       ProductModel programmingModel = productModels.stream()
-            .filter( pm -> "PROG_BOOK".equals( pm.getReference() ) )
+//            .filter( pm -> "PROG_BOOK".equals( pm.getReference() ) )
             .findFirst().orElse( null );
 
       if ( programmingModel != null ) {
@@ -327,7 +332,7 @@ public class DataInitializer {
       product.setStock( stock );
       product.setBought( bought );
       product.setCart( cart );
-      product.setProductModel( productModel );
+//      product.setProductModel( productModel );
 
       productRepository.save( product );
    }

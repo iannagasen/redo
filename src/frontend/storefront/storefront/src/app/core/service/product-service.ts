@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OauthService } from '../../login/oauth-service';
+import { OauthService } from '../../pages/login/oauth-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 
@@ -16,12 +16,17 @@ export class ProductService {
   ) {
   }
 
-  getAllProducts(): Observable<any> {
+  getAllProducts(): Observable<ProductDetails[]> {
     const headers = this.createAuthHeaders();
     return this.httpClient.get<any>( `${ this.BASE_URL }/products`, { headers } )
       .pipe(
         map( response => response.content ),
       );
+  }
+
+  createProduct( product: ProductCreationDetails ): Observable<void> {
+    const headers = this.createAuthHeaders();
+    return this.httpClient.post<void>( `${ this.BASE_URL }/products`, product, { headers } );
   }
 
   private createAuthHeaders(): HttpHeaders {

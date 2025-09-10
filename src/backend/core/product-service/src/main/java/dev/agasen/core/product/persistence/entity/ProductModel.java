@@ -1,18 +1,17 @@
 package dev.agasen.core.product.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
-@Entity
-@Table( name = "product_models" )
+//@Getter
+//@Setter
+//@NoArgsConstructor
+//@AllArgsConstructor
+//@ToString
+//@Entity
+//@Table( name = "product_models" )
 public class ProductModel {
 
    @Id

@@ -27,7 +27,7 @@ public class ProductController {
    @GetMapping
    public Page< ProductDetails > getProducts(
          @RequestParam( defaultValue = "0", name = "page" ) @Min( 0 ) int page,
-         @RequestParam( defaultValue = "1", name = "size" ) @Min( 1 ) @Max( 100 ) int size
+         @RequestParam( defaultValue = "20", name = "size" ) @Min( 1 ) @Max( 100 ) int size
    ) {
       log.info( "User is {}", SecurityContextHolder.getContext().getAuthentication() );
       return productService.getProducts( page, size );

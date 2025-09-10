@@ -2,20 +2,12 @@ import { Component, OnInit, signal } from '@angular/core';
 import { OauthService } from '../login/oauth-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ProductService } from '../core/service/product-service';
-
-interface Product {
-  id: number;
-  name: string;
-  description?: string;
-  price?: number;
-  category?: string;
-  // Add other product properties as needed
-}
+import { ProductService } from '../../core/service/product-service';
+import { ProductCreatorForm } from '../../components/product/product-creator-form/product-creator-form';
 
 @Component( {
   selector: 'app-dashboard',
-  imports: [ CommonModule ],
+  imports: [ CommonModule, ProductCreatorForm ],
   template: `
     <div class="p-5 max-w-7xl mx-auto">
       <h1 class="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
@@ -91,13 +83,14 @@ interface Product {
           </div>
         }
       </div>
+      <app-product-creator-form></app-product-creator-form>
     </div>
   `,
   styles: ``
 } )
 export class Dashboard implements OnInit {
-  // Convert to signals
-  products = signal<Product[]>( [] );
+
+  products = signal<ProductDetails[]>( [] );
   loading = signal( false );
   error = signal<string | null>( null );
 
@@ -123,25 +116,25 @@ export class Dashboard implements OnInit {
     this.loading.set( true );
     this.error.set( null );
 
-
     this.productService.getAllProducts()
       .subscribe( {
         next: ( response ) => {
-          console.log( 'API response:', response );
           this.products.set( response );  // <-- set the product array
           this.loading.set( false );
         },
         error: ( error ) => {
-          console.error( 'Error loading products:', error );
           this.error.set( 'Failed to load products. Please try again.' );
           this.loading.set( false );
-
           if ( error.status === 401 ) {
             this.auth.logout();
             this.router.navigate( [ '/login' ] );
           }
         }
       } );
+  }
+
+  createProduct() {
+
   }
 
   logout() {
