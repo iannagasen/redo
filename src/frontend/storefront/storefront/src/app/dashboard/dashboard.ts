@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { OauthService } from '../login/oauth-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { ProductService } from '../core/service/product-service';
 
 interface Product {
   id: number;
@@ -104,8 +104,7 @@ export class Dashboard implements OnInit {
   constructor(
     private auth: OauthService,
     private router: Router,
-    private http: HttpClient
-    // Remove ChangeDetectorRef - not needed with signals
+    private productService: ProductService,
   ) {
   }
 
@@ -124,33 +123,18 @@ export class Dashboard implements OnInit {
     this.loading.set( true );
     this.error.set( null );
 
-    // Get the access token for authenticated requests
-    const token = this.auth.getAccessToken();
-    const headers = {
-      'Authorization': `Bearer ${ token }`,
-      'Content-Type': 'application/json'
-    };
 
-    // Adjust the API endpoint URL as needed
-    this.http.get<any>( 'http://localhost:8081/api/v1/products', { headers } )
+    this.productService.getAllProducts()
       .subscribe( {
         next: ( response ) => {
           console.log( 'API response:', response );
-          this.products.set( response.content );  // <-- set the product array
+          this.products.set( response );  // <-- set the product array
           this.loading.set( false );
-
-          console.log( 'Loading:', this.loading() );
-          console.log( 'Error:', this.error() );
-          console.log( 'Products length:', this.products().length );
-
-          // No need for manual change detection with signals
         },
         error: ( error ) => {
           console.error( 'Error loading products:', error );
           this.error.set( 'Failed to load products. Please try again.' );
           this.loading.set( false );
-
-          // No need for manual change detection with signals
 
           if ( error.status === 401 ) {
             this.auth.logout();
