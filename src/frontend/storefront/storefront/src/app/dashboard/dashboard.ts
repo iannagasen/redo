@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { OauthService } from '../login/oauth-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -32,7 +32,7 @@ interface Product {
       <div class="mt-5">
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Products</h2>
 
-        @if (loading) {
+        @if (loading()) {
           <div class="text-center py-10 text-gray-600">
             <div
               class="animate-spin inline-block w-6 h-6 border-2 border-current border-t-transparent text-blue-600 rounded-full mb-2">
@@ -41,9 +41,9 @@ interface Product {
           </div>
         }
 
-        @if (error) {
+        @if (error()) {
           <div class="text-center py-10 text-red-600">
-            <p class="mb-4">Error loading products: {{ error }}</p>
+            <p class="mb-4">Error loading products: {{ error() }}</p>
             <button
               (click)="loadProducts()"
               class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
@@ -52,7 +52,7 @@ interface Product {
           </div>
         }
 
-        @if (!loading && !error && products.length === 0) {
+        @if (!loading() && !error() && products().length === 0) {
           <div class="text-center py-10 text-gray-600">
             <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -62,9 +62,9 @@ interface Product {
           </div>
         }
 
-        @if (!loading && !error && products.length > 0) {
+        @if (!loading() && !error() && products().length > 0) {
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-5">
-            @for (product of products; track product.id) {
+            @for (product of products(); track product.id) {
               <div
                 class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ product.name }}</h3>
@@ -96,15 +96,16 @@ interface Product {
   styles: ``
 } )
 export class Dashboard implements OnInit {
-  products: Product[] = [];
-  loading = false;
-  error: string | null = null;
+  // Convert to signals
+  products = signal<Product[]>( [] );
+  loading = signal( false );
+  error = signal<string | null>( null );
 
   constructor(
     private auth: OauthService,
     private router: Router,
-    private http: HttpClient,
-    private cd: ChangeDetectorRef,
+    private http: HttpClient
+    // Remove ChangeDetectorRef - not needed with signals
   ) {
   }
 
@@ -120,8 +121,8 @@ export class Dashboard implements OnInit {
   }
 
   loadProducts() {
-    this.loading = true;
-    this.error = null;
+    this.loading.set( true );
+    this.error.set( null );
 
     // Get the access token for authenticated requests
     const token = this.auth.getAccessToken();
@@ -135,21 +136,21 @@ export class Dashboard implements OnInit {
       .subscribe( {
         next: ( response ) => {
           console.log( 'API response:', response );
-          this.products = response.content;  // <-- get the product array
-          this.loading = false;
+          this.products.set( response.content );  // <-- set the product array
+          this.loading.set( false );
 
-          console.log( this.loading );
-          console.log( this.error );
-          console.log( this.products.length );
+          console.log( 'Loading:', this.loading() );
+          console.log( 'Error:', this.error() );
+          console.log( 'Products length:', this.products().length );
 
-          this.cd.detectChanges(); // 👈 force UI refresh
+          // No need for manual change detection with signals
         },
         error: ( error ) => {
           console.error( 'Error loading products:', error );
-          this.error = 'Failed to load products. Please try again.';
-          this.loading = false;
+          this.error.set( 'Failed to load products. Please try again.' );
+          this.loading.set( false );
 
-          this.cd.detectChanges(); // 👈 force UI refresh
+          // No need for manual change detection with signals
 
           if ( error.status === 401 ) {
             this.auth.logout();
@@ -163,5 +164,4 @@ export class Dashboard implements OnInit {
     this.auth.logout();
     this.router.navigate( [ '/login' ] );
   }
-
 }
