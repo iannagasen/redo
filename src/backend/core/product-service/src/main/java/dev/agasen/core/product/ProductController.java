@@ -2,9 +2,11 @@ package dev.agasen.core.product;
 
 import dev.agasen.api.product.product.ProductCreationDetails;
 import dev.agasen.api.product.product.ProductDetails;
+import dev.agasen.core.product.commands.CreateProductService;
 import dev.agasen.core.product.domain.ProductService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,13 +18,11 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 //@SecurityRequirement( name = "oauth2" )
 @Slf4j
+@RequiredArgsConstructor
 public class ProductController {
 
    private final ProductService productService;
-
-   public ProductController( ProductService productService ) {
-      this.productService = productService;
-   }
+   private final CreateProductService createProductService;
 
    @GetMapping
    public Page< ProductDetails > getProducts(
@@ -49,7 +49,7 @@ public class ProductController {
 
    @PostMapping
    public ProductDetails addProduct( @RequestBody ProductCreationDetails productCreationDetails ) {
-      return productService.createProduct( productCreationDetails );
+      return createProductService.create( productCreationDetails );
    }
 
     /*

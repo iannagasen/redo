@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { OauthService } from './oauth-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
+import { ProductCreationDetails } from '../model/product-creation-details';
 
 @Injectable( {
   providedIn: 'root'

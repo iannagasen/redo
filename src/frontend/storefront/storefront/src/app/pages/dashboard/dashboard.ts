@@ -3,7 +3,7 @@ import { OauthService } from '../../core/service/oauth-service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../core/service/product-service';
-import { ProductCreatorForm } from '../../components/product/product-creator-form/product-creator-form';
+import { ProductCreatorForm } from '../../components/product/product-creator-form';
 
 @Component( {
   selector: 'app-dashboard',
@@ -83,7 +83,10 @@ import { ProductCreatorForm } from '../../components/product/product-creator-for
           </div>
         }
       </div>
-      <app-product-creator-form></app-product-creator-form>
+
+      <div class="mt-3">
+        <app-product-creator-form></app-product-creator-form>
+      </div>
     </div>
   `,
   styles: ``
