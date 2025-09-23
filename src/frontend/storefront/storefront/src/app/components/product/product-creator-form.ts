@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { ProductService } from '../../core/service/product-service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -31,7 +31,24 @@ import { FormInput } from '../shared/form/form-input';
         <input type="text" formControlName="slug" class="bg-green-300">
 
         <label class="block mt-2">Brand:</label>
-        <input type="text" formControlName="brand" class="bg-green-300">
+        <input
+          type="text"
+          formControlName="brand"
+          (focus)="loadSuggestions()"
+          (input)="filterSuggestions($event)"
+          class="bg-green-300"
+        >
+
+        @if (filteredSuggestions().length > 0) {
+          <ul class="bg-white border mt-1">
+            @for (suggestion of filteredSuggestions(); track suggestion) {
+              <li (click)="selectSuggestion(suggestion)"
+                  class="cursor-pointer hover:bg-gray-200 px-2 py-1">
+                {{ suggestion }}
+              </li>
+            }
+          </ul>
+        }
 
         <label class="block mt-2">Price:</label>
         <input type="number" min="0" formControlName="price" class="bg-green-300">
@@ -54,6 +71,15 @@ export class ProductCreatorForm {
 
   isCreating = signal( false );
 
+  private allSuggestions = signal<string[]>( [] );
+  private query = signal<string>( '' );
+
+  filteredSuggestions = computed( () =>
+    this.allSuggestions().filter( b =>
+      b.toLowerCase().includes( this.query().toLowerCase() )
+    )
+  )
+
   productForm: FormGroup;
 
   constructor(
@@ -61,6 +87,22 @@ export class ProductCreatorForm {
     private fb: FormBuilder,
   ) {
     this.productForm = this.createProductForm()
+  }
+
+  loadSuggestions() {
+    this.productService.getAllBrands()
+      .subscribe( brands => this.allSuggestions.set( brands ) );
+  }
+
+  filterSuggestions( event: Event ) {
+    const input = event.target as HTMLInputElement;
+    this.query.set( input.value );
+  }
+
+  selectSuggestion( suggestion: string ) {
+    this.productForm.get( 'brand' )?.setValue( suggestion );
+    this.query.set( suggestion );
+    this.allSuggestions.set( [] );
   }
 
   private createProductForm(): FormGroup {

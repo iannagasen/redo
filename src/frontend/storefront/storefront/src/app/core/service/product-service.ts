@@ -30,6 +30,11 @@ export class ProductService {
     return this.httpClient.post<void>( `${ this.BASE_URL }/products`, product, { headers } );
   }
 
+  getAllBrands(): Observable<string[]> {
+    const headers = this.createAuthHeaders();
+    return this.httpClient.get<any>( `${ this.BASE_URL }/products/brands`, { headers } );
+  }
+
   private createAuthHeaders(): HttpHeaders {
     const token = this.oauthService.getAccessToken();
     return new HttpHeaders( {

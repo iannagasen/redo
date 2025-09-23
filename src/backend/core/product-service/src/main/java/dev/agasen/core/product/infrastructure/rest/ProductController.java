@@ -2,6 +2,7 @@ package dev.agasen.core.product.infrastructure.rest;
 
 import dev.agasen.api.product.product.ProductCreationDetails;
 import dev.agasen.api.product.product.ProductDetails;
+import dev.agasen.core.product.application.read.BrandRetrievalService;
 import dev.agasen.core.product.application.read.ProductRetrievalService;
 import dev.agasen.core.product.application.write.ProductCreationService;
 import jakarta.validation.constraints.Max;
@@ -13,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping( "/api/v1/products" )
 @Validated
@@ -23,6 +26,7 @@ public class ProductController {
 
    private final ProductCreationService productCreationService;
    private final ProductRetrievalService productRetrievalService;
+   private final BrandRetrievalService brandRetrievalService;
 
    @GetMapping
    public Page< ProductDetails > getProducts(
@@ -32,6 +36,12 @@ public class ProductController {
       log.info( "User is {}", SecurityContextHolder.getContext().getAuthentication() );
       return productRetrievalService.getAllProducts( page, size );
    }
+
+   @GetMapping( "/brands" )
+   public List< String > getBrands() {
+      return brandRetrievalService.getAllBrands();
+   }
+
 
 //   @GetMapping( "/{id}" )
 //   public ProductDetails getProduct( @PathVariable Long id ) {

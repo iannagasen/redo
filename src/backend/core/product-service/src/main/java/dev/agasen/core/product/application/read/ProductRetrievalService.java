@@ -19,6 +19,7 @@ public class ProductRetrievalService {
 
    private final ProductRepository productRepository;
    private final ProductMapper productMapper;
+   // include caching
 
    @PreAuthorize( "hasAnyAuthority('SCOPE_read', 'SCOPE_openid')" )
    public List< ProductDetails > getAllProducts() {
