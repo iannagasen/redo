@@ -1,4 +1,4 @@
-package dev.agasen.core.product.config;
+package dev.agasen.core.product.infrastructure.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,25 +22,25 @@ public class SecurityConfig {
    @Bean
    public SecurityFilterChain securityFilterChain( HttpSecurity http ) throws Exception {
       http
-            .cors( cors -> cors.configurationSource( corsConfigurationSource() ) )
-            .csrf( AbstractHttpConfigurer::disable )
-            .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
-            .authorizeHttpRequests( authorize -> authorize
-                  .requestMatchers( "/actuator/**" ).permitAll()
-                  .requestMatchers(
-                        "/swagger-ui/**",
-                        "/swagger-ui.html",
-                        "/api-docs/**",
-                        "/v3/api-docs/**",
-                        "/webjars/**"
-                  ).permitAll()
-                  .anyRequest().authenticated()
+         .cors( cors -> cors.configurationSource( corsConfigurationSource() ) )
+         .csrf( AbstractHttpConfigurer::disable )
+         .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
+         .authorizeHttpRequests( authorize -> authorize
+            .requestMatchers( "/actuator/**" ).permitAll()
+            .requestMatchers(
+               "/swagger-ui/**",
+               "/swagger-ui.html",
+               "/api-docs/**",
+               "/v3/api-docs/**",
+               "/webjars/**"
+            ).permitAll()
+            .anyRequest().authenticated()
+         )
+         .oauth2ResourceServer( oauth2 -> oauth2
+            .jwt( jwt -> jwt
+               .jwkSetUri( "http://localhost:8080/oauth2/jwks" )
             )
-            .oauth2ResourceServer( oauth2 -> oauth2
-                  .jwt( jwt -> jwt
-                        .jwkSetUri( "http://localhost:8080/oauth2/jwks" )
-                  )
-            );
+         );
       return http.build();
    }
 

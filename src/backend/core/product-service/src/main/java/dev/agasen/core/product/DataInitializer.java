@@ -1,10 +1,10 @@
 package dev.agasen.core.product;
 
-import dev.agasen.core.product.persistence.CategoryRepository;
-import dev.agasen.core.product.persistence.ProductRepository;
-import dev.agasen.core.product.persistence.entity.Category;
-import dev.agasen.core.product.persistence.entity.Product;
-import dev.agasen.core.product.persistence.entity.ProductModel;
+import dev.agasen.core.product.domain.category.Category;
+import dev.agasen.core.product.domain.category.CategoryRepository;
+import dev.agasen.core.product.domain.persistence.entity.ProductModel;
+import dev.agasen.core.product.domain.product.Product;
+import dev.agasen.core.product.domain.product.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
@@ -79,7 +79,7 @@ public class DataInitializer {
       Category technical = createAndSaveCategory( "Technical", "Technical and programming books", books );
 
       return List.of( electronics, clothing, books, sports, smartphones, laptops, tablets,
-            accessories, menClothing, womenClothing, shoes, fiction, nonFiction, technical );
+         accessories, menClothing, womenClothing, shoes, fiction, nonFiction, technical );
    }
 
    private Category createAndSaveCategory( String name, String description, Category parent ) {
@@ -194,126 +194,126 @@ public class DataInitializer {
 
       // iPhone Products
       createAndSaveProduct(
-            "iPhone 15 Pro 128GB Space Black",
-            "Latest iPhone with Pro features, 128GB storage in Space Black",
-            "IPHONE15-PRO-128-BLACK",
-            "iphone-15-pro-128gb-space-black",
-            "Apple",
-            new BigDecimal( "999.99" ),
-            "USD",
-            50, 0, 0,
-            iphoneModel
+         "iPhone 15 Pro 128GB Space Black",
+         "Latest iPhone with Pro features, 128GB storage in Space Black",
+         "IPHONE15-PRO-128-BLACK",
+         "iphone-15-pro-128gb-space-black",
+         "Apple",
+         new BigDecimal( "999.99" ),
+         "USD",
+         50, 0, 0,
+         iphoneModel
       );
 
       createAndSaveProduct(
-            "iPhone 15 Pro 256GB Natural Titanium",
-            "Latest iPhone with Pro features, 256GB storage in Natural Titanium",
-            "IPHONE15-PRO-256-TITANIUM",
-            "iphone-15-pro-256gb-natural-titanium",
-            "Apple",
-            new BigDecimal( "1099.99" ),
-            "USD",
-            30, 0, 0,
-            iphoneModel
+         "iPhone 15 Pro 256GB Natural Titanium",
+         "Latest iPhone with Pro features, 256GB storage in Natural Titanium",
+         "IPHONE15-PRO-256-TITANIUM",
+         "iphone-15-pro-256gb-natural-titanium",
+         "Apple",
+         new BigDecimal( "1099.99" ),
+         "USD",
+         30, 0, 0,
+         iphoneModel
       );
 
       // Samsung Products
       createAndSaveProduct(
-            "Samsung Galaxy S24 Ultra 256GB Black",
-            "Premium Samsung smartphone with S Pen, 256GB storage",
-            "GALAXY-S24-ULTRA-256-BLACK",
-            "samsung-galaxy-s24-ultra-256gb-black",
-            "Samsung",
-            new BigDecimal( "1199.99" ),
-            "USD",
-            25, 0, 0,
-            samsungModel
+         "Samsung Galaxy S24 Ultra 256GB Black",
+         "Premium Samsung smartphone with S Pen, 256GB storage",
+         "GALAXY-S24-ULTRA-256-BLACK",
+         "samsung-galaxy-s24-ultra-256gb-black",
+         "Samsung",
+         new BigDecimal( "1199.99" ),
+         "USD",
+         25, 0, 0,
+         samsungModel
       );
 
       // MacBook Products
       createAndSaveProduct(
-            "MacBook Pro 14-inch M3 512GB Space Gray",
-            "14-inch MacBook Pro with M3 chip, 512GB SSD, Space Gray",
-            "MBP14-M3-512-GRAY",
-            "macbook-pro-14-m3-512gb-space-gray",
-            "Apple",
-            new BigDecimal( "1999.99" ),
-            "USD",
-            15, 0, 0,
-            macbookModel
+         "MacBook Pro 14-inch M3 512GB Space Gray",
+         "14-inch MacBook Pro with M3 chip, 512GB SSD, Space Gray",
+         "MBP14-M3-512-GRAY",
+         "macbook-pro-14-m3-512gb-space-gray",
+         "Apple",
+         new BigDecimal( "1999.99" ),
+         "USD",
+         15, 0, 0,
+         macbookModel
       );
 
       createAndSaveProduct(
-            "MacBook Air 13-inch M2 256GB Midnight",
-            "13-inch MacBook Air with M2 chip, 256GB SSD, Midnight",
-            "MBA13-M2-256-MIDNIGHT",
-            "macbook-air-13-m2-256gb-midnight",
-            "Apple",
-            new BigDecimal( "1099.99" ),
-            "USD",
-            40, 0, 0,
-            macbookModel
+         "MacBook Air 13-inch M2 256GB Midnight",
+         "13-inch MacBook Air with M2 chip, 256GB SSD, Midnight",
+         "MBA13-M2-256-MIDNIGHT",
+         "macbook-air-13-m2-256gb-midnight",
+         "Apple",
+         new BigDecimal( "1099.99" ),
+         "USD",
+         40, 0, 0,
+         macbookModel
       );
 
       // Clothing Products
       ProductModel tshirtModel = productModels.stream()
 //            .filter( pm -> "TSHIRT".equals( pm.getReference() ) )
-            .findFirst().orElse( null );
+         .findFirst().orElse( null );
 
       if ( tshirtModel != null ) {
          createAndSaveProduct(
-               "Classic Cotton T-Shirt White - Medium",
-               "100% cotton classic fit t-shirt in white, size medium",
-               "TSHIRT-WHITE-M",
-               "classic-cotton-tshirt-white-medium",
-               "Generic",
-               new BigDecimal( "19.99" ),
-               "USD",
-               100, 0, 0,
-               tshirtModel
+            "Classic Cotton T-Shirt White - Medium",
+            "100% cotton classic fit t-shirt in white, size medium",
+            "TSHIRT-WHITE-M",
+            "classic-cotton-tshirt-white-medium",
+            "Generic",
+            new BigDecimal( "19.99" ),
+            "USD",
+            100, 0, 0,
+            tshirtModel
          );
 
          createAndSaveProduct(
-               "Classic Cotton T-Shirt Black - Large",
-               "100% cotton classic fit t-shirt in black, size large",
-               "TSHIRT-BLACK-L",
-               "classic-cotton-tshirt-black-large",
-               "Generic",
-               new BigDecimal( "19.99" ),
-               "USD",
-               80, 0, 0,
-               tshirtModel
+            "Classic Cotton T-Shirt Black - Large",
+            "100% cotton classic fit t-shirt in black, size large",
+            "TSHIRT-BLACK-L",
+            "classic-cotton-tshirt-black-large",
+            "Generic",
+            new BigDecimal( "19.99" ),
+            "USD",
+            80, 0, 0,
+            tshirtModel
          );
       }
 
       // Book Products
       ProductModel programmingModel = productModels.stream()
 //            .filter( pm -> "PROG_BOOK".equals( pm.getReference() ) )
-            .findFirst().orElse( null );
+         .findFirst().orElse( null );
 
       if ( programmingModel != null ) {
          createAndSaveProduct(
-               "Clean Code: A Handbook of Agile Software Craftsmanship",
-               "Essential book for software developers on writing clean, maintainable code",
-               "BOOK-CLEAN-CODE",
-               "clean-code-handbook-agile-software-craftsmanship",
-               "Prentice Hall",
-               new BigDecimal( "42.99" ),
-               "USD",
-               75, 0, 0,
-               programmingModel
+            "Clean Code: A Handbook of Agile Software Craftsmanship",
+            "Essential book for software developers on writing clean, maintainable code",
+            "BOOK-CLEAN-CODE",
+            "clean-code-handbook-agile-software-craftsmanship",
+            "Prentice Hall",
+            new BigDecimal( "42.99" ),
+            "USD",
+            75, 0, 0,
+            programmingModel
          );
 
          createAndSaveProduct(
-               "Design Patterns: Elements of Reusable Object-Oriented Software",
-               "Classic book on software design patterns by the Gang of Four",
-               "BOOK-DESIGN-PATTERNS",
-               "design-patterns-elements-reusable-oop-software",
-               "Addison-Wesley",
-               new BigDecimal( "54.99" ),
-               "USD",
-               45, 0, 0,
-               programmingModel
+            "Design Patterns: Elements of Reusable Object-Oriented Software",
+            "Classic book on software design patterns by the Gang of Four",
+            "BOOK-DESIGN-PATTERNS",
+            "design-patterns-elements-reusable-oop-software",
+            "Addison-Wesley",
+            new BigDecimal( "54.99" ),
+            "USD",
+            45, 0, 0,
+            programmingModel
          );
       }
    }

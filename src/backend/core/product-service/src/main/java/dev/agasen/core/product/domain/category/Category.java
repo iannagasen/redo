@@ -1,4 +1,4 @@
-package dev.agasen.core.product.persistence.entity;
+package dev.agasen.core.product.domain.category;
 
 import dev.agasen.common.persistence.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -25,6 +25,5 @@ public class Category extends BaseEntity {
 
    @OneToMany( mappedBy = "parent", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true )
    private List< Category > categories;
-
 
 }

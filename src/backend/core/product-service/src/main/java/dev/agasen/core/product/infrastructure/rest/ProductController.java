@@ -1,9 +1,9 @@
-package dev.agasen.core.product;
+package dev.agasen.core.product.infrastructure.rest;
 
 import dev.agasen.api.product.product.ProductCreationDetails;
 import dev.agasen.api.product.product.ProductDetails;
-import dev.agasen.core.product.commands.CreateProductService;
-import dev.agasen.core.product.domain.ProductService;
+import dev.agasen.core.product.application.read.ProductRetrievalService;
+import dev.agasen.core.product.application.write.ProductCreationService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -21,35 +21,35 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProductController {
 
-   private final ProductService productService;
-   private final CreateProductService createProductService;
+   private final ProductCreationService productCreationService;
+   private final ProductRetrievalService productRetrievalService;
 
    @GetMapping
    public Page< ProductDetails > getProducts(
-         @RequestParam( defaultValue = "0", name = "page" ) @Min( 0 ) int page,
-         @RequestParam( defaultValue = "20", name = "size" ) @Min( 1 ) @Max( 100 ) int size
+      @RequestParam( defaultValue = "0", name = "page" ) @Min( 0 ) int page,
+      @RequestParam( defaultValue = "20", name = "size" ) @Min( 1 ) @Max( 100 ) int size
    ) {
       log.info( "User is {}", SecurityContextHolder.getContext().getAuthentication() );
-      return productService.getProducts( page, size );
+      return productRetrievalService.getAllProducts( page, size );
    }
 
-   @GetMapping( "/{id}" )
-   public ProductDetails getProduct( @PathVariable Long id ) {
-      return productService.getProduct( id );
-   }
-
-   @GetMapping( "/category/{category}" )
-   public Page< ProductDetails > getProductsByCategory(
-         @PathVariable String category,
-         @RequestParam( defaultValue = "0" ) @Min( 0 ) int page,
-         @RequestParam( defaultValue = "1" ) @Min( 1 ) @Max( 100 ) int size
-   ) {
-      return productService.getProductsByCategory( category, page, size );
-   }
+//   @GetMapping( "/{id}" )
+//   public ProductDetails getProduct( @PathVariable Long id ) {
+//      return productService.getProduct( id );
+//   }
+//
+//   @GetMapping( "/category/{category}" )
+//   public Page< ProductDetails > getProductsByCategory(
+//      @PathVariable String category,
+//      @RequestParam( defaultValue = "0" ) @Min( 0 ) int page,
+//      @RequestParam( defaultValue = "1" ) @Min( 1 ) @Max( 100 ) int size
+//   ) {
+//      return productService.getProductsByCategory( category, page, size );
+//   }
 
    @PostMapping
    public ProductDetails addProduct( @RequestBody ProductCreationDetails productCreationDetails ) {
-      return createProductService.create( productCreationDetails );
+      return productCreationService.create( productCreationDetails );
    }
 
     /*

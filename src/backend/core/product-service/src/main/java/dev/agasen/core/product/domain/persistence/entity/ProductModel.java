@@ -1,5 +1,6 @@
-package dev.agasen.core.product.persistence.entity;
+package dev.agasen.core.product.domain.persistence.entity;
 
+import dev.agasen.core.product.domain.product.Product;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package dev.agasen.core.product.config;
+package dev.agasen.core.product.application.mapper;
 
 import org.mapstruct.MapperConfig;
 import org.mapstruct.ReportingPolicy;

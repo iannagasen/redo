@@ -1,6 +1,5 @@
-package dev.agasen.core.product.persistence;
+package dev.agasen.core.product.domain.category;
 
-import dev.agasen.core.product.persistence.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository< Category, Long > {

@@ -1,4 +1,4 @@
-package dev.agasen.core.product.config;
+package dev.agasen.core.product.domain;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;

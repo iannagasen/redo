@@ -1,6 +1,5 @@
-package dev.agasen.core.product.persistence;
+package dev.agasen.core.product.domain.product;
 
-import dev.agasen.core.product.persistence.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository< Product, Long > {

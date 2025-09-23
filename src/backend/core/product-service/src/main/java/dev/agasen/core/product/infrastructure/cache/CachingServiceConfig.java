@@ -1,4 +1,4 @@
-package dev.agasen.core.product.config;
+package dev.agasen.core.product.infrastructure.cache;
 
 import dev.agasen.api.product.product.ProductDetails;
 import dev.agasen.common.cache.CachingService;
@@ -24,9 +24,9 @@ public class CachingServiceConfig {
    @Bean
    public CachingService< String, ProductDetails > configureProductCachingService( CachingTemplate< String, ProductDetails > template ) {
       return new CachingService<>(
-            template,
-            Duration.ofMinutes( 10 ),
-            key -> "product:" + key
+         template,
+         Duration.ofMinutes( 10 ),
+         key -> "product:" + key
       );
    }
 

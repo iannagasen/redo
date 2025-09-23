@@ -1,16 +1,16 @@
-package dev.agasen.core.product.mapper;
+package dev.agasen.core.product.application.mapper;
 
 import dev.agasen.api.product.product.ProductCreationDetails;
 import dev.agasen.api.product.product.ProductDetails;
-import dev.agasen.core.product.persistence.entity.Product;
+import dev.agasen.core.product.domain.product.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(
-      componentModel = "spring",
-      unmappedTargetPolicy = ReportingPolicy.ERROR
+   componentModel = "spring",
+   unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 public interface ProductMapper {
 
