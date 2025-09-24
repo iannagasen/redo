@@ -30,9 +30,9 @@ export class ProductService {
     return this.httpClient.post<void>( `${ this.BASE_URL }/products`, product, { headers } );
   }
 
-  getAllBrands(): Observable<string[]> {
+  queryBrands( query: string ): Observable<string[]> {
     const headers = this.createAuthHeaders();
-    return this.httpClient.get<any>( `${ this.BASE_URL }/products/brands`, { headers } );
+    return this.httpClient.get<any>( `${ this.BASE_URL }/products/brands?q=${ query }&p=0&s=5`, { headers } )
   }
 
   private createAuthHeaders(): HttpHeaders {

@@ -38,8 +38,12 @@ public class ProductController {
    }
 
    @GetMapping( "/brands" )
-   public List< String > getBrands() {
-      return brandRetrievalService.getAllBrands();
+   public List< String > getBrands(
+      @RequestParam( "q" ) String query,
+      @RequestParam( defaultValue = "0", name = "p" ) @Min( 0 ) int page,
+      @RequestParam( defaultValue = "10", name = "s" ) @Min( 1 ) @Max( 100 ) int size
+   ) {
+      return brandRetrievalService.getBrands( query, page, size );
    }
 
 

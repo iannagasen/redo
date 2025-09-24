@@ -13,14 +13,6 @@ import { FormInput } from '../shared/form/form-input';
       <form [formGroup]="productForm" (ngSubmit)="submitProductCreated()">
         <app-form-input type="text" label="Product Name" formControlName="name"/>
 
-        <!--        <label class="block mt-2">Product Name:</label>-->
-        <!--        <input type="text" formControlName="name" class="bg-green-300">-->
-        <!--        @if (productForm.get("name")?.invalid && productForm.get("name")?.touched) {-->
-        <!--          <div>-->
-        <!--            <small class="text-red-400">Product Name is required</small>-->
-        <!--          </div>-->
-        <!--        }-->
-
         <label class="block mt-2">Description:</label>
         <input type="text" formControlName="description" class="bg-green-300">
 
@@ -34,7 +26,6 @@ import { FormInput } from '../shared/form/form-input';
         <input
           type="text"
           formControlName="brand"
-          (focus)="loadSuggestions()"
           (input)="filterSuggestions($event)"
           class="bg-green-300"
         >
@@ -89,14 +80,17 @@ export class ProductCreatorForm {
     this.productForm = this.createProductForm()
   }
 
-  loadSuggestions() {
-    this.productService.getAllBrands()
-      .subscribe( brands => this.allSuggestions.set( brands ) );
-  }
-
   filterSuggestions( event: Event ) {
     const input = event.target as HTMLInputElement;
-    this.query.set( input.value );
+    const value = input.value.trim();
+    this.query.set( value );
+
+    if ( value.length >= 2 ) {
+      this.productService.queryBrands( value )
+        .subscribe( b => this.allSuggestions.set( b ) );
+    } else {
+      this.allSuggestions.set( [] )
+    }
   }
 
   selectSuggestion( suggestion: string ) {
