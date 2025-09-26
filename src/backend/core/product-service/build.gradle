@@ -13,11 +13,16 @@ java {
     }
 }
 
+configurations {
+    agent
+}
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    agent "io.opentelemetry.javaagent:opentelemetry-javaagent:2.20.0"
     implementation project(':src:backend:platform:common')
     implementation project(':src:backend:platform:api')
 
@@ -66,6 +71,18 @@ dependencies {
     testImplementation "com.redis:testcontainers-redis"
 }
 
+tasks.register('copyAgent', Copy) {
+    from configurations.agent {
+        rename "opentelemetry-javaagent-.*\\.jar", "opentelemetry-javaagent.jar"
+    }
+    into layout.buildDirectory.dir("agent")
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootJar {
+    dependsOn copyAgent
+    archiveFileName = "app.jar"
 }
