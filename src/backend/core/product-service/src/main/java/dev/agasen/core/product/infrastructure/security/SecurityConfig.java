@@ -2,6 +2,7 @@ package dev.agasen.core.product.infrastructure.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,23 +21,38 @@ import java.util.Arrays;
 public class SecurityConfig {
 
    @Bean
+   @Order( 1 )
+   public SecurityFilterChain publicFilterChain( HttpSecurity http ) throws Exception {
+      http.securityMatcher(
+            "/actuator/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/api-docs/**",
+            "/v3/api-docs/**",
+            "/webjars/**",
+            "/public/**"
+         )
+         .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
+         .csrf( AbstractHttpConfigurer::disable )
+         .authorizeHttpRequests( authorize -> authorize.anyRequest().permitAll() )
+         // skip oauth resource server
+         .oauth2ResourceServer( AbstractHttpConfigurer::disable )
+         // Disable the exception handling that's causing the redirect
+         .exceptionHandling( exception -> exception.disable() )
+         .anonymous( AbstractHttpConfigurer::disable );
+
+      return http.build();
+
+   }
+
+   @Bean
+   @Order( 2 )
    public SecurityFilterChain securityFilterChain( HttpSecurity http ) throws Exception {
       http
          .cors( cors -> cors.configurationSource( corsConfigurationSource() ) )
          .csrf( AbstractHttpConfigurer::disable )
          .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
-         .authorizeHttpRequests( authorize -> authorize
-            .requestMatchers( "/actuator/**" ).permitAll()
-            .requestMatchers(
-               "/swagger-ui/**",
-               "/swagger-ui.html",
-               "/api-docs/**",
-               "/v3/api-docs/**",
-               "/webjars/**",
-               "/public/**"
-            ).permitAll()
-            .anyRequest().authenticated()
-         )
+         .authorizeHttpRequests( authorize -> authorize.anyRequest().authenticated() )
          .oauth2ResourceServer( oauth2 -> oauth2
             .jwt( jwt -> jwt
                .jwkSetUri( "http://localhost:8080/oauth2/jwks" )

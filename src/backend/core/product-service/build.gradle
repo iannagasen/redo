@@ -86,3 +86,7 @@ bootJar {
     dependsOn copyAgent
     archiveFileName = "app.jar"
 }
+
+jar {
+    enabled = false
+}
