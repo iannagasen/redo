@@ -81,4 +81,4 @@ Use minikube tunnel
 
 The easiest is port-forwarding:
 bashminikube kubectl -- port-forward pod/mypod 8080:8080
-Then access http://localhost:8080/hello - this should work!
+Then access http://localhost:8080/public/hello - this should work!

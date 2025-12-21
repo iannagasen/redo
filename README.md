@@ -1,7 +1,7 @@
-Setup
+# Running the whole app
 
-~/.testcontainers.properties
+using k8s and docker compose
 
-```properties
-testcontainers.reuse.enable=true
+```bash
+make
 ```
