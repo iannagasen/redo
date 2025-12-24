@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -51,23 +52,23 @@ public class AuthorizationServerConfig {
       OAuth2AuthorizationServerConfiguration.applyDefaultSecurity( http );
 
       http.getConfigurer( OAuth2AuthorizationServerConfigurer.class )
-            .oidc( Customizer.withDefaults() );
+         .oidc( Customizer.withDefaults() );
 
       http.cors( Customizer.withDefaults() )
-            .exceptionHandling( exceptions -> exceptions
-                  .defaultAuthenticationEntryPointFor(
-                        new LoginUrlAuthenticationEntryPoint( "/login" ),
-                        new MediaTypeRequestMatcher( MediaType.TEXT_HTML )
-                  )
-                  .defaultAuthenticationEntryPointFor(
-                        new HttpStatusEntryPoint( HttpStatus.UNAUTHORIZED ),
-                        new MediaTypeRequestMatcher( MediaType.APPLICATION_JSON )
-                  )
-            );
+         .exceptionHandling( exceptions -> exceptions
+            .defaultAuthenticationEntryPointFor(
+               new LoginUrlAuthenticationEntryPoint( "/login" ),
+               new MediaTypeRequestMatcher( MediaType.TEXT_HTML )
+            )
+            .defaultAuthenticationEntryPointFor(
+               new HttpStatusEntryPoint( HttpStatus.UNAUTHORIZED ),
+               new MediaTypeRequestMatcher( MediaType.APPLICATION_JSON )
+            )
+         );
 
       http.formLogin()
-            .loginPage( "/login" )
-            .defaultSuccessUrl( "/home", true ); // always go here after login
+         .loginPage( "/login" )
+         .defaultSuccessUrl( "/home", true ); // always go here after login
 
       return http.build();
    }
@@ -76,15 +77,15 @@ public class AuthorizationServerConfig {
    @Order( 2 )
    public SecurityFilterChain defaultSecurityFilterChain( HttpSecurity http ) throws Exception {
       http.authorizeHttpRequests( authorize -> authorize
-                        .requestMatchers( "/oauth2/**" ).permitAll()
-                        .requestMatchers( "/.well-known/appspecific/**" ).permitAll()
+               .requestMatchers( "/oauth2/**" ).permitAll()
+               .requestMatchers( "/.well-known/appspecific/**" ).permitAll()
 //
 //                  // for the angular to introspect the token if it is still valid
-                        .requestMatchers( "/oauth2/introspect" ).permitAll()
-                        .anyRequest().authenticated()
-            )
-            .cors( Customizer.withDefaults() )
-            .formLogin( Customizer.withDefaults() );
+               .requestMatchers( "/oauth2/introspect" ).permitAll()
+               .anyRequest().authenticated()
+         )
+         .cors( Customizer.withDefaults() )
+         .formLogin( Customizer.withDefaults() );
 
       return http.build();
    }
@@ -92,9 +93,9 @@ public class AuthorizationServerConfig {
    @Bean
    public UserDetailsService userDetailsService() {
       UserDetails user = User.withUsername( "admin" )
-            .password( passwordEncoder().encode( "pass" ) ) // 👈 This part is important
-            .roles( "USER" )
-            .build();
+         .password( passwordEncoder().encode( "pass" ) ) // 👈 This part is important
+         .roles( "USER" )
+         .build();
       return new InMemoryUserDetailsManager( user );
    }
 
@@ -109,9 +110,9 @@ public class AuthorizationServerConfig {
       RSAPublicKey publicKey = ( RSAPublicKey ) keyPair.getPublic();
       RSAPrivateKey privateKey = ( RSAPrivateKey ) keyPair.getPrivate();
       RSAKey rsaKey = new RSAKey.Builder( publicKey )
-            .privateKey( privateKey )
-            .keyID( UUID.randomUUID().toString() )
-            .build();
+         .privateKey( privateKey )
+         .keyID( UUID.randomUUID().toString() )
+         .build();
       JWKSet jwkSet = new JWKSet( rsaKey );
       return new ImmutableJWKSet<>( jwkSet );
    }
@@ -134,10 +135,10 @@ public class AuthorizationServerConfig {
    }
 
    @Bean
-   public AuthorizationServerSettings authorizationServerSettings() {
+   public AuthorizationServerSettings authorizationServerSettings( @Value( "${env.base.url.auth-server}" ) String authServerUrl ) {
       return AuthorizationServerSettings.builder()
-            .issuer( "http://localhost:8080" )
-            .build();
+         .issuer( authServerUrl )
+         .build();
    }
 
    @Bean
@@ -153,9 +154,13 @@ public class AuthorizationServerConfig {
    }
 
    @Bean
-   public CorsConfigurationSource corsConfigurationSource() {
+   public CorsConfigurationSource corsConfigurationSource(
+      @Value( "${env.base.url.product-service}" ) String productService,
+      @Value( "${env.base.url.storefront}" ) String storefront
+   ) {
       CorsConfiguration config = new CorsConfiguration();
-      config.setAllowedOrigins( List.of( "http://localhost:8081", "http://localhost:4200" ) );
+//      config.setAllowedOrigins( List.of( "http://localhost:8081", "http://localhost:4200" ) );
+      config.setAllowedOrigins( List.of( productService, storefront ) );
       config.setAllowedMethods( List.of( "GET", "POST", "PUT", "DELETE", "OPTIONS" ) );
       config.setAllowedHeaders( List.of( "*" ) );
       config.setAllowCredentials( true );

@@ -99,6 +99,7 @@ springdoc:
       client-id: swagger-ui
       client-secret: swagger-secret
       use-basic-authentication-with-access-code-grant: true
+    server-url: /product
 
 ---
 spring.config.activate.on-profile: docker

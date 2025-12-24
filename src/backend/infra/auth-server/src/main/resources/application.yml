@@ -2,6 +2,11 @@ spring.application.name: auth-server
 
 server.port: 8080
 
+env.base.url:
+  auth-server: ${ENV_BASE_URL_AUTH_SERVER:http://localhost:8080}
+  product-service: ${ENV_BASE_URL_PRODUCT_SERVICE:http://localhost:8081}
+  storefront: ${ENV_BASE_URL_STOREFRONT:http://localhost:4200}
+
 spring:
   autoconfigure:
     exclude:
@@ -25,7 +30,7 @@ oauth2:
       authorization-grant-types:
         - authorization_code
       redirect-uris:
-        - http://localhost:8081/swagger-ui/oauth2-redirect.html
+        - ${env.base.url.product-service}/swagger-ui/oauth2-redirect.html
       scopes:
         - openid
         - read
@@ -49,7 +54,7 @@ oauth2:
         - authorization_code
         - refresh_token
       redirect-uris:
-        - http://localhost:4200/login/callback
+        - ${env.base.url.storefront}/login/callback
       scopes:
         - openid
         - read
@@ -66,3 +71,6 @@ logging:
     # For testing if config is loaded
     root: INFO
     org.springframework.boot.context.config: DEBUG
+---
+spring.config.activate.on-profile: docker
+server.port: 8080

@@ -31,6 +31,7 @@ rebuild: gradle-build
 k8s-start:
 ifeq ($(OS),Windows_NT)
 	@$(MINIKUBE_CMD) "if ((minikube status --format '{{.Host}}') -ne 'Running') { minikube start } else { Write-Host 'Minikube already running' }"
+	minikube image load product:latest gateway:latest auth:latest
 else
 	@STATUS=$$(minikube status --format "{{.Host}}"); \
 	if [ "$$STATUS" != "Running" ]; then \
@@ -41,27 +42,29 @@ else
 	fi
 endif
 
+
+
 # Step 4: Deploy to Kubernetes
 # I dont even understand the ifeq part ... 🤯
 # but the idea is, open a new terminal and port forward
 k8s-up: k8s-start rebuild
-	kubectl apply -f $(K8S_MANIFESTS)
+	kubectl apply -f $(K8S_MANIFESTS) --recursive
 ifeq ($(OS),Windows_NT)
 	@echo "Opening new PowerShell window for port-forwarding..."
-	cmd /c start powershell -NoExit -Command "minikube kubectl -- port-forward pod/mypod 8080:8080"
+	cmd /c start powershell -NoExit -Command "minikube kubectl -- port-forward deployment/product-deployment 8080:8080"
 else
 	@echo "Opening new terminal for port-forwarding..."
 	@if [ "$(shell uname)" = "Darwin" ]; then \
-		osascript -e 'tell application "Terminal" to do script "minikube kubectl -- port-forward pod/mypod 8080:8080"'; \
+		osascript -e 'tell application "Terminal" to do script "minikube kubectl -- port-forward deployment/product-deployment 8080:8080"'; \
 	elif command -v gnome-terminal >/dev/null 2>&1; then \
-		gnome-terminal -- bash -c "minikube kubectl -- port-forward pod/mypod 8080:8080; exec bash"; \
+		gnome-terminal -- bash -c "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; exec bash"; \
 	elif command -v xterm >/dev/null 2>&1; then \
-		xterm -e "minikube kubectl -- port-forward pod/mypod 8080:8080; bash" & \
+		xterm -e "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; bash" & \
 	elif command -v konsole >/dev/null 2>&1; then \
-		konsole -e bash -c "minikube kubectl -- port-forward pod/mypod 8080:8080; exec bash" & \
+		konsole -e bash -c "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; exec bash" & \
 	else \
 		echo "Could not detect terminal. Running in background..."; \
-		minikube kubectl -- port-forward pod/mypod 8080:8080 & \
+		minikube kubectl -- port-forward deployment/product-deployment 8080:8080 & \
 	fi
 endif
 	@echo "Port-forward started in new terminal window"

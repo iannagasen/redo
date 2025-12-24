@@ -1,4 +1,11 @@
+server:
+  port: 8000
+
 spring.application.name: api-gateway
+
+env.base.url:
+  auth-server: ${ENV_BASE_URL_AUTH_SERVER:http://localhost:8080}
+  product-service: ${ENV_BASE_URL_PRODUCT_SERVICE:http://localhost:8081}
 
 spring:
   security:
@@ -14,10 +21,10 @@ spring:
             provider: my-auth-provider
         provider:
           my-auth-provider:
-            issuer-uri: http://localhost:8080
+            issuer-uri: ${env.base.url.auth-server}
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080
+          issuer-uri: ${env.base.url.auth-server}
   cloud:
     gateway:
       server:
@@ -27,7 +34,7 @@ spring:
           routes:
             # Main Swagger UI HTML
             - id: product-service-swagger-ui
-              uri: http://localhost:8081
+              uri: ${env.base.url.product-service}
               predicates:
                 - Path=/swagger-ui.html
               filters:
@@ -35,7 +42,7 @@ spring:
 
             # API docs
             - id: product-service-docs
-              uri: http://localhost:8081
+              uri: ${env.base.url.product-service}
               predicates:
                 - Path=/v3/api-docs
               filters:
@@ -43,7 +50,7 @@ spring:
 
             # Swagger UI config (needed for Swagger UI to know where to get APIs)
             - id: product-service-swagger-config
-              uri: http://localhost:8081
+              uri: ${env.base.url.product-service}
               predicates:
                 - Path=/v3/api-docs/swagger-config
               filters:
@@ -51,7 +58,7 @@ spring:
 
             # JS, CSS, etc. needed for Swagger UI to render
             - id: product-service-swagger-assets
-              uri: http://localhost:8081
+              uri: ${env.base.url.product-service}
               predicates:
                 - Path=/swagger-ui/**
               filters:
@@ -59,10 +66,19 @@ spring:
 
             # Optional: Webjars (icons, fonts, etc. used by older Swagger versions)
             - id: product-service-webjars
-              uri: http://localhost:8081
+              uri: ${env.base.url.product-service}
               predicates:
                 - Path=/webjars/**
               filters:
                 - RewritePath=/webjars/(?<segment>.*), /webjars/${segment}
-server:
-  port: 8000
+
+            - id: product-service
+              uri: ${env.base.url.product-service}
+              predicates:
+                - Path=/product/**
+              filters:
+                - RewritePath=/product/(?<segment>.*), /${segment}
+
+---
+spring.config.activate.on-profile: docker
+server.port: 8080
