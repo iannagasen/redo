@@ -42,29 +42,39 @@ else
 	fi
 endif
 
-
+ingress-svc-host:
+	@echo "Updating 'shopbuddy.com' in hosts file for ingress service..."
+	@ip=$$(minikube ip); \
+	entry="$$ip shopbuddy.com"; \
+	file="/c/Windows/System32/drivers/etc/hosts"; \
+	if ! grep -q "$$entry" "$$file"; then \
+		echo "$$entry" | sudo tee -a "$$file" > /dev/null; \
+		echo "Added: $$entry"; \
+	else \
+		echo "Entry already exists."; \
+	fi
 
 # Step 4: Deploy to Kubernetes
 # I dont even understand the ifeq part ... 🤯
 # but the idea is, open a new terminal and port forward
-k8s-up: k8s-start rebuild
+k8s-up: k8s-start rebuild ingress-svc-host
 	kubectl apply -f $(K8S_MANIFESTS) --recursive
-ifeq ($(OS),Windows_NT)
-	@echo "Opening new PowerShell window for port-forwarding..."
-	cmd /c start powershell -NoExit -Command "minikube kubectl -- port-forward deployment/product-deployment 8080:8080"
-else
-	@echo "Opening new terminal for port-forwarding..."
-	@if [ "$(shell uname)" = "Darwin" ]; then \
-		osascript -e 'tell application "Terminal" to do script "minikube kubectl -- port-forward deployment/product-deployment 8080:8080"'; \
-	elif command -v gnome-terminal >/dev/null 2>&1; then \
-		gnome-terminal -- bash -c "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; exec bash"; \
-	elif command -v xterm >/dev/null 2>&1; then \
-		xterm -e "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; bash" & \
-	elif command -v konsole >/dev/null 2>&1; then \
-		konsole -e bash -c "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; exec bash" & \
-	else \
-		echo "Could not detect terminal. Running in background..."; \
-		minikube kubectl -- port-forward deployment/product-deployment 8080:8080 & \
-	fi
-endif
-	@echo "Port-forward started in new terminal window"
+#ifeq ($(OS),Windows_NT)
+#	@echo "Opening new PowerShell window for port-forwarding..."
+#	cmd /c start powershell -NoExit -Command "minikube kubectl -- port-forward deployment/product-deployment 8080:8080"
+#else
+#	@echo "Opening new terminal for port-forwarding..."
+#	@if [ "$(shell uname)" = "Darwin" ]; then \
+#		osascript -e 'tell application "Terminal" to do script "minikube kubectl -- port-forward deployment/product-deployment 8080:8080"'; \
+#	elif command -v gnome-terminal >/dev/null 2>&1; then \
+#		gnome-terminal -- bash -c "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; exec bash"; \
+#	elif command -v xterm >/dev/null 2>&1; then \
+#		xterm -e "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; bash" & \
+#	elif command -v konsole >/dev/null 2>&1; then \
+#		konsole -e bash -c "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; exec bash" & \
+#	else \
+#		echo "Could not detect terminal. Running in background..."; \
+#		minikube kubectl -- port-forward deployment/product-deployment 8080:8080 & \
+#	fi
+#endif
+#	@echo "Port-forward started in new terminal window"
