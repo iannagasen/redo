@@ -42,22 +42,13 @@ else
 	fi
 endif
 
-ingress-svc-host:
-	@echo "Updating 'shopbuddy.com' in hosts file for ingress service..."
-	@ip=$$(minikube ip); \
-	entry="$$ip shopbuddy.com"; \
-	file="/c/Windows/System32/drivers/etc/hosts"; \
-	if ! grep -q "$$entry" "$$file"; then \
-		echo "$$entry" | sudo tee -a "$$file" > /dev/null; \
-		echo "Added: $$entry"; \
-	else \
-		echo "Entry already exists."; \
-	fi
+tunnel-start:
+	@powershell -Command "Start-Process powershell -Verb RunAs -ArgumentList '-NoExit', '-Command', 'minikube tunnel'"
 
 # Step 4: Deploy to Kubernetes
 # I dont even understand the ifeq part ... 🤯
 # but the idea is, open a new terminal and port forward
-k8s-up: k8s-start rebuild ingress-svc-host
+k8s-up: k8s-start rebuild tunnel-start
 	kubectl apply -f $(K8S_MANIFESTS) --recursive
 #ifeq ($(OS),Windows_NT)
 #	@echo "Opening new PowerShell window for port-forwarding..."
