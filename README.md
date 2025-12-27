@@ -15,6 +15,11 @@ make
 | API Gateway                    | 8000  | 8080            | 8000 (NodePort) |
 | Auth Server                    | 8080  | 8080            | 8080            |
 
+k8s enpoints: using host (shopbuddy.com)
+/product/actuator, /product/actuator/{health,info}
+/product/public/hello
+/swagger
+
 temporarily disable the otlp logging by removing this in the environment variable
 
 ```text
