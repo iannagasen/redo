@@ -1,5 +1,6 @@
 package dev.agasen.core.product.infrastructure.security;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -9,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -32,14 +34,20 @@ public class SecurityConfig {
             "/webjars/**",
             "/public/**"
          )
+         .addFilterBefore( ( request, response, chain ) -> {
+            HttpServletRequest req = ( HttpServletRequest ) request;
+            System.out.println( "🟢 PUBLIC CHAIN: " + req.getMethod() + " " + req.getRequestURI() );
+            chain.doFilter( request, response );
+         }, UsernamePasswordAuthenticationFilter.class )
          .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
          .csrf( AbstractHttpConfigurer::disable )
          .authorizeHttpRequests( authorize -> authorize.anyRequest().permitAll() )
          // skip oauth resource server
          .oauth2ResourceServer( AbstractHttpConfigurer::disable )
          // Disable the exception handling that's causing the redirect
-         .exceptionHandling( exception -> exception.disable() )
-         .anonymous( AbstractHttpConfigurer::disable );
+         .exceptionHandling( AbstractHttpConfigurer::disable )
+         .anonymous( AbstractHttpConfigurer::disable )
+      ;
 
       return http.build();
 

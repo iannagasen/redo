@@ -62,7 +62,6 @@ spring:
 #            user-info-uri: http://localhost:8080/userinfo
 #            jwk-set-uri: http://localhost:8080/oauth2/jwks
 
-
 logging:
   level:
     org.springframework.jdbc: DEBUG
@@ -71,6 +70,7 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
     org.springframework.security.web.util.matcher: TRACE
+    org.springframework.boot.autoconfigure: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
