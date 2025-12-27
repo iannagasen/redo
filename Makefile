@@ -13,11 +13,11 @@ else
 endif
 
 # Default target
-all: infra rebuild k8s-up
+all: rebuild k8s-up
 
 # Step 0: Run infra services first (detached)
 infra:
-	docker compose -f $(INFRA_SERVICES) up -d
+	docker compose -f $(INFRA_SERVICES) build --no-cache
 
 # Step 1: Build Gradle project (skip tests for now)
 gradle-build:
