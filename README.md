@@ -14,3 +14,12 @@ make
 | Product Service                | 8081  | 8080            | -               | 
 | API Gateway                    | 8000  | 8080            | 8000 (NodePort) |
 | Auth Server                    | 8080  | 8080            | 8080            |
+
+temporarily disable the otlp logging by removing this in the environment variable
+
+```text
+-javaagent:src/backend/core/product-service/build/agent/opentelemetry-javaagent.jar
+-Dotel.traces.exporter=logging
+-Dotel.metrics.exporter=logging
+-Dotel.logs.exporter=logging
+```
