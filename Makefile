@@ -13,7 +13,7 @@ else
 endif
 
 # Default target
-all: rebuild k8s-up
+all: infra rebuild k8s-up
 
 # Step 0: Run infra services first (detached)
 infra:

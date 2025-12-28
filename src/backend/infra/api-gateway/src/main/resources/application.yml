@@ -38,7 +38,7 @@ spring:
               predicates:
                 - Path=/swagger-ui.html
               filters:
-                - RewritePath=/swagger-ui.html, /swagger-ui.html
+                - RewritePath=/product/swagger-ui.html, /product/swagger-ui.html
 
             # API docs
             - id: product-service-docs
@@ -46,7 +46,7 @@ spring:
               predicates:
                 - Path=/v3/api-docs
               filters:
-                - RewritePath=/v3/api-docs, /v3/api-docs
+                - RewritePath=/product/v3/api-docs, /product/v3/api-docs
 
             # Swagger UI config (needed for Swagger UI to know where to get APIs)
             - id: product-service-swagger-config
@@ -54,7 +54,7 @@ spring:
               predicates:
                 - Path=/v3/api-docs/swagger-config
               filters:
-                - RewritePath=/v3/api-docs/swagger-config, /v3/api-docs/swagger-config
+                - RewritePath=/product/v3/api-docs/swagger-config, /product/v3/api-docs/swagger-config
 
             # JS, CSS, etc. needed for Swagger UI to render
             - id: product-service-swagger-assets
@@ -62,7 +62,7 @@ spring:
               predicates:
                 - Path=/swagger-ui/**
               filters:
-                - RewritePath=/swagger-ui/(?<segment>.*), /swagger-ui/${segment}
+                - RewritePath=/product/swagger-ui/(?<segment>.*), /product/swagger-ui/${segment}
 
             # Optional: Webjars (icons, fonts, etc. used by older Swagger versions)
             - id: product-service-webjars
@@ -70,14 +70,14 @@ spring:
               predicates:
                 - Path=/webjars/**
               filters:
-                - RewritePath=/webjars/(?<segment>.*), /webjars/${segment}
+                - RewritePath=/product/webjars/(?<segment>.*), /product/webjars/${segment}
 
             - id: product-service
               uri: ${env.base.url.product-service}
               predicates:
                 - Path=/product/**
               filters:
-                - RewritePath=/product/(?<segment>.*), /${segment}
+                - RewritePath=/product/product/(?<segment>.*), /product/${segment}
 
 ---
 spring.config.activate.on-profile: docker

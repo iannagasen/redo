@@ -1,5 +1,6 @@
 server.port: 8081
 
+
 spring:
   application:
     name: product-service
@@ -67,10 +68,10 @@ logging:
     org.springframework.jdbc: DEBUG
     org.springframework.data.jdbc: DEBUG
     dev.agasen.core.product: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.security.oauth2: DEBUG
-    org.springframework.security.web.util.matcher: TRACE
-    org.springframework.boot.autoconfigure: DEBUG
+  #    org.springframework.security: DEBUG
+  #    org.springframework.security.oauth2: DEBUG
+  #    org.springframework.security.web.util.matcher: TRACE
+  #    org.springframework.boot.autoconfigure: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
@@ -99,8 +100,16 @@ springdoc:
       client-id: swagger-ui
       client-secret: swagger-secret
       use-basic-authentication-with-access-code-grant: true
-    server-url: /product
+#    server-url: /product
 
+server:
+  servlet:
+    context-path: /product
 ---
 spring.config.activate.on-profile: docker
 server.port: 8080
+#springdoc:
+#  swagger-ui:
+#    url: /product/v3/api-docs
+#  api-docs:
+#    path: /product/v3/api-docs

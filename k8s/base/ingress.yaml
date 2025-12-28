@@ -3,17 +3,25 @@ kind: Ingress
 metadata:
   name: ingress-wildcard-host
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+#    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
     - host: "shopbuddy.com"
       http:
         paths:
-          - pathType: ImplementationSpecific
+          - pathType: Prefix
             #            path: "/product"
-            path: "/product(/|$)(.*)"  # Regex to capture everything after /product
+            path: "/product"
             backend:
               service:
                 name: product-service
+                port:
+                  number: 8080
+
+          - pathType: Prefix
+            path: "/gateway"
+            backend:
+              service:
+                name: gateway-service
                 port:
                   number: 8080
