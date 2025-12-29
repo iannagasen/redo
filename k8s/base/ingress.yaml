@@ -18,10 +18,15 @@ spec:
                 port:
                   number: 8080
 
-          - pathType: Prefix
-            path: "/gateway"
-            backend:
-              service:
-                name: gateway-service
-                port:
-                  number: 8080
+          #
+          #
+          #          - pathType: ImplementationSpecific
+          #            #            path: "/product"
+          #            path: "/gateway(/|$)(.*)"  # Regex to capture everything after /product
+#          - pathType: ImplementationSpecific
+#            path: "/gateway(/|$)(.*)"
+#            backend:
+#              service:
+#                name: gateway-service
+#                port:
+#                  number: 8080
