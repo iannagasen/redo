@@ -9,18 +9,7 @@ spec:
     - host: "shopbuddy.com"
       http:
         paths:
-          #          - pathType: Prefix
-          #            #            path: "/product"
-          #            path: "/product"
-          #            backend:
-          #              service:
-          #                name: product-service
-          #                port:
-          #                  number: 8080
-
-
           - pathType: ImplementationSpecific
-            #            path: "/product"
             path: "/gateway(/|$)(.*)"  # Regex to capture everything after /product
             backend:
               service:
