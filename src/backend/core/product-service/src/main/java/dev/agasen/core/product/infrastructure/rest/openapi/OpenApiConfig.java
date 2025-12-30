@@ -1,14 +1,19 @@
 package dev.agasen.core.product.infrastructure.rest.openapi;
 
 
+import dev.agasen.core.product.infrastructure.AuthProperties;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.OAuthFlows;
-import io.swagger.v3.oas.annotations.security.OAuthScope;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.security.OAuthFlow;
+import io.swagger.v3.oas.models.security.OAuthFlows;
+import io.swagger.v3.oas.models.security.Scopes;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
@@ -17,21 +22,25 @@ import java.util.List;
 @OpenAPIDefinition(
    info = @Info( title = "Product API", version = "v1" )
 )
-@SecurityScheme(
-   name = "oauth2",
-   type = SecuritySchemeType.OAUTH2,
-   flows = @OAuthFlows(
-      authorizationCode = @io.swagger.v3.oas.annotations.security.OAuthFlow(
-         authorizationUrl = "http://localhost:8080/oauth2/authorize",
-         tokenUrl = "http://localhost:8080/oauth2/token",
-         scopes = {
-            @OAuthScope( name = "openid", description = "OpenID scope" ),
-            @OAuthScope( name = "read", description = "Read scope" ),
-         }
-      )
-   )
-)
+@RequiredArgsConstructor
+//@SecurityScheme(
+//   name = "oauth2",
+//   type = SecuritySchemeType.OAUTH2,
+//   flows = @OAuthFlows(
+//      authorizationCode = @io.swagger.v3.oas.annotations.security.OAuthFlow(
+//         authorizationUrl = "${auth.authorizationUrl}",
+//         tokenUrl = "${auth.tokenUrl}",
+//         scopes = {
+//            @OAuthScope( name = "openid", description = "OpenID scope" ),
+//            @OAuthScope( name = "read", description = "Read scope" ),
+//         }
+//      )
+//   )
+//)
 public class OpenApiConfig {
+
+   private final AuthProperties authProperties;
+
    //   @Bean
    public OpenAPI customOpenAPI() {
       // 👇 This tells Swagger to call APIs through your gateway instead of the internal URL
@@ -44,6 +53,30 @@ public class OpenApiConfig {
       //       - RewritePath=/product/(?<segment>.*), /${segment}
       return new OpenAPI()
          .servers( List.of( new Server().url( "/product" ) ) );
+   }
+
+
+   @Bean
+   public OpenAPI anotherCustomOpenAPI(
+      @Value( "${auth.authorizationUrl}" ) String authorizationUrl,
+      @Value( "${auth.tokenUrl}" ) String tokenUrl
+   ) {
+      return new OpenAPI()
+         .components( new Components()
+            .addSecuritySchemes( "oauth2", new SecurityScheme()
+               .type( SecurityScheme.Type.OAUTH2 )
+               .flows( new OAuthFlows()
+                  .authorizationCode( new OAuthFlow()
+                     .authorizationUrl( authorizationUrl )
+                     .tokenUrl( tokenUrl )
+                     .scopes( new Scopes()
+                        .addString( "openid", "OpenID scope" )
+                        .addString( "read", "Read scope" )
+                     )
+                  )
+               )
+            )
+         );
    }
 
 }

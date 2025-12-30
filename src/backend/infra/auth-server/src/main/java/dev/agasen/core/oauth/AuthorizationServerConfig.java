@@ -135,7 +135,7 @@ public class AuthorizationServerConfig {
    }
 
    @Bean
-   public AuthorizationServerSettings authorizationServerSettings( @Value( "${env.base.url.auth-server}" ) String authServerUrl ) {
+   public AuthorizationServerSettings authorizationServerSettings( @Value( "${env.base.url.internal.auth}" ) String authServerUrl ) {
       return AuthorizationServerSettings.builder()
          .issuer( authServerUrl )
          .build();
@@ -155,8 +155,8 @@ public class AuthorizationServerConfig {
 
    @Bean
    public CorsConfigurationSource corsConfigurationSource(
-      @Value( "${env.base.url.product-service}" ) String productService,
-      @Value( "${env.base.url.storefront}" ) String storefront
+      @Value( "${env.base.url.internal.product}" ) String productService,
+      @Value( "${env.base.url.external.storefront}" ) String storefront
    ) {
       CorsConfiguration config = new CorsConfiguration();
 //      config.setAllowedOrigins( List.of( "http://localhost:8081", "http://localhost:4200" ) );

@@ -6,8 +6,12 @@ server:
 spring.application.name: api-gateway
 
 env.base.url:
-  auth-server: ${ENV_BASE_URL_AUTH_SERVER:http://localhost:8080}
-  product-service: ${ENV_BASE_URL_PRODUCT_SERVICE:http://localhost:8081}
+  internal:
+    auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    product: ${INTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
+  external:
+    auth: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    product: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
 
 spring:
   security:
@@ -23,10 +27,10 @@ spring:
             provider: my-auth-provider
         provider:
           my-auth-provider:
-            issuer-uri: ${env.base.url.auth-server}
+            issuer-uri: ${env.base.url.internal.auth}
       resourceserver:
         jwt:
-          issuer-uri: ${env.base.url.auth-server}
+          issuer-uri: ${env.base.url.internal.auth}
   cloud:
     gateway:
       server:
@@ -36,7 +40,7 @@ spring:
           routes:
             # Main Swagger UI HTML
             - id: product-service-swagger-ui
-              uri: ${env.base.url.product-service}
+              uri: ${env.base.url.internal.product}
               predicates:
                 - Path=/swagger-ui.html
               filters:
@@ -44,7 +48,7 @@ spring:
 
             # API docs
             - id: product-service-docs
-              uri: ${env.base.url.product-service}
+              uri: ${env.base.url.internal.product}
               predicates:
                 - Path=/v3/api-docs
               filters:
@@ -52,7 +56,7 @@ spring:
 
             # Swagger UI config (needed for Swagger UI to know where to get APIs)
             - id: product-service-swagger-config
-              uri: ${env.base.url.product-service}
+              uri: ${env.base.url.internal.product}
               predicates:
                 - Path=/v3/api-docs/swagger-config
               filters:
@@ -60,7 +64,7 @@ spring:
 
             # JS, CSS, etc. needed for Swagger UI to render
             - id: product-service-swagger-assets
-              uri: ${env.base.url.product-service}
+              uri: ${env.base.url.internal.product}
               predicates:
                 - Path=/swagger-ui/**
               filters:
@@ -68,14 +72,14 @@ spring:
 
             # Optional: Webjars (icons, fonts, etc. used by older Swagger versions)
             - id: product-service-webjars
-              uri: ${env.base.url.product-service}
+              uri: ${env.base.url.internal.product}
               predicates:
                 - Path=/webjars/**
               filters:
                 - RewritePath=/product/webjars/(?<segment>.*), /product/webjars/${segment}
 
             - id: product-service
-              uri: ${env.base.url.product-service}
+              uri: ${env.base.url.internal.product}
               predicates:
                 - Path=/product/**
               filters:

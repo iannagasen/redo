@@ -1,9 +1,16 @@
 server.port: 8081
 
 env.base.url:
-  auth-server: ${ENV_BASE_URL_AUTH_SERVER:http://localhost:8080}
-  product-service: ${ENV_BASE_URL_PRODUCT_SERVICE:http://localhost:8081}
-  storefront: ${ENV_BASE_URL_STOREFRONT:http://localhost:4200}
+  internal:
+    auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    product: ${INTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
+  external:
+    auth: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    product: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
+    
+auth:
+  authorizationUrl: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}/oauth2/authorize
+  tokenUrl: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}/oauth2/token
 
 spring:
   application:
@@ -44,7 +51,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8080
+          issuer-uri: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
         # validate this value by going thru {oauthUrl}/.well-know/openid-configuration
         # this is for Swagger UI's OAuth2 flow (client)
         #      client:
@@ -95,7 +102,7 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     try-it-out-enabled: true
-    oauth2-redirect-url: ${env.base.url.product-service}/product/swagger-ui/oauth2-redirect.html
+    oauth2-redirect-url: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}/swagger-ui/oauth2-redirect.html
     use-root-path: true
     display-request-duration: true
     operations-sorter: method

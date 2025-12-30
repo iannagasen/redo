@@ -1,6 +1,7 @@
 package dev.agasen.core.product.infrastructure.security;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -21,6 +22,8 @@ import java.util.Arrays;
 @EnableWebSecurity
 @EnableMethodSecurity( prePostEnabled = true )
 public class SecurityConfig {
+
+   @Value( "${env.base.url.internal.auth}" ) String authServerUrl;
 
    @Bean
    @Order( 1 )
@@ -63,7 +66,7 @@ public class SecurityConfig {
          .authorizeHttpRequests( authorize -> authorize.anyRequest().authenticated() )
          .oauth2ResourceServer( oauth2 -> oauth2
             .jwt( jwt -> jwt
-               .jwkSetUri( "http://localhost:8080/oauth2/jwks" )
+               .jwkSetUri( authServerUrl + "/oauth2/jwks" )
             )
          );
       return http.build();
