@@ -6,8 +6,10 @@ import { HttpClient } from '@angular/common/http';
 } )
 export class OauthService {
   private clientId = 'angular-client';
-  private redirectUri = 'http://localhost:4200/login/callback';
-  private authServer = 'http://localhost:8080';
+  // private redirectUri = 'http://localhost:4200/login/callback';
+  private redirectUri = `${ window.location.origin }/storefront/login/callback`;
+  // private authServer = 'http://localhost:8080';
+  private authServer = 'http://shopbuddy.com/auth';
 
   constructor( private http: HttpClient ) {
   }

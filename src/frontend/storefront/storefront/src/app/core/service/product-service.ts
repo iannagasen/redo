@@ -9,7 +9,8 @@ import { ProductCreationDetails } from '../model/product-creation-details';
 } )
 export class ProductService {
 
-  private readonly BASE_URL = 'http://localhost:8081/api/v1';
+  // private readonly BASE_URL = 'http://localhost:8081/api/v1';
+  private readonly BASE_URL = 'http://shopbuddy.com/product/api/v1';
 
   constructor(
     private oauthService: OauthService,

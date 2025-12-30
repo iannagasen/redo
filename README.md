@@ -30,3 +30,8 @@ temporarily disable the otlp logging by removing this in the environment variabl
 -Dotel.metrics.exporter=logging
 -Dotel.logs.exporter=logging
 ```
+
+# Improvement / issues
+
+- Not using HTTPS on the domain (shopbuddy.com), we are using OAUTH2 so it should be https, there is a workaround
+  in angular for this to use `npm install crypto-js` , uninstall once https is installed

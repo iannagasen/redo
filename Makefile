@@ -1,3 +1,8 @@
+# ARGUMENT
+EXCLUDE ?=
+SERVICES := product gateway auth storefront
+FILTERED := $(filter-out $(EXCLUDE),$(SERVICES))
+
 # Variables
 CORE_SERVICES=docker-compose-build-core-services.yaml
 INFRA_SERVICES=docker-compose-infra.yaml
@@ -15,13 +20,6 @@ endif
 # Default target
 all: infra rebuild k8s-up
 
-#use-minikube:
-#ifeq ($(OS),Windows_NT)
-#	minikube -p minikube docker-env --shell powershell | Invoke-Expression
-#else
-#	eval $(minikube docker-env)
-#endif
-
 # Step 0: Run infra services first (detached)
 infra:
 	docker compose -f $(INFRA_SERVICES) build --no-cache
@@ -32,7 +30,8 @@ gradle-build:
 
 # Step 2: Rebuild Docker image(s) using compose
 rebuild: gradle-build
-	docker compose -f $(CORE_SERVICES) build --no-cache
+	@echo "Building: $(FILTERED)"
+	docker compose -f $(CORE_SERVICES) build --no-cache $(FILTERED)
 
 # Step 3: Start Minikube if not already running
 k8s-start:
@@ -56,23 +55,9 @@ tunnel-start:
 # I dont even understand the ifeq part ... 🤯
 # but the idea is, open a new terminal and port forward
 k8s-up: k8s-start rebuild tunnel-start
+ifeq ($(EXCLUDE),storefront)
+	@echo "Skipping storefront manifest..."
+	kubectl apply -f $(K8S_MANIFESTS) --recursive --selector 'app!=storefront'
+else
 	kubectl apply -f $(K8S_MANIFESTS) --recursive
-#ifeq ($(OS),Windows_NT)
-#	@echo "Opening new PowerShell window for port-forwarding..."
-#	cmd /c start powershell -NoExit -Command "minikube kubectl -- port-forward deployment/product-deployment 8080:8080"
-#else
-#	@echo "Opening new terminal for port-forwarding..."
-#	@if [ "$(shell uname)" = "Darwin" ]; then \
-#		osascript -e 'tell application "Terminal" to do script "minikube kubectl -- port-forward deployment/product-deployment 8080:8080"'; \
-#	elif command -v gnome-terminal >/dev/null 2>&1; then \
-#		gnome-terminal -- bash -c "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; exec bash"; \
-#	elif command -v xterm >/dev/null 2>&1; then \
-#		xterm -e "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; bash" & \
-#	elif command -v konsole >/dev/null 2>&1; then \
-#		konsole -e bash -c "minikube kubectl -- port-forward deployment/product-deployment 8080:8080; exec bash" & \
-#	else \
-#		echo "Could not detect terminal. Running in background..."; \
-#		minikube kubectl -- port-forward deployment/product-deployment 8080:8080 & \
-#	fi
-#endif
-#	@echo "Port-forward started in new terminal window"
+endif

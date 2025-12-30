@@ -29,7 +29,7 @@ services:
     networks:
       - gateway-network
 
-  authserver:
+  auth:
     build: /src/backend/infra/auth-server
     image: auth:latest
     mem_limit: 256m
