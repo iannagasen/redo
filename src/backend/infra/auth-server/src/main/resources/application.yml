@@ -30,7 +30,7 @@ oauth2:
       authorization-grant-types:
         - authorization_code
       redirect-uris:
-        - ${env.base.url.product-service}/swagger-ui/oauth2-redirect.html
+        - ${env.base.url.product-service}/product/swagger-ui/oauth2-redirect.html
       scopes:
         - openid
         - read

@@ -1,5 +1,9 @@
 server.port: 8081
 
+env.base.url:
+  auth-server: ${ENV_BASE_URL_AUTH_SERVER:http://localhost:8080}
+  product-service: ${ENV_BASE_URL_PRODUCT_SERVICE:http://localhost:8081}
+  storefront: ${ENV_BASE_URL_STOREFRONT:http://localhost:4200}
 
 spring:
   application:
@@ -91,7 +95,7 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     try-it-out-enabled: true
-    oauth2-redirect-url: http://localhost:8081/swagger-ui/oauth2-redirect.html
+    oauth2-redirect-url: ${env.base.url.product-service}/product/swagger-ui/oauth2-redirect.html
     use-root-path: true
     display-request-duration: true
     operations-sorter: method
@@ -100,6 +104,7 @@ springdoc:
       client-id: swagger-ui
       client-secret: swagger-secret
       use-basic-authentication-with-access-code-grant: true
+      scopes: openid
 #    server-url: /product
 
 server:

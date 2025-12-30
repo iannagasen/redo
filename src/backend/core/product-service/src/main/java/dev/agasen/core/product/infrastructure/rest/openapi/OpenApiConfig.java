@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.security.OAuthScope;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.List;
    )
 )
 public class OpenApiConfig {
-   @Bean
+   //   @Bean
    public OpenAPI customOpenAPI() {
       // 👇 This tells Swagger to call APIs through your gateway instead of the internal URL
       // the product is from Path=/product

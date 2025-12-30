@@ -5,6 +5,7 @@ import dev.agasen.api.product.product.ProductDetails;
 import dev.agasen.core.product.application.read.BrandRetrievalService;
 import dev.agasen.core.product.application.read.ProductRetrievalService;
 import dev.agasen.core.product.application.write.ProductCreationService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping( "/api/v1/products" )
 @Validated
-//@SecurityRequirement( name = "oauth2" )
+@SecurityRequirement( name = "oauth2" )
 @Slf4j
 @RequiredArgsConstructor
 public class ProductController {
