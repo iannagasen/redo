@@ -47,10 +47,8 @@ services:
 
   # Your Angular frontend
   storefront:
-    build:
-      context: /src/frontend/storefront/storefront
-      dockerfile: Dockerfile
-    container_name: angular-app
+    build: /src/frontend/storefront/storefront
+    image: storefront:latest
     ports:
       - "8000:8080"  # Map host:container port
     networks:

@@ -15,6 +15,13 @@ endif
 # Default target
 all: infra rebuild k8s-up
 
+#use-minikube:
+#ifeq ($(OS),Windows_NT)
+#	minikube -p minikube docker-env --shell powershell | Invoke-Expression
+#else
+#	eval $(minikube docker-env)
+#endif
+
 # Step 0: Run infra services first (detached)
 infra:
 	docker compose -f $(INFRA_SERVICES) build --no-cache
@@ -31,7 +38,7 @@ rebuild: gradle-build
 k8s-start:
 ifeq ($(OS),Windows_NT)
 	@$(MINIKUBE_CMD) "if ((minikube status --format '{{.Host}}') -ne 'Running') { minikube start } else { Write-Host 'Minikube already running' }"
-	minikube image load product:latest gateway:latest auth:latest
+	minikube image load product:latest gateway:latest auth:latest storefront:latest
 else
 	@STATUS=$$(minikube status --format "{{.Host}}"); \
 	if [ "$$STATUS" != "Running" ]; then \

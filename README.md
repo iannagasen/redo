@@ -20,6 +20,8 @@ k8s enpoints: using host (shopbuddy.com)
 /product/public/hello
 /swagger
 
+http://shopbuddy.com/storefront
+
 temporarily disable the otlp logging by removing this in the environment variable
 
 ```text
