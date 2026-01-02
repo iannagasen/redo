@@ -6,6 +6,10 @@ using k8s and docker compose
 make
 ```
 
+# Preliminary setup
+
+1. Add shopbuddy.com 127.0.0.1 in /etc/hosts
+
 # Ports
 
 | App                            | Local | Docker (Mapped) | Kubernetes      |
@@ -21,6 +25,8 @@ k8s enpoints: using host (shopbuddy.com)
 /swagger
 
 http://shopbuddy.com/storefront
+
+https://shopbuddy.com/product/swagger-ui/index.html#/product-controller/addProduct
 
 temporarily disable the otlp logging by removing this in the environment variable
 

@@ -54,10 +54,19 @@ tunnel-start:
 # Step 4: Deploy to Kubernetes
 # I dont even understand the ifeq part ... 🤯
 # but the idea is, open a new terminal and port forward
-k8s-up: k8s-start rebuild tunnel-start
+k8s-up: k8s-start tunnel-start install-cert-manager
 ifeq ($(EXCLUDE),storefront)
 	@echo "Skipping storefront manifest..."
 	kubectl apply -f $(K8S_MANIFESTS) --recursive --selector 'app!=storefront'
 else
 	kubectl apply -f $(K8S_MANIFESTS) --recursive
 endif
+
+install-cert-manager:
+	@echo "Installing cert-manager"
+	powershell -NoProfile -Command "if (-not (kubectl get secret shopbuddy-mkcert-tls -n default -o json)) { kubectl create secret tls shopbuddy-mkcert-tls --cert=k8s/shopbuddy.com.dummy.pem --key=k8s/shopbuddy.com-key.pem -n default }"
+	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.1/cert-manager.crds.yaml
+	powershell -NoProfile -Command "if (-not (kubectl get namespace cert-manager -o json)) { kubectl create namespace cert-manager }"
+	kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.1/cert-manager.yaml
+
+
