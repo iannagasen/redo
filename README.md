@@ -41,3 +41,20 @@ temporarily disable the otlp logging by removing this in the environment variabl
 
 - Not using HTTPS on the domain (shopbuddy.com), we are using OAUTH2 so it should be https, there is a workaround
   in angular for this to use `npm install crypto-js` , uninstall once https is installed
+
+# Future Plans
+
+- observability
+- messaging
+    - kafka
+- other inter service communication
+    - no graphql ()
+    - gRPC maybe
+    - messaging
+- documentation
+- ci/cd
+- k8s
+    - helm / customize
+- app
+    - maybe some other technologies
+    - 
