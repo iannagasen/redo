@@ -1,5 +1,6 @@
 package dev.agasen.core.product.productservice;
 
+import dev.agasen.core.product.BaseIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProductDetailsControllerTest {
+public class ProductDetailsControllerTest extends BaseIntegrationTest {
 
    @Autowired
    private MockMvc mockMvc;
@@ -22,19 +23,19 @@ public class ProductDetailsControllerTest {
    @Test
    void testGetProducts() throws Exception {
       mockMvc.perform( get( "/api/v1/products" )
-                  .param( "page", "0" )
-                  .param( "size", "10" )
-                  .with( withReadScopeJwt() )
-            )
-            .andExpect( status().isOk() )
-            .andDo( print() );
+            .param( "page", "0" )
+            .param( "size", "10" )
+            .with( withReadScopeJwt() )
+         )
+         .andExpect( status().isOk() )
+         .andDo( print() );
    }
 
    // Simulate an authenticated user with 'read' scope using a mock JWT (no real token validation)
    private RequestPostProcessor withReadScopeJwt() {
       return jwt().jwt( jwt -> jwt
-            .claim( "scope", "read" )
-            .claim( "sub", "admin" )
+         .claim( "scope", "read" )
+         .claim( "sub", "admin" )
       );
    }
 }
