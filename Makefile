@@ -54,7 +54,7 @@ tunnel-start:
 # Step 4: Deploy to Kubernetes
 # I dont even understand the ifeq part ... 🤯
 # but the idea is, open a new terminal and port forward
-k8s-up: k8s-start tunnel-start install-cert-manager
+k8s-up: k8s-start
 ifeq ($(EXCLUDE),storefront)
 	@echo "Skipping storefront manifest..."
 	kubectl apply -f $(K8S_MANIFESTS) --recursive --selector 'app!=storefront'

@@ -160,7 +160,16 @@ public class AuthorizationServerConfig {
    ) {
       CorsConfiguration config = new CorsConfiguration();
 //      config.setAllowedOrigins( List.of( "http://localhost:8081", "http://localhost:4200" ) );
-      config.setAllowedOrigins( List.of( productService, storefront, "shopbuddy.com", "http://shopbuddy.com" ) );
+      config.setAllowedOrigins(
+         List.of(
+            productService,
+            storefront,
+            "shopbuddy.com",
+            "http://shopbuddy.com",
+            "https://shopbuddy.com",
+            "http://localhost:4200",// adding this for ease of local development ...
+            "http://localhost:4200/storefront"
+         ) );
       config.setAllowedMethods( List.of( "GET", "POST", "PUT", "DELETE", "OPTIONS" ) );
       config.setAllowedHeaders( List.of( "*" ) );
       config.setAllowCredentials( true );

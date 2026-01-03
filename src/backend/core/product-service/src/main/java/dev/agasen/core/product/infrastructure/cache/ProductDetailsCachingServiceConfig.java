@@ -14,7 +14,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.time.Duration;
 
 @Configuration
-public class CachingServiceConfig {
+public class ProductDetailsCachingServiceConfig {
+
+   public static final String KEY_PREFIX = "product:";
 
    @Bean
    public CachingTemplate< String, ProductDetails > configureRedisCachingTemplate( RedisTemplate< String, ProductDetails > template ) {
@@ -26,7 +28,7 @@ public class CachingServiceConfig {
       return new CachingService<>(
          template,
          Duration.ofMinutes( 10 ),
-         key -> "product:" + key
+         key -> KEY_PREFIX + key
       );
    }
 

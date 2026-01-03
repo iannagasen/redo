@@ -1,8 +1,11 @@
 package dev.agasen.core.product.application.read;
 
 import dev.agasen.api.product.product.ProductDetails;
+import dev.agasen.common.cache.CachingService;
+import dev.agasen.common.pagination.PagedResult;
 import dev.agasen.core.product.application.mapper.ProductMapper;
 import dev.agasen.core.product.domain.product.ProductRepository;
+import dev.agasen.core.product.infrastructure.cache.PageProductDetailsCachingServiceConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +22,7 @@ public class ProductRetrievalService {
 
    private final ProductRepository productRepository;
    private final ProductMapper productMapper;
-   // include caching
+   private final CachingService< String, PagedResult< ProductDetails > > productDetailsCacheService;
 
    @PreAuthorize( "hasAnyAuthority('SCOPE_read', 'SCOPE_openid')" )
    public List< ProductDetails > getAllProducts() {
@@ -27,9 +30,13 @@ public class ProductRetrievalService {
    }
 
    @PreAuthorize( "hasAnyAuthority('SCOPE_read', 'SCOPE_openid')" )
-   public Page< ProductDetails > getAllProducts( int page, int size ) {
-      return productRepository.findAll( PageRequest.of( page, size ) )
-         .map( productMapper::toDomain );
+   public PagedResult< ProductDetails > getAllProducts( int page, int size ) {
+      String key = PageProductDetailsCachingServiceConfig.KEY_PREFIX + "p-" + page + ":s-" + size;
+      return productDetailsCacheService.getCachedOrCompute( key,
+         () -> {
+            Page< ProductDetails > resultPage = productRepository.findAll( PageRequest.of( page, size ) ).map( productMapper::toDomain );
+            return PagedResult.from( resultPage );
+         }
+      );
    }
-
 }

@@ -2,7 +2,6 @@ package dev.agasen.core.product;
 
 import dev.agasen.core.product.domain.category.Category;
 import dev.agasen.core.product.domain.category.CategoryRepository;
-import dev.agasen.core.product.domain.persistence.entity.ProductModel;
 import dev.agasen.core.product.domain.product.Product;
 import dev.agasen.core.product.domain.product.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -39,10 +37,9 @@ public class DataInitializer {
          List< Category > categories = createCategories();
 
          // Create Product Models
-         List< ProductModel > productModels = createProductModels();
 
          // Create Products
-         createProducts( productModels );
+         createProducts();
       };
    }
 
@@ -90,107 +87,9 @@ public class DataInitializer {
       return categoryRepository.save( category );
    }
 
-   private List< ProductModel > createProductModels() {
-      return new ArrayList<>();
-//      log.info( "Creating product models..." );
-//
-//      // Electronics Product Models
-//      ProductModel iphoneModel = createAndSaveProductModel(
-//            "iPhone",
-//            "IPHONE",
-//            "Apple iPhone smartphone series"
-//      );
-//
-//      ProductModel samsungModel = createAndSaveProductModel(
-//            "Galaxy",
-//            "GALAXY",
-//            "Samsung Galaxy smartphone series"
-//      );
-//
-//      ProductModel macbookModel = createAndSaveProductModel(
-//            "MacBook",
-//            "MACBOOK",
-//            "Apple MacBook laptop series"
-//      );
-//
-//      ProductModel dellModel = createAndSaveProductModel(
-//            "Dell XPS",
-//            "DELL_XPS",
-//            "Dell XPS laptop series"
-//      );
-//
-//      // Clothing Product Models
-//      ProductModel tshirtModel = createAndSaveProductModel(
-//            "T-Shirt",
-//            "TSHIRT",
-//            "Basic t-shirt design"
-//      );
-//
-//      ProductModel jeansModel = createAndSaveProductModel(
-//            "Jeans",
-//            "JEANS",
-//            "Denim jeans"
-//      );
-//
-//      // Book Product Models
-//      ProductModel programmingBookModel = createAndSaveProductModel(
-//            "Programming Books",
-//            "PROG_BOOK",
-//            "Technical programming books"
-//      );
-//
-//      // Create some model variants (parent-child relationships)
-//      ProductModel iphone15Model = createAndSaveProductModel(
-//            "iPhone 15",
-//            "IPHONE15",
-//            "iPhone 15 series",
-//            iphoneModel
-//      );
-//
-//      ProductModel iphone14Model = createAndSaveProductModel(
-//            "iPhone 14",
-//            "IPHONE14",
-//            "iPhone 14 series",
-//            iphoneModel
-//      );
-//
-//      return List.of( iphoneModel, samsungModel, macbookModel, dellModel, tshirtModel,
-//            jeansModel, programmingBookModel, iphone15Model, iphone14Model );
-   }
 
-   private ProductModel createAndSaveProductModel( String name, String reference, String description ) {
-      return createAndSaveProductModel( name, reference, description, null );
-   }
-
-   private ProductModel createAndSaveProductModel( String name, String reference, String description, ProductModel parent ) {
-      ProductModel model = new ProductModel();
-//      model.setId( null );
-//      model.setName( name );
-//      model.setReference( reference );
-//      model.setDescription( description );
-//      model.setParentModel( parent );
-//      return productModelRepository.save( model );
-      return null;
-   }
-
-   private void createProducts( List< ProductModel > productModels ) {
+   private void createProducts() {
       log.info( "Creating products..." );
-
-      // Find specific models
-      ProductModel iphoneModel = null;
-//            productModels.stream()
-//            .filter( pm -> "IPHONE15".equals( pm.getReference() ) )
-//            .findFirst().orElse( productModels.get( 0 ) );
-
-      ProductModel samsungModel = null;
-//            productModels.stream()
-//            .filter( pm -> "GALAXY".equals( pm.getReference() ) )
-//            .findFirst().orElse( productModels.get( 1 ) );
-
-      ProductModel macbookModel = null;
-//            productModels.stream()
-//            .filter( pm -> "MACBOOK".equals( pm.getReference() ) )
-//            .findFirst().orElse( productModels.get( 2 ) );
 
       // iPhone Products
       createAndSaveProduct(
@@ -201,8 +100,7 @@ public class DataInitializer {
          "Apple",
          new BigDecimal( "999.99" ),
          "USD",
-         50, 0, 0,
-         iphoneModel
+         50, 0, 0
       );
 
       createAndSaveProduct(
@@ -213,8 +111,7 @@ public class DataInitializer {
          "Apple",
          new BigDecimal( "1099.99" ),
          "USD",
-         30, 0, 0,
-         iphoneModel
+         30, 0, 0
       );
 
       // Samsung Products
@@ -226,8 +123,7 @@ public class DataInitializer {
          "Samsung",
          new BigDecimal( "1199.99" ),
          "USD",
-         25, 0, 0,
-         samsungModel
+         25, 0, 0
       );
 
       // MacBook Products
@@ -239,8 +135,7 @@ public class DataInitializer {
          "Apple",
          new BigDecimal( "1999.99" ),
          "USD",
-         15, 0, 0,
-         macbookModel
+         15, 0, 0
       );
 
       createAndSaveProduct(
@@ -251,76 +146,59 @@ public class DataInitializer {
          "Apple",
          new BigDecimal( "1099.99" ),
          "USD",
-         40, 0, 0,
-         macbookModel
+         40, 0, 0
       );
 
-      // Clothing Products
-      ProductModel tshirtModel = productModels.stream()
-//            .filter( pm -> "TSHIRT".equals( pm.getReference() ) )
-         .findFirst().orElse( null );
 
-      if ( tshirtModel != null ) {
-         createAndSaveProduct(
-            "Classic Cotton T-Shirt White - Medium",
-            "100% cotton classic fit t-shirt in white, size medium",
-            "TSHIRT-WHITE-M",
-            "classic-cotton-tshirt-white-medium",
-            "Generic",
-            new BigDecimal( "19.99" ),
-            "USD",
-            100, 0, 0,
-            tshirtModel
-         );
+      createAndSaveProduct(
+         "Classic Cotton T-Shirt White - Medium",
+         "100% cotton classic fit t-shirt in white, size medium",
+         "TSHIRT-WHITE-M",
+         "classic-cotton-tshirt-white-medium",
+         "Generic",
+         new BigDecimal( "19.99" ),
+         "USD",
+         100, 0, 0
+      );
 
-         createAndSaveProduct(
-            "Classic Cotton T-Shirt Black - Large",
-            "100% cotton classic fit t-shirt in black, size large",
-            "TSHIRT-BLACK-L",
-            "classic-cotton-tshirt-black-large",
-            "Generic",
-            new BigDecimal( "19.99" ),
-            "USD",
-            80, 0, 0,
-            tshirtModel
-         );
-      }
+      createAndSaveProduct(
+         "Classic Cotton T-Shirt Black - Large",
+         "100% cotton classic fit t-shirt in black, size large",
+         "TSHIRT-BLACK-L",
+         "classic-cotton-tshirt-black-large",
+         "Generic",
+         new BigDecimal( "19.99" ),
+         "USD",
+         80, 0, 0
+      );
 
-      // Book Products
-      ProductModel programmingModel = productModels.stream()
-//            .filter( pm -> "PROG_BOOK".equals( pm.getReference() ) )
-         .findFirst().orElse( null );
 
-      if ( programmingModel != null ) {
-         createAndSaveProduct(
-            "Clean Code: A Handbook of Agile Software Craftsmanship",
-            "Essential book for software developers on writing clean, maintainable code",
-            "BOOK-CLEAN-CODE",
-            "clean-code-handbook-agile-software-craftsmanship",
-            "Prentice Hall",
-            new BigDecimal( "42.99" ),
-            "USD",
-            75, 0, 0,
-            programmingModel
-         );
+      createAndSaveProduct(
+         "Clean Code: A Handbook of Agile Software Craftsmanship",
+         "Essential book for software developers on writing clean, maintainable code",
+         "BOOK-CLEAN-CODE",
+         "clean-code-handbook-agile-software-craftsmanship",
+         "Prentice Hall",
+         new BigDecimal( "42.99" ),
+         "USD",
+         75, 0, 0
+      );
 
-         createAndSaveProduct(
-            "Design Patterns: Elements of Reusable Object-Oriented Software",
-            "Classic book on software design patterns by the Gang of Four",
-            "BOOK-DESIGN-PATTERNS",
-            "design-patterns-elements-reusable-oop-software",
-            "Addison-Wesley",
-            new BigDecimal( "54.99" ),
-            "USD",
-            45, 0, 0,
-            programmingModel
-         );
-      }
+      createAndSaveProduct(
+         "Design Patterns: Elements of Reusable Object-Oriented Software",
+         "Classic book on software design patterns by the Gang of Four",
+         "BOOK-DESIGN-PATTERNS",
+         "design-patterns-elements-reusable-oop-software",
+         "Addison-Wesley",
+         new BigDecimal( "54.99" ),
+         "USD",
+         45, 0, 0
+      );
    }
 
    private void createAndSaveProduct( String name, String description, String sku, String slug,
                                       String brand, BigDecimal price, String currency,
-                                      int stock, int bought, int cart, ProductModel productModel ) {
+                                      int stock, int bought, int cart ) {
       Product product = new Product();
       product.setName( name );
       product.setDescription( description );
@@ -332,7 +210,6 @@ public class DataInitializer {
       product.setStock( stock );
       product.setBought( bought );
       product.setCart( cart );
-//      product.setProductModel( productModel );
 
       productRepository.save( product );
    }

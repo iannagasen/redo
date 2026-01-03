@@ -57,4 +57,4 @@ temporarily disable the otlp logging by removing this in the environment variabl
     - helm / customize
 - app
     - maybe some other technologies
-    - 
+- makefile flow, deployment like hot deploy only services with changes?

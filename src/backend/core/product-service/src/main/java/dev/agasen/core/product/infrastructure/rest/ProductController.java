@@ -2,6 +2,7 @@ package dev.agasen.core.product.infrastructure.rest;
 
 import dev.agasen.api.product.product.ProductCreationDetails;
 import dev.agasen.api.product.product.ProductDetails;
+import dev.agasen.common.pagination.PagedResult;
 import dev.agasen.core.product.application.read.BrandRetrievalService;
 import dev.agasen.core.product.application.read.ProductRetrievalService;
 import dev.agasen.core.product.application.write.ProductCreationService;
@@ -10,7 +11,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +30,7 @@ public class ProductController {
    private final BrandRetrievalService brandRetrievalService;
 
    @GetMapping
-   public Page< ProductDetails > getProducts(
+   public PagedResult< ProductDetails > getProducts(
       @RequestParam( defaultValue = "0", name = "page" ) @Min( 0 ) int page,
       @RequestParam( defaultValue = "20", name = "size" ) @Min( 1 ) @Max( 100 ) int size
    ) {
