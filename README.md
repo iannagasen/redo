@@ -58,3 +58,16 @@ temporarily disable the otlp logging by removing this in the environment variabl
 - app
     - maybe some other technologies
 - makefile flow, deployment like hot deploy only services with changes?
+
+Dev Experience improvement
+
+https://chatgpt.com/share/6959d854-75d0-8000-8f1d-00f746300770
+
+# installations
+
+```bash
+choco install make
+choco install minikube 
+choco install kubectl
+choco install -y skaffold
+```
