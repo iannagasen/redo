@@ -1,0 +1,25 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: ecommerce-redo
+build:
+  artifacts:
+    - image: storefront
+      context: src/frontend/storefront/storefront
+      buildpacks:
+        builder: gcr.io/buildpacks/builder:v1
+manifests:
+  rawYaml:
+    - k8s/base/auth-server-ingress.yaml
+    - k8s/base/ingress.yaml
+    - k8s/base/internal-gateway-ingress.yaml
+    - k8s/base/namespace.yaml
+    - k8s/base/storefront-ingresss.yaml
+    - k8s/base/backend/product-service/service.yaml
+    - k8s/base/frontend/storefront/deployment.yaml
+    - k8s/base/frontend/storefront/service.yaml
+    - k8s/base/infra/postgres/service.yaml
+    - k8s/base/infra/postgres/statefulset.yaml
+    - k8s/base/infra/redis/service.yaml
+    - k8s/base/infra/redis/statefulset.yaml
+    - k8s/base/shared/secrets/backend-url-configmap.yaml
