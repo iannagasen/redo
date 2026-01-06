@@ -61,6 +61,8 @@ temporarily disable the otlp logging by removing this in the environment variabl
 
 Dev Experience improvement
 
+- use `telepresence` in conjunction with `skaffold`
+
 https://chatgpt.com/share/6959d854-75d0-8000-8f1d-00f746300770
 
 # installations
