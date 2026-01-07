@@ -1,6 +1,9 @@
 ```bash
 # check what manifests to render
 skaffold render
+
+skaffold dev
+
 ```
 
 # Source: https://gist.github.com/0466cff59d08cabb5276f593ca2e513d
