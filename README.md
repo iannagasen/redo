@@ -74,3 +74,5 @@ choco install minikube
 choco install kubectl
 choco install -y skaffold
 ```
+
+TODO: skafold
