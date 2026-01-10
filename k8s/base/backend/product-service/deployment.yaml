@@ -54,15 +54,15 @@ spec:
           envFrom:
             - configMapRef:
                 name: backend-url-configmap
-          livenessProbe:
-            httpGet:
-              path: /product/actuator/health/liveness
-              port: 8080
-            initialDelaySeconds: 20
-            periodSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: /product/actuator/health/readiness
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 5
+#          livenessProbe:
+#            httpGet:
+#              path: /product/actuator/health/liveness
+#              port: 8080
+#            initialDelaySeconds: 20
+#            periodSeconds: 30
+#          readinessProbe:
+#            httpGet:
+#              path: /product/actuator/health/readiness
+#              port: 8080
+#            initialDelaySeconds: 10
+#            periodSeconds: 5
