@@ -75,4 +75,5 @@ choco install kubectl
 choco install -y skaffold
 ```
 
-TODO: skafold
+TODO: skaffold
+create shortcut for starting up services - maybe use make 
