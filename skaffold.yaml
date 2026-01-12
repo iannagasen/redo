@@ -18,10 +18,6 @@ build:
       context: src/backend/infra/auth-server
       docker:
         dockerfile: Dockerfile
-#    - image: storefront
-#      context: src/frontend/storefront/storefront
-#      docker:
-#        dockerfile: Dockerfile
 manifests:
   # todo: use kustomize
   rawYaml:
