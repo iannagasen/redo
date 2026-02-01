@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-insight-deployment
+  labels:
+    app: redis-insight
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-insight
+  template:
+    metadata:
+      labels:
+        app: redis-insight
+    spec:
+      containers:
+        - name: redis-insight
+          image: redislabs/redisinsight:latest
+          ports:
+            - containerPort: 5540
+          env:
+            - name: "RI_REDIS_HOST"
+              value: "redis"
+            - name: "RI_REDIS_PORT"
+              value: "6379"

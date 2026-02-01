@@ -14,7 +14,7 @@ skaffold dev
 
 urls:
 _note: hosts file should be updated to have the shopbuddy.com domain_
-https://shopbuddy.com/product/swagger-ui/index.html#/product-controller/addProduct
+http://shopbuddy.com/product/swagger-ui/index.html#/product-controller/addProduct
 
 # Steps in starting the frontend
 

@@ -77,3 +77,4 @@ choco install -y skaffold
 
 TODO: skaffold
 create shortcut for starting up services - maybe use make 
+
