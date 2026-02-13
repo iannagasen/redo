@@ -1,0 +1,35 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: k8s-admin-role
+  namespace: default
+rules:
+  # allow reading pods
+  - apiGroups: [ "" ]
+    resources: [ "pods" ]
+    verbs: [ "get", "list" ]
+
+  # allow reading pod logs
+  - apiGroups: [ "" ]
+    resources: [ "pods/log" ]
+    verbs: [ "get", "list" ]
+
+  # Allow reading services
+  - apiGroups: [ "" ]
+    resources: [ "services" ]
+    verbs: [ "get", "list", "watch" ]
+
+  # Allow reading deployments
+  - apiGroups: [ "apps" ]
+    resources: [ "deployments" ]
+    verbs: [ "get", "list", "watch" ]
+
+  # Allow reading configmaps
+  - apiGroups: [ "" ]
+    resources: [ "configmaps" ]
+    verbs: [ "get", "list", "watch" ]
+
+  # Allow reading secrets (be careful with this!)
+  - apiGroups: [ "" ]
+    resources: [ "secrets" ]
+    verbs: [ "get", "list" ]

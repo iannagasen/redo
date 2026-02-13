@@ -1,0 +1,19 @@
+server.servlet.context-path: /k8s-admin
+
+spring:
+  application.name: k8s-admin
+  ssl.bundle.pem:
+    k8s-bundle:
+      truststore:
+        certificate: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+
+logging:
+  level:
+    org.springframework.web.client.RestClient: DEBUG
+    org.springframework.http.client: DEBUG
+    org.springframework.web.client: DEBUG
+    org.springframework.boot.ssl: DEBUG
+    dev.agasen: DEBUG
+    root: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

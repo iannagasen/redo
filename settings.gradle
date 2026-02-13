@@ -6,5 +6,6 @@ include ':src:backend:core:user-service'
 
 include ':src:backend:infra:auth-server'
 include ':src:backend:infra:api-gateway'
+include ':src:backend:infra:k8s-admin'
 
 include ':src:backend:bff:storefront-bff'

@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-k8s-admin
+spec:
+  rules:
+    - host: "shopbuddy.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/k8s-admin"
+            backend:
+              service:
+                name: k8s-admin-service
+                port:
+                  number: 8080
