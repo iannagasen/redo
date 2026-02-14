@@ -16,6 +16,9 @@ urls:
 _note: hosts file should be updated to have the shopbuddy.com domain_
 http://shopbuddy.com/product/swagger-ui/index.html#/product-controller/addProduct
 
+http://shopbuddy.com/k8s-admin/hello
+http://shopbuddy.com/k8s-admin/pods
+
 # Steps in starting the frontend
 
 ```sh
