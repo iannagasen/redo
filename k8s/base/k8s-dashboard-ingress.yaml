@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8s-dashboard-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+    - host: shopbuddy.com
+      http:
+        paths:
+          - path: /k8s-dashboard(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: k8s-dashboard-service
+                port:
+                  number: 80

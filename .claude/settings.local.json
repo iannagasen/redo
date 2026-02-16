@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew:*)",
+      "Bash(apt list:*)",
+      "Bash(\"/mnt/c/Users/ianna/.jdks/corretto-24.0.2/bin/java.exe\" -version)",
+      "Bash(cmd.exe /c:*)",
+      "Bash(npm install)",
+      "Bash(npx ng build)"
+    ]
+  }
+}

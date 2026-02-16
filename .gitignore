@@ -51,3 +51,6 @@ out/
 
 **/__pycache__/
 **/*.pyc
+
+# vibes
+CLAUDE.md

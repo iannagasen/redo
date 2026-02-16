@@ -22,6 +22,10 @@ build:
       context: src/backend/infra/k8s-admin
       docker:
         dockerfile: Dockerfile
+#    - image: k8s-dashboard
+#      context: src/frontend/k8s-dashboard/k8s-dashboard
+#      docker:
+#        dockerfile: Dockerfile
 manifests:
   # todo: use kustomize
   rawYaml:
@@ -31,6 +35,7 @@ manifests:
     - k8s/base/backend/product-service/*.yaml
     - k8s/base/backend/k8s-admin/*.yaml
     #    - k8s/base/frontend/storefront/*.yaml
+    #    - k8s/base/frontend/k8s-dashboard/*.yaml
     - k8s/base/infra/postgres/*.yaml
     - k8s/base/infra/redis/*.yaml
     - k8s/base/shared/cert/*.yaml
