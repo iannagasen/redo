@@ -14,9 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -26,7 +25,6 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -41,6 +39,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -91,15 +90,6 @@ public class AuthorizationServerConfig {
    }
 
    @Bean
-   public UserDetailsService userDetailsService() {
-      UserDetails user = User.withUsername( "admin" )
-         .password( passwordEncoder().encode( "pass" ) ) // 👈 This part is important
-         .roles( "USER" )
-         .build();
-      return new InMemoryUserDetailsManager( user );
-   }
-
-   @Bean
    public PasswordEncoder passwordEncoder() {
       return new BCryptPasswordEncoder();
    }
@@ -145,9 +135,27 @@ public class AuthorizationServerConfig {
    public OAuth2TokenCustomizer< JwtEncodingContext > jwtCustomizer() {
       return context -> {
          if ( context.getTokenType().equals( OAuth2TokenType.ACCESS_TOKEN ) ) {
+            Authentication principal = context.getPrincipal();
+            var authorities = principal.getAuthorities();
+
+            List< String > roles = authorities.stream()
+               .map( GrantedAuthority::getAuthority )
+               .filter( a -> a.startsWith( "ROLE_" ) )
+               .map( a -> a.substring( 5 ) )
+               .collect( Collectors.toList() );
+
+            List< String > permissions = authorities.stream()
+               .map( GrantedAuthority::getAuthority )
+               .filter( a -> !a.startsWith( "ROLE_" ) )
+               .collect( Collectors.toList() );
+
             context.getClaims().claims( claims -> {
-               claims.put( "custom_claim", "custom_value" );
-//               claims.put( "scope", "read" );
+               if ( !roles.isEmpty() ) {
+                  claims.put( "roles", roles );
+               }
+               if ( !permissions.isEmpty() ) {
+                  claims.put( "permissions", permissions );
+               }
             } );
          }
       };

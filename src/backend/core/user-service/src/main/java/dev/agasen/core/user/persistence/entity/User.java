@@ -49,7 +49,7 @@ public class User {
    }
 
    public boolean hasRole( Role role ) {
-      return role.getUserRoles().stream().anyMatch( ur -> ur.getRole().equals( role ) );
+      return this.userRoles.stream().anyMatch( ur -> ur.getRole().equals( role ) );
    }
 
    public void addRoles( Collection< Role > roles ) {

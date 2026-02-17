@@ -39,7 +39,6 @@ public class OAuth2EndpointTests extends BaseSecurityTest {
                   .param( "token", accessToken ) )
             .andExpect( status().isOk() )
             .andExpect( jsonPath( "$.active" ).value( true ) )
-            .andExpect( jsonPath( "$.custom_claim" ).value( "custom_value" ) )
             .andExpect( jsonPath( "$.client_id" ).value( BaseSecurityTest.CLIENT_ID ) )
             .andExpect( jsonPath( "$.token_type" ).value( "Bearer" ) )
             .andDo( print() )

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +30,7 @@ public class UserRestService implements UserService {
    private final UserRepository userRepository;
    private final RoleRepository roleRepository;
    private final UserMapper userMapper;
+   private final PasswordEncoder passwordEncoder;
 
    @Override
    @Transactional( readOnly = true )
@@ -46,8 +48,10 @@ public class UserRestService implements UserService {
    }
 
    @Override
+   @Transactional
    public void createUser( UserCreationDetails userCreationDetails ) {
       User user = userMapper.toUser( userCreationDetails );
+      user.setPassword( passwordEncoder.encode( user.getPassword() ) );
       Collection< Role > roles = roleRepository.findAllExistByNameIn( userCreationDetails.getRoles() );
 
       var userRoles = roles.stream()
@@ -59,16 +63,16 @@ public class UserRestService implements UserService {
    }
 
    @Override
+   @Transactional
    public void updateUserPassword( long id, UserPasswordChange userPasswordChange ) {
       User user = userRepository.findById( id )
             .orElseThrow( Exceptions.notFound( "User", id ) );
 
-      // TODO: use encoding , hashes , etc
-      if ( user.getPassword().equals( userPasswordChange.getCurrentPassword() ) ) {
-         user.setPassword( userPasswordChange.getCurrentPassword() );
+      if ( passwordEncoder.matches( userPasswordChange.getCurrentPassword(), user.getPassword() ) ) {
+         user.setPassword( passwordEncoder.encode( userPasswordChange.getNewPassword() ) );
          log.debug( "Password changed for user with id {}", id );
       } else {
-         throw new RuntimeException( "password did not match" );
+         throw new RuntimeException( "Current password did not match" );
       }
    }
 

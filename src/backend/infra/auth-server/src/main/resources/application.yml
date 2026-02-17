@@ -15,9 +15,10 @@ env.base.url:
     storefront: ${EXTERNAL_STOREFRONT_CHANNEL_BASE_URL:http://localhost:4200}
 
 spring:
-  autoconfigure:
-    exclude:
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/user_management
+    username: ${DB_USER:product_user}
+    password: ${DB_PASSWORD:product_password}
 
 oauth2:
   clients:
@@ -68,6 +69,22 @@ oauth2:
         - openid
         - read
       # PKCE
+      client-settings:
+        require-authorization-consent: true
+        require-proof-key: true
+    k8s-dashboard-client:
+      client-id: k8s-dashboard-client
+      client-secret: k8s-dashboard-secret
+      client-authentication-method: none
+      authorization-grant-types:
+        - authorization_code
+        - refresh_token
+      redirect-uris:
+        - http://shopbuddy.com/k8s-dashboard/login/callback
+        - http://localhost:4200/k8s-dashboard/login/callback
+      scopes:
+        - openid
+        - read
       client-settings:
         require-authorization-consent: true
         require-proof-key: true

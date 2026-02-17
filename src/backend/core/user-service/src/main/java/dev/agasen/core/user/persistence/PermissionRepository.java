@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public interface PermissionRepository extends JpaRepository< Permission, Integer > {
+public interface PermissionRepository extends JpaRepository< Permission, Long > {
 
    Collection< Permission > findByNameIn( Collection< String > names );
 
