@@ -1,14 +1,14 @@
-﻿apiVersion: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: auth
-  name: auth-deployment
+    app: user
+  name: user-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: user
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       labels:
-        app: auth
+        app: user
     spec:
       initContainers:
         - name: ensure-db
@@ -32,11 +32,12 @@ spec:
             - name: PGPASSWORD
               value: "product_password"
       containers:
-        - name: authserver
-          image: auth:latest
-          imagePullPolicy: Never # recommended for local development
+        - name: user
+          image: user:latest
+          imagePullPolicy: Never
           ports:
             - containerPort: 8080
+              name: http
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"

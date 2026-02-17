@@ -18,6 +18,10 @@ build:
       context: src/backend/infra/auth-server
       docker:
         dockerfile: Dockerfile
+    - image: user
+      context: src/backend/core/user-service
+      docker:
+        dockerfile: Dockerfile
     - image: k8s-admin
       context: src/backend/infra/k8s-admin
       docker:
@@ -33,6 +37,7 @@ manifests:
     - k8s/base/backend/api-gateway/*.yaml
     - k8s/base/backend/auth-server/*.yaml
     - k8s/base/backend/product-service/*.yaml
+    - k8s/base/backend/user-service/*.yaml
     - k8s/base/backend/k8s-admin/*.yaml
     #    - k8s/base/frontend/storefront/*.yaml
     #    - k8s/base/frontend/k8s-dashboard/*.yaml
