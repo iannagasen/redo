@@ -1,5 +1,7 @@
 server.servlet.context-path: /k8s-admin
 
+env.base.url.internal.auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+
 spring:
   application.name: k8s-admin
   ssl.bundle.pem:

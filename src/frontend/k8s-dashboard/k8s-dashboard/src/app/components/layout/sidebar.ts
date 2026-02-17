@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { OauthService } from '../../core/service/oauth-service';
 
 @Component({
   selector: 'app-sidebar',
@@ -23,15 +24,31 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
           </li>
         }
       </ul>
+      <div class="border-t border-gray-700 p-4">
+        <button
+          (click)="logout()"
+          class="w-full text-left px-2 py-2 text-sm text-gray-400 hover:text-white hover:bg-gray-800 rounded transition-colors"
+        >
+          Logout
+        </button>
+      </div>
     </nav>
   `,
 })
 export class Sidebar {
+  private auth = inject(OauthService);
+  private router = inject(Router);
+
   links = [
-    { path: '/', label: 'Overview', exact: true },
+    { path: '/overview', label: 'Overview', exact: true },
     { path: '/pods', label: 'Pods', exact: false },
     { path: '/deployments', label: 'Deployments', exact: false },
     { path: '/services', label: 'Services', exact: false },
     { path: '/configmaps', label: 'ConfigMaps', exact: false },
   ];
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 }
