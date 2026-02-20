@@ -257,6 +257,34 @@ In the root component, only show the sidebar/nav when logged in:
 
 ---
 
+## Troubleshooting
+
+### 400 Bad Request on `/oauth2/authorize`
+
+**Symptom:**
+```
+GET http://shopbuddy.com/auth/oauth2/authorize?client_id=k8s-dashboard-client
+    &redirect_uri=http%3A%2F%2Flocalhost%3A4300%2F...
+    400 (Bad Request)
+```
+
+**Cause:** The `redirect_uri` sent by the frontend does not exactly match any URI registered for that client in `application.yml`. The URI must match on scheme, host, port, and path — even a port difference (e.g., `4200` vs `4300`) will cause a 400.
+
+**Fix:** Add the actual port to the client's `redirect-uris`:
+
+```yaml
+redirect-uris:
+  - http://shopbuddy.com/k8s-dashboard/login/callback
+  - http://localhost:4200/k8s-dashboard/login/callback
+  - http://localhost:4300/k8s-dashboard/login/callback
+```
+
+Redeploy the auth-server after the change (Skaffold will detect it automatically).
+
+**Prevention:** `ng serve` defaults to port 4200, but increments to 4201, 4300, etc. if the port is already taken (e.g., another Angular app is running). Register all ports you expect to use upfront.
+
+---
+
 ## Verification Checklist
 
 1. Navigate to the app URL — should redirect to `/login`

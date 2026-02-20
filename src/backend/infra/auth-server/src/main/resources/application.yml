@@ -82,6 +82,7 @@ oauth2:
       redirect-uris:
         - http://shopbuddy.com/k8s-dashboard/login/callback
         - http://localhost:4200/k8s-dashboard/login/callback
+        - http://localhost:4300/k8s-dashboard/login/callback
       scopes:
         - openid
         - read
