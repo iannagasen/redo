@@ -4,7 +4,7 @@ metadata:
   name: ingress-k8s-admin
   annotations:
     nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "http://localhost:4200, http://shopbuddy.com"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "http://localhost:4200, http://localhost:4300, http://shopbuddy.com"
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
     nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization"
 spec:
