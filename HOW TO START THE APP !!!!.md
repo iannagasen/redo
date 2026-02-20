@@ -28,4 +28,4 @@ ng serve
 
 urls:
 http://localhost:4200/storefront/dashboard
-
+http://localhost:4300/k8s-dashboard

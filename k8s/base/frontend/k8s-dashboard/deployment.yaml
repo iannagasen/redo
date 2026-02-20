@@ -19,5 +19,5 @@ spec:
           image: k8s-dashboard:latest
           imagePullPolicy: Never
           ports:
-            - containerPort: 8080
+            - containerPort: 4300
               protocol: TCP

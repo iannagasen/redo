@@ -54,3 +54,6 @@ out/
 
 # vibes
 CLAUDE.md
+GEMINI.md
+.claude/
+.gemini/

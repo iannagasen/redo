@@ -10,4 +10,4 @@ spec:
     app: k8s-dashboard
   ports:
     - port: 80
-      targetPort: 8080
+      targetPort: 4300
