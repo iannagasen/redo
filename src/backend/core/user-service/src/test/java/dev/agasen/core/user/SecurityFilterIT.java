@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Tests for the SecurityConfig filter chains in user-service.
  * Extends BaseIntegrationTest to reuse the Postgres and Redis infrastructure.
  */
-public class SecurityFilterIntegrationTest extends BaseIntegrationTest {
+public class SecurityFilterIT extends BaseIntegrationTest {
 
     @Value("${internal.api.key}")
     private String internalApiKey;

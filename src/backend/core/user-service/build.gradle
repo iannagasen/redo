@@ -41,7 +41,7 @@ dependencies {
     implementation 'org.postgresql:postgresql'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    
+
 
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
@@ -66,4 +66,22 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+    // By default, run only unit tests
+//    exclude '**/*IT.class'
 }
+
+// Integration Test Task
+//tasks.register('intTest', Test) {
+//    description = 'Runs integration tests with Testcontainers.'
+//    group = 'verification'
+//
+//    testClassesDirs = sourceSets.test.output.classesDirs
+//    classpath = sourceSets.test.runtimeClasspath
+//
+//    include '**/*IT.class'
+//
+//    useJUnitPlatform()
+//
+//    // Ensure it always runs when called
+//    outputs.upToDateWhen { false }
+//}

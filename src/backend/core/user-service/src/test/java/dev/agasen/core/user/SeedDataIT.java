@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SeedDataIntegrationTest extends BaseIntegrationTest {
+public class SeedDataIT extends BaseIntegrationTest {
 
    @Autowired
    private JdbcTemplate jdbcTemplate;
