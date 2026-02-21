@@ -12,14 +12,13 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(
-      componentModel = "spring",
-      uses = { PermissionMapper.class },
-      unmappedTargetPolicy = ReportingPolicy.ERROR
+   componentModel = "spring",
+   uses = { PermissionMapper.class },
+   unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 public interface RoleMapper {
 
@@ -28,7 +27,6 @@ public interface RoleMapper {
    @Mapping( source = "rolePermissions", target = "permissions", qualifiedByName = "rolePermissionsToPermissions" )
    RoleDetails roleToRoleDetails( Role role );
 
-   List< RoleDetails > rolesToRoleDetails( List< Role > roles );
 
    @Mapping( target = "id", ignore = true )
    @Mapping( target = "rolePermissions", ignore = true )
@@ -41,8 +39,8 @@ public interface RoleMapper {
          return new HashSet<>();
       }
       return rolePermissions.stream()
-            .map( RolePermission::getPermission )
-            .map( PermissionMapper.INSTANCE::permissionToPermissionDetails )
-            .collect( Collectors.toSet() );
+         .map( RolePermission::getPermission )
+         .map( PermissionMapper.INSTANCE::permissionToPermissionDetails )
+         .collect( Collectors.toSet() );
    }
 }

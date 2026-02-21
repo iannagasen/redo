@@ -177,8 +177,9 @@ public class AuthorizationServerConfig {
             "shopbuddy.com",
             "http://shopbuddy.com",
             "https://shopbuddy.com",
-            "http://localhost:4200",// adding this for ease of local development ...
-            "http://localhost:4200/storefront"
+            "http://localhost:4200",
+            "http://localhost:4200/storefront",
+            "http://localhost:4300"
          ) );
       config.setAllowedMethods( List.of( "GET", "POST", "PUT", "DELETE", "OPTIONS" ) );
       config.setAllowedHeaders( List.of( "*" ) );

@@ -56,6 +56,7 @@ public class KubernetesController {
    @GetMapping( "/configmaps" )
    public JsonNode listConfigMaps() {
       log.info( ">>>> listConfigMaps called" );
+      log.info( "Hello Ian" );
       return k8sClient.listConfigMaps();
    }
 }

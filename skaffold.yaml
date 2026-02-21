@@ -10,52 +10,22 @@ build:
       context: src/backend/core/product-service
       docker:
         dockerfile: Dockerfile
-      hooks:
-        before:
-          - command: ["sh", "-c", "./gradlew :src:backend:core:product-service:build -x test"]
-            os: [linux, darwin]
-          - command: ["cmd", "/C", "gradlew.bat :src:backend:core:product-service:build -x test"]
-            os: [windows]
     - image: gateway
       context: src/backend/infra/api-gateway
       docker:
         dockerfile: Dockerfile
-      hooks:
-        before:
-          - command: ["sh", "-c", "./gradlew :src:backend:infra:api-gateway:build -x test"]
-            os: [linux, darwin]
-          - command: ["cmd", "/C", "gradlew.bat :src:backend:infra:api-gateway:build -x test"]
-            os: [windows]
     - image: auth
       context: src/backend/infra/auth-server
       docker:
         dockerfile: Dockerfile
-      hooks:
-        before:
-          - command: ["sh", "-c", "./gradlew :src:backend:infra:auth-server:build -x test"]
-            os: [linux, darwin]
-          - command: ["cmd", "/C", "gradlew.bat :src:backend:infra:auth-server:build -x test"]
-            os: [windows]
     - image: user
       context: src/backend/core/user-service
       docker:
         dockerfile: Dockerfile
-      hooks:
-        before:
-          - command: ["sh", "-c", "./gradlew :src:backend:core:user-service:build -x test"]
-            os: [linux, darwin]
-          - command: ["cmd", "/C", "gradlew.bat :src:backend:core:user-service:build -x test"]
-            os: [windows]
     - image: k8s-admin
       context: src/backend/infra/k8s-admin
       docker:
         dockerfile: Dockerfile
-      hooks:
-        before:
-          - command: ["sh", "-c", "./gradlew :src:backend:infra:k8s-admin:build -x test"]
-            os: [linux, darwin]
-          - command: ["cmd", "/C", "gradlew.bat :src:backend:infra:k8s-admin:build -x test"]
-            os: [windows]
 #    - image: k8s-dashboard
 #      context: src/frontend/k8s-dashboard/k8s-dashboard
 #      docker:
