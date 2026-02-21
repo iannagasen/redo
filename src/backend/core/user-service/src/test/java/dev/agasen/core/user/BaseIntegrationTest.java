@@ -23,7 +23,6 @@ import org.testcontainers.utility.DockerImageName;
 //@Testcontainers
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import( BaseIntegrationTest.NoSecurityConfig.class )
 public abstract class BaseIntegrationTest {
 
    @Autowired
@@ -38,11 +37,6 @@ public abstract class BaseIntegrationTest {
             .withDatabaseName( "test-db" )
             .withUsername( "user" )
             .withPassword( "password" )
-            .withCreateContainerCmdModifier( cmd -> {
-               cmd.getHostConfig().withPortBindings(
-                     new PortBinding( Ports.Binding.bindPort( 5555 ), new ExposedPort( 5432 ) )
-               );
-            } )
             .withReuse( true );
 
       redis = new RedisContainer( DockerImageName.parse( "redis:6.0.3" ) )
@@ -59,6 +53,9 @@ public abstract class BaseIntegrationTest {
       registry.add( "spring.datasource.username", () -> postgres.getUsername() );
       registry.add( "spring.datasource.password", () -> postgres.getPassword() );
 
+      registry.add( "spring.data.redis.host", () -> redis.getHost() );
+      registry.add( "spring.data.redis.port", () -> redis.getMappedPort( 6379 ) );
+      // Keep legacy properties just in case
       registry.add( "spring.redis.host", () -> redis.getHost() );
       registry.add( "spring.redis.port", () -> redis.getMappedPort( 6379 ) );
    }
