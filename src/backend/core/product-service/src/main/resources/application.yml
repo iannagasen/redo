@@ -32,20 +32,18 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create  # SET none for PROD - options: none | validate | update | create | create-drop
+      ddl-auto: none
     show-sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
   data:
     redis:
       host: redis
       port: 6379
 
-  sql:
-    init:
-      mode: always  # Set to 'always' if you want to run schema.sql on startup | 'never' if not
-      platform: postgresql
-  #      schema-locations: classpath:schema.sql  # if not using default naming
-  #      data-locations: classpath:data.sql    # for data inserts
+  # Removed spring.sql.init.mode in favor of Liquibase
 
   security:
     oauth2:

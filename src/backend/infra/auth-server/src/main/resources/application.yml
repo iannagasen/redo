@@ -19,6 +19,8 @@ spring:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/user_management
     username: ${DB_USER:product_user}
     password: ${DB_PASSWORD:product_password}
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
 oauth2:
   clients:

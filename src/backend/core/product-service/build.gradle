@@ -48,6 +48,7 @@ dependencies {
 
     // Database
     implementation 'org.postgresql:postgresql'
+    implementation 'org.liquibase:liquibase-core'
 
     // JSON Processing (for JSONB columns)
     implementation 'com.fasterxml.jackson.core:jackson-databind'
