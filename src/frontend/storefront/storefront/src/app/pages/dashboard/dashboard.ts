@@ -1,13 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { OauthService } from '../../core/service/oauth-service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../core/service/product-service';
 import { ProductCreatorForm } from '../../components/product/product-creator-form';
+import { ProductDetails } from '../../core/model/product-details';
 
 @Component( {
   selector: 'app-dashboard',
-  imports: [ CommonModule, ProductCreatorForm ],
+  imports: [ CommonModule, RouterModule, ProductCreatorForm ],
   template: `
     <div class="p-5 max-w-7xl mx-auto">
       <h1 class="text-3xl font-bold text-gray-900 mb-8">Dashboard</h1>
@@ -58,26 +59,27 @@ import { ProductCreatorForm } from '../../components/product/product-creator-for
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-5">
             @for (product of products(); track product.id) {
               <div
-                class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                [routerLink]="['/products', product.id]"
+                class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer">
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ product.name }}</h3>
 
                 @if (product.description) {
-                  <p class="text-gray-600 mb-3 text-sm leading-relaxed">
+                  <p class="text-gray-600 mb-3 text-sm leading-relaxed line-clamp-2">
                     {{ product.description }}
                   </p>
                 }
 
+                @if (product.brand) {
+                  <p class="text-xs text-gray-400 mb-2">{{ product.brand }}</p>
+                }
+
                 @if (product.price) {
-                  <p class="text-lg font-bold text-green-600 mb-2">
-                    {{ product.price | currency }}
+                  <p class="text-lg font-bold text-green-600">
+                    {{ product.price | currency: (product.currency || 'USD') }}
                   </p>
                 }
 
-                @if (product.category) {
-                  <p class="text-xs text-gray-500 uppercase tracking-wide">
-                    {{ product.category }}
-                  </p>
-                }
+                <p class="text-xs text-blue-500 mt-3 font-medium">View details →</p>
               </div>
             }
           </div>

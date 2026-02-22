@@ -1,8 +1,5 @@
 package dev.agasen.core.user;
 
-import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.PortBinding;
-import com.github.dockerjava.api.model.Ports;
 import com.redis.testcontainers.RedisContainer;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -34,14 +30,14 @@ public abstract class BaseIntegrationTest {
    @BeforeAll
    static void setup() {
       postgres = new PostgreSQLContainer<>( "postgres:17-alpine" )
-            .withDatabaseName( "test-db" )
-            .withUsername( "user" )
-            .withPassword( "password" )
-            .withReuse( true );
+         .withDatabaseName( "test-db" )
+         .withUsername( "user" )
+         .withPassword( "password" )
+         .withReuse( true );
 
       redis = new RedisContainer( DockerImageName.parse( "redis:6.0.3" ) )
-            .withExposedPorts( 6379 )
-            .withReuse( true );
+         .withExposedPorts( 6379 )
+         .withReuse( true );
 
       postgres.start();
       redis.start();
@@ -65,7 +61,7 @@ public abstract class BaseIntegrationTest {
       @Bean
       public SecurityFilterChain filterChain( HttpSecurity http ) throws Exception {
          http.csrf().disable()
-               .authorizeHttpRequests().anyRequest().permitAll();
+            .authorizeHttpRequests().anyRequest().permitAll();
          return http.build();
       }
    }

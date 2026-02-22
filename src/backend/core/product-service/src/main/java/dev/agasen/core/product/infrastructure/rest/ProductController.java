@@ -29,6 +29,11 @@ public class ProductController {
    private final ProductRetrievalService productRetrievalService;
    private final BrandRetrievalService brandRetrievalService;
 
+   @GetMapping( "/{id}" )
+   public ProductDetails getProduct( @PathVariable Long id ) {
+      return productRetrievalService.getProductById( id );
+   }
+
    @GetMapping
    public PagedResult< ProductDetails > getProducts(
       @RequestParam( defaultValue = "0", name = "page" ) @Min( 0 ) int page,

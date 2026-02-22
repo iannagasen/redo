@@ -3,6 +3,7 @@ import { OauthService } from './oauth-service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { ProductCreationDetails } from '../model/product-creation-details';
+import { ProductDetails } from '../model/product-details';
 
 @Injectable( {
   providedIn: 'root'
@@ -24,6 +25,11 @@ export class ProductService {
       .pipe(
         map( response => response.content ),
       );
+  }
+
+  getProductById( id: number ): Observable<ProductDetails> {
+    const headers = this.createAuthHeaders();
+    return this.httpClient.get<ProductDetails>( `${ this.BASE_URL }/products/${ id }`, { headers } );
   }
 
   createProduct( product: ProductCreationDetails ): Observable<void> {

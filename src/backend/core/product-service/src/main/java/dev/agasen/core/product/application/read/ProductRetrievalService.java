@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class ProductRetrievalService {
    private final ProductRepository productRepository;
    private final ProductMapper productMapper;
    private final CachingService< String, PagedResult< ProductDetails > > productDetailsCacheService;
+   private final CachingService< String, ProductDetails > productCachingService;
 
    @PreAuthorize( "hasAnyAuthority('SCOPE_read', 'SCOPE_openid')" )
    public List< ProductDetails > getAllProducts() {
@@ -34,9 +37,20 @@ public class ProductRetrievalService {
       return productDetailsCacheService.getCachedOrCompute( key, () -> findAllProducts( page, size ) );
    }
 
+   @PreAuthorize( "hasAnyAuthority('SCOPE_read', 'SCOPE_openid')" )
+   public ProductDetails getProductById( Long id ) {
+      return productCachingService.getCachedOrCompute( String.valueOf( id ), () -> findProductById( id ) );
+   }
+
    private PagedResult< ProductDetails > findAllProducts( int page, int size ) {
       return PagedResult.from(
          productRepository.findAll( PageRequest.of( page, size ) ).map( productMapper::toDomain )
       );
+   }
+
+   private ProductDetails findProductById( Long id ) {
+      return productRepository.findById( id )
+         .map( productMapper::toDomain )
+         .orElseThrow( () -> new ResponseStatusException( HttpStatus.NOT_FOUND, "Product not found: " + id ) );
    }
 }
