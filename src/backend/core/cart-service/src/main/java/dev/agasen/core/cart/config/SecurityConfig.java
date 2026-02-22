@@ -1,4 +1,4 @@
-package dev.agasen.core.cart.infrastructure.security;
+package dev.agasen.core.cart.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -85,18 +85,18 @@ public class SecurityConfig {
       return converter;
    }
 
-   private Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
+   private Converter< Jwt, Collection< GrantedAuthority > > jwtGrantedAuthoritiesConverter() {
       JwtGrantedAuthoritiesConverter defaultConverter = new JwtGrantedAuthoritiesConverter();
 
       return jwt -> {
-         Collection<GrantedAuthority> authorities = new ArrayList<>( defaultConverter.convert( jwt ) );
+         Collection< GrantedAuthority > authorities = new ArrayList<>( defaultConverter.convert( jwt ) );
 
-         List<String> roles = jwt.getClaimAsStringList( "roles" );
+         List< String > roles = jwt.getClaimAsStringList( "roles" );
          if ( roles != null ) {
             roles.forEach( role -> authorities.add( new SimpleGrantedAuthority( "ROLE_" + role ) ) );
          }
 
-         List<String> permissions = jwt.getClaimAsStringList( "permissions" );
+         List< String > permissions = jwt.getClaimAsStringList( "permissions" );
          if ( permissions != null ) {
             permissions.forEach( perm -> authorities.add( new SimpleGrantedAuthority( perm ) ) );
          }

@@ -1,4 +1,4 @@
-package dev.agasen.core.order.infrastructure.rest;
+package dev.agasen.core.order;
 
 import dev.agasen.api.order.CreateOrderRequest;
 import dev.agasen.api.order.OrderDetails;
@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping( "/api/v1/orders" )
 @RequiredArgsConstructor
-public class OrderController {
+public class OrderRestService {
 
    private final OrderRetrievalService orderRetrievalService;
    private final OrderCommandService orderCommandService;

@@ -1,4 +1,4 @@
-package dev.agasen.core.cart.infrastructure.rest;
+package dev.agasen.core.cart;
 
 import dev.agasen.api.cart.AddToCartRequest;
 import dev.agasen.api.cart.CartDetails;
@@ -9,19 +9,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping( "/api/v1/cart" )
 @RequiredArgsConstructor
-public class CartController {
+public class CartRestService {
 
    private final CartRetrievalService retrievalService;
    private final CartCommandService commandService;
@@ -45,13 +38,13 @@ public class CartController {
    }
 
    @DeleteMapping( "/items/{productId}" )
-   public ResponseEntity<Void> removeItem( @PathVariable Long productId ) {
+   public ResponseEntity< Void > removeItem( @PathVariable Long productId ) {
       commandService.removeItem( userId(), productId );
       return ResponseEntity.noContent().build();
    }
 
    @DeleteMapping
-   public ResponseEntity<Void> clearCart() {
+   public ResponseEntity< Void > clearCart() {
       commandService.clearCart( userId() );
       return ResponseEntity.noContent().build();
    }
