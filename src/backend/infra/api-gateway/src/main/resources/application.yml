@@ -10,10 +10,12 @@ env.base.url:
     auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
     product: ${INTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
     cart: ${INTERNAL_CART_SERVICE_BASE_URL:http://localhost:8082}
+    order: ${INTERNAL_ORDER_SERVICE_BASE_URL:http://localhost:8083}
   external:
     auth: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
     product: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
     cart: ${EXTERNAL_CART_SERVICE_BASE_URL:http://localhost:8082}
+    order: ${EXTERNAL_ORDER_SERVICE_BASE_URL:http://localhost:8083}
 
 spring:
   security:
@@ -93,6 +95,13 @@ spring:
                 - Path=/cart/**
               filters:
                 - RewritePath=/cart/cart/(?<segment>.*), /cart/${segment}
+
+            - id: order-service
+              uri: ${env.base.url.internal.order}
+              predicates:
+                - Path=/order/**
+              filters:
+                - RewritePath=/order/order/(?<segment>.*), /order/${segment}
 
 ---
 spring.config.activate.on-profile: docker

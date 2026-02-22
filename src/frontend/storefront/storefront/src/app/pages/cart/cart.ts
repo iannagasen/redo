@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../core/service/cart-service';
+import { OrderService } from '../../core/service/order-service';
 import { CartItemDetails } from '../../core/model/cart-item-details';
 
 @Component( {
@@ -124,26 +125,21 @@ import { CartItemDetails } from '../../core/model/cart-item-details';
                 </div>
               </div>
 
-              @if (orderPlaced()) {
-                <div class="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-                  <svg class="w-8 h-8 text-green-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                  </svg>
-                  <p class="text-green-700 font-semibold">Order placed!</p>
-                  <p class="text-green-600 text-sm mt-1">Thank you for your purchase.</p>
+              @if (checkoutError()) {
+                <div class="bg-red-50 border border-red-200 rounded-lg p-3 mb-3 text-sm text-red-700">
+                  Checkout failed. Please try again.
                 </div>
-              } @else {
-                <button
-                  (click)="checkout()"
-                  class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors mb-3">
-                  Checkout
-                </button>
-                <a
-                  [routerLink]="['/dashboard']"
-                  class="block text-center text-sm text-blue-600 hover:text-blue-800 transition-colors">
-                  Continue Shopping
-                </a>
               }
+              <button
+                (click)="checkout()"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-colors mb-3">
+                Checkout
+              </button>
+              <a
+                [routerLink]="['/dashboard']"
+                class="block text-center text-sm text-blue-600 hover:text-blue-800 transition-colors">
+                Continue Shopping
+              </a>
             </div>
           </div>
 
@@ -157,9 +153,11 @@ import { CartItemDetails } from '../../core/model/cart-item-details';
 export class Cart {
 
   orderPlaced = signal( false );
+  checkoutError = signal( false );
 
   constructor(
     public cartService: CartService,
+    private orderService: OrderService,
     private router: Router,
   ) {
   }
@@ -169,7 +167,13 @@ export class Cart {
   }
 
   checkout(): void {
-    this.orderPlaced.set( true );
-    this.cartService.clearCart();
+    const items = this.cartService.cartItems();
+    this.orderService.createOrder( items ).subscribe( {
+      next: () => {
+        this.cartService.clearCart();
+        this.router.navigate( [ '/orders' ] );
+      },
+      error: () => this.checkoutError.set( true ),
+    } );
   }
 }

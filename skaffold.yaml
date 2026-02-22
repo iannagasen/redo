@@ -30,6 +30,10 @@ build:
       context: src/backend/core/cart-service
       docker:
         dockerfile: Dockerfile
+    - image: order
+      context: src/backend/core/order-service
+      docker:
+        dockerfile: Dockerfile
 #    - image: k8s-dashboard
 #      context: src/frontend/k8s-dashboard/k8s-dashboard
 #      docker:
@@ -44,6 +48,7 @@ manifests:
     - k8s/base/backend/user-service/*.yaml
     - k8s/base/backend/k8s-admin/*.yaml
     - k8s/base/backend/cart-service/*.yaml
+    - k8s/base/backend/order-service/*.yaml
     #    - k8s/base/frontend/storefront/*.yaml
     #    - k8s/base/frontend/k8s-dashboard/*.yaml
     - k8s/base/infra/postgres/*.yaml
