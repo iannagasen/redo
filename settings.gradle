@@ -3,6 +3,7 @@ include ':src:backend:platform:api'
 
 include ':src:backend:core:product-service'
 include ':src:backend:core:user-service'
+include ':src:backend:core:cart-service'
 
 include ':src:backend:infra:auth-server'
 include ':src:backend:infra:api-gateway'

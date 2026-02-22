@@ -1,12 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule, CurrencyPipe } from '@angular/common';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { ProductService } from '../../core/service/product-service';
+import { CartService } from '../../core/service/cart-service';
 import { ProductDetails } from '../../core/model/product-details';
+import { AddToCartRequest } from '../../core/model/add-to-cart-request';
 
 @Component( {
   selector: 'app-product-detail',
-  imports: [ CommonModule ],
+  imports: [ CommonModule, RouterModule ],
   template: `
     <div class="p-5 max-w-4xl mx-auto">
 
@@ -107,13 +109,24 @@ import { ProductDetails } from '../../core/model/product-details';
             </div>
 
             <!-- Action -->
-            <div class="pt-2">
+            <div class="pt-2 flex items-center gap-4 flex-wrap">
               <button
+                (click)="addToCart()"
                 [disabled]="(product()!.stock ?? 0) === 0"
-                class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed
+                class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed
                        text-white px-8 py-3 rounded-lg font-semibold transition-colors">
                 {{ (product()!.stock ?? 0) > 0 ? 'Add to Cart' : 'Out of Stock' }}
               </button>
+
+              @if (addedToCart()) {
+                <div class="flex items-center gap-2 text-green-600 font-medium">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                  </svg>
+                  Added to cart!
+                  <a [routerLink]="['/cart']" class="underline hover:text-green-800 transition-colors">View cart</a>
+                </div>
+              }
             </div>
 
           </div>
@@ -129,13 +142,16 @@ export class ProductDetail implements OnInit {
   product = signal<ProductDetails | null>( null );
   loading = signal( false );
   error = signal<string | null>( null );
+  addedToCart = signal( false );
 
   private productId!: number;
+  private addedTimer?: ReturnType<typeof setTimeout>;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
+    private cartService: CartService,
   ) {
   }
 
@@ -158,6 +174,23 @@ export class ProductDetail implements OnInit {
         this.loading.set( false );
       }
     } );
+  }
+
+  addToCart(): void {
+    const p = this.product();
+    if ( !p ) return;
+    const req: AddToCartRequest = {
+      productId: p.id,
+      productName: p.name,
+      brand: p.brand,
+      price: p.price ?? 0,
+      currency: p.currency,
+      quantity: 1,
+    };
+    this.cartService.addToCart( req );
+    this.addedToCart.set( true );
+    clearTimeout( this.addedTimer );
+    this.addedTimer = setTimeout( () => this.addedToCart.set( false ), 3000 );
   }
 
   goBack() {

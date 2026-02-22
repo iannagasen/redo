@@ -1,0 +1,58 @@
+server.port: 8082
+
+env.base.url:
+  internal:
+    auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    cart: ${INTERNAL_CART_SERVICE_BASE_URL:http://localhost:8082}
+  external:
+    auth: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    cart: ${EXTERNAL_CART_SERVICE_BASE_URL:http://localhost:8082}
+
+spring:
+  application:
+    name: cart-service
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+
+logging:
+  level:
+    dev.agasen.core.cart: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    try-it-out-enabled: true
+    use-root-path: true
+
+server:
+  servlet:
+    context-path: /cart
+---
+spring.config.activate.on-profile: docker
+server.port: 8080
+
+spring.data.redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}
