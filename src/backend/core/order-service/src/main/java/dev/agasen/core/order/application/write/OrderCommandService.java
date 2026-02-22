@@ -3,16 +3,16 @@ package dev.agasen.core.order.application.write;
 import dev.agasen.api.order.CreateOrderRequest;
 import dev.agasen.api.order.OrderDetails;
 import dev.agasen.api.order.OrderItemRequest;
+import dev.agasen.common.exceptions.BadRequestException;
+import dev.agasen.common.exceptions.Exceptions;
 import dev.agasen.core.order.application.read.OrderRetrievalService;
 import dev.agasen.core.order.domain.Order;
 import dev.agasen.core.order.domain.OrderItem;
 import dev.agasen.core.order.domain.OrderRepository;
 import dev.agasen.core.order.domain.OrderStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 
@@ -55,12 +55,12 @@ public class OrderCommandService {
 
    public OrderDetails updateStatus( Long orderId, String status ) {
       Order order = orderRepository.findById( orderId )
-         .orElseThrow( () -> new ResponseStatusException( HttpStatus.NOT_FOUND, "Order not found" ) );
+         .orElseThrow( Exceptions.notFound( "Order", orderId ) );
 
       try {
          order.setStatus( OrderStatus.valueOf( status.toUpperCase() ) );
       } catch ( IllegalArgumentException e ) {
-         throw new ResponseStatusException( HttpStatus.BAD_REQUEST, "Invalid status: " + status );
+         throw new BadRequestException( "Invalid order status: " + status );
       }
 
       Order saved = orderRepository.save( order );

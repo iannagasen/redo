@@ -7,8 +7,8 @@ import dev.agasen.core.order.application.read.OrderRetrievalService;
 import dev.agasen.core.order.application.write.OrderCommandService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import dev.agasen.common.security.SecurityUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +46,6 @@ public class OrderRestService {
    }
 
    private String currentUserId() {
-      return SecurityContextHolder.getContext().getAuthentication().getName();
+      return SecurityUtils.currentUserId();
    }
 }

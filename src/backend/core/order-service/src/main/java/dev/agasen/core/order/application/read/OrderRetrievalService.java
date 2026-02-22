@@ -2,14 +2,13 @@ package dev.agasen.core.order.application.read;
 
 import dev.agasen.api.order.OrderDetails;
 import dev.agasen.api.order.OrderItemDetails;
+import dev.agasen.common.exceptions.Exceptions;
 import dev.agasen.core.order.domain.Order;
 import dev.agasen.core.order.domain.OrderItem;
 import dev.agasen.core.order.domain.OrderRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -29,10 +28,10 @@ public class OrderRetrievalService {
 
    public OrderDetails getOrderById( String userId, Long id ) {
       Order order = orderRepository.findById( id )
-         .orElseThrow( () -> new ResponseStatusException( HttpStatus.NOT_FOUND, "Order not found" ) );
+         .orElseThrow( Exceptions.notFound( "Order", id ) );
 
       if ( !order.getUserId().equals( userId ) ) {
-         throw new ResponseStatusException( HttpStatus.NOT_FOUND, "Order not found" );
+         throw Exceptions.notFound( "Order", id ).get();
       }
 
       return toOrderDetails( order );
