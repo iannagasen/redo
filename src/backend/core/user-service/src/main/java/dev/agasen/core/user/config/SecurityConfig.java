@@ -13,6 +13,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
@@ -87,15 +89,20 @@ public class SecurityConfig {
    @Order( 3 )
    public SecurityFilterChain standardFilterChain( HttpSecurity http ) throws Exception {
       http.addFilterBefore( ( request, response, chain ) -> {
-         HttpServletRequest req = ( HttpServletRequest ) request;
-         log.info( "🛡️ STANDARD (OAUTH) CHAIN: {} {}", req.getMethod(), req.getRequestURI() );
-         chain.doFilter( request, response );
-      }, UsernamePasswordAuthenticationFilter.class )
+            HttpServletRequest req = ( HttpServletRequest ) request;
+            log.info( "🛡️ STANDARD (OAUTH) CHAIN: {} {}", req.getMethod(), req.getRequestURI() );
+            chain.doFilter( request, response );
+         }, UsernamePasswordAuthenticationFilter.class )
          .csrf( AbstractHttpConfigurer::disable )
          .sessionManagement( session -> session.sessionCreationPolicy( SessionCreationPolicy.STATELESS ) )
          .authorizeHttpRequests( auth -> auth.anyRequest().authenticated() )
          .oauth2ResourceServer( oauth2 -> oauth2.jwt( jwt -> jwt.jwkSetUri( authServerUrl + "/oauth2/jwks" ) ) );
 
       return http.build();
+   }
+
+   @Bean
+   public PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
    }
 }
