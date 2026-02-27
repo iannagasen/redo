@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kafka-ui-ingress
+spec:
+  rules:
+    - host: "shopbuddy.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/kafka-ui"
+            backend:
+              service:
+                name: kafka-ui
+                port:
+                  number: 8080

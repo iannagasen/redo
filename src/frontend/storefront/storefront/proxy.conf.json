@@ -1,0 +1,22 @@
+{
+  "/auth": {
+    "target": "http://shopbuddy.com",
+    "changeOrigin": true
+  },
+  "/product": {
+    "target": "http://shopbuddy.com",
+    "changeOrigin": true
+  },
+  "/cart": {
+    "target": "http://shopbuddy.com",
+    "changeOrigin": true
+  },
+  "/order": {
+    "target": "http://shopbuddy.com",
+    "changeOrigin": true
+  },
+  "/payment": {
+    "target": "http://shopbuddy.com",
+    "changeOrigin": true
+  }
+}

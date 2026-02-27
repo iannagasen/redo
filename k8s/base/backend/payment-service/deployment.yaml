@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: payment
+  name: payment-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: payment
+    spec:
+      initContainers:
+        - name: ensure-db
+          image: postgres:17-alpine
+          command: ['sh', '-c']
+          args:
+            - |
+              until pg_isready -h postgres -U product_user; do echo "Waiting for postgres..."; sleep 2; done
+              psql -h postgres -U product_user -d product_catalog -tc "SELECT 1 FROM pg_database WHERE datname = 'payment_service'" | grep -q 1 \
+                || psql -h postgres -U product_user -d product_catalog -c "CREATE DATABASE payment_service;" || true
+          env:
+            - name: PGPASSWORD
+              value: "product_password"
+      containers:
+        - name: payment
+          image: payment:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "docker"
+            - name: DB_HOST
+              value: "postgres"
+            - name: DB_PORT
+              value: "5432"
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka:9092"
+          envFrom:
+            - configMapRef:
+                name: backend-url-configmap

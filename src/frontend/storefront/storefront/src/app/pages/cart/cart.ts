@@ -169,9 +169,9 @@ export class Cart {
   checkout(): void {
     const items = this.cartService.cartItems();
     this.orderService.createOrder( items ).subscribe( {
-      next: () => {
+      next: order => {
         this.cartService.clearCart();
-        this.router.navigate( [ '/orders' ] );
+        this.router.navigate( [ '/checkout' ], { queryParams: { orderId: order.id } } );
       },
       error: () => this.checkoutError.set( true ),
     } );

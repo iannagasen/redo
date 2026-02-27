@@ -127,6 +127,8 @@ export class Orders implements OnInit {
         return 'bg-purple-100 text-purple-800';
       case 'DELIVERED':
         return 'bg-green-100 text-green-800';
+      case 'PAYMENT_FAILED':
+        return 'bg-red-100 text-red-800';
       case 'CANCELLED':
         return 'bg-red-100 text-red-800';
       default:

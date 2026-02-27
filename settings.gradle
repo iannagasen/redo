@@ -5,6 +5,7 @@ include ':src:backend:core:product-service'
 include ':src:backend:core:user-service'
 include ':src:backend:core:cart-service'
 include ':src:backend:core:order-service'
+include ':src:backend:core:payment-service'
 
 include ':src:backend:infra:auth-server'
 include ':src:backend:infra:api-gateway'

@@ -7,8 +7,8 @@ import dev.agasen.core.cart.application.read.CartRetrievalService;
 import dev.agasen.core.cart.application.write.CartCommandService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import dev.agasen.common.security.SecurityUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -50,6 +50,6 @@ public class CartRestService {
    }
 
    private String userId() {
-      return SecurityUtils.currentUserId();
+      return SecurityContextHolder.getContext().getAuthentication().getName();
    }
 }
