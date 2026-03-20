@@ -26,7 +26,11 @@ spec:
           ports:
             - containerPort: 8080
               name: http
+            - containerPort: 5009
+              name: debug
           env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5009"
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: REDIS_HOST

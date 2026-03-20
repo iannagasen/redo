@@ -37,7 +37,11 @@ spec:
           imagePullPolicy: Never # recommended for local development
           ports:
             - containerPort: 8080
+            - containerPort: 5005
+              name: debug
           env:
+            - name: JAVA_TOOL_OPTIONS
+              value: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
             - name: SPRING_PROFILES_ACTIVE
               value: "docker"
             - name: DB_HOST

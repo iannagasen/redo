@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/src" />
+            <option value="$PROJECT_DIR$/src/backend" />
+            <option value="$PROJECT_DIR$/src/backend/bff" />
+            <option value="$PROJECT_DIR$/src/backend/bff/storefront-bff" />
+            <option value="$PROJECT_DIR$/src/backend/core" />
+            <option value="$PROJECT_DIR$/src/backend/core/cart-service" />
+            <option value="$PROJECT_DIR$/src/backend/core/order-service" />
+            <option value="$PROJECT_DIR$/src/backend/core/payment-service" />
+            <option value="$PROJECT_DIR$/src/backend/core/product-service" />
+            <option value="$PROJECT_DIR$/src/backend/core/user-service" />
+            <option value="$PROJECT_DIR$/src/backend/infra" />
+            <option value="$PROJECT_DIR$/src/backend/infra/api-gateway" />
+            <option value="$PROJECT_DIR$/src/backend/infra/auth-server" />
+            <option value="$PROJECT_DIR$/src/backend/infra/k8s-admin" />
+            <option value="$PROJECT_DIR$/src/backend/platform" />
+            <option value="$PROJECT_DIR$/src/backend/platform/api" />
+            <option value="$PROJECT_DIR$/src/backend/platform/common" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

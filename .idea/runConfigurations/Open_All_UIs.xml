@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Open All UIs" type="ShConfigurationType">
+    <option name="SCRIPT_TEXT" value="# Opens all ShopBuddy UIs in Chrome. # Requires: minikube tunnel + skaffold dev already running. $urls = @( &quot;http://shopbuddy.com/storefront&quot;, &quot;http://shopbuddy.com/k8s-dashboard&quot;, &quot;http://shopbuddy.com/kafka-ui&quot;, &quot;http://redis.shopbuddy.com&quot;, &quot;http://shopbuddy.com/product/swagger-ui.html&quot;, &quot;http://shopbuddy.com/cart/swagger-ui.html&quot;, &quot;http://shopbuddy.com/order/swagger-ui.html&quot;, &quot;http://shopbuddy.com/payment/swagger-ui.html&quot; ) Start-Process &quot;chrome.exe&quot; -ArgumentList ($urls -join &quot; &quot;)" />
+    <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+    <option name="SCRIPT_PATH" value="$PROJECT_DIR$/scripts/open-all-uis.ps1" />
+    <option name="SCRIPT_OPTIONS" value="" />
+    <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+    <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+    <option name="INTERPRETER_PATH" value="" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="EXECUTE_IN_TERMINAL" value="true" />
+    <option name="EXECUTE_SCRIPT_FILE" value="true" />
+    <envs />
+    <method v="2" />
+  </configuration>
+</component>

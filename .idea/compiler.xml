@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="Ecommerce-redo.src.backend.core.payment-service.main" />
+        <module name="Ecommerce-redo.src.backend.core.user-service.test" />
+        <module name="Ecommerce-redo.src.backend.core.cart-service.test" />
+        <module name="Ecommerce-redo.src.backend.core.order-service.test" />
+        <module name="Ecommerce-redo.src.backend.core.cart-service.main" />
+        <module name="Ecommerce-redo.src.backend.infra.auth-server.main" />
+        <module name="Ecommerce-redo.src.backend.bff.storefront-bff.main" />
+        <module name="Ecommerce-redo.src.backend.core.order-service.main" />
+        <module name="Ecommerce-redo.src.backend.core.product-service.test" />
+        <module name="Ecommerce-redo.src.backend.platform.api.main" />
+        <module name="Ecommerce-redo.src.backend.core.payment-service.test" />
+      </profile>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.5.5.Final/897f6f115930b936287bef552bf5fe28cc64717d/mapstruct-processor-1.5.5.Final.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok-mapstruct-binding/0.2.0/2f1cf9ced7b720ba4996c942b816669e63f0fa4f/lombok-mapstruct-binding-0.2.0.jar" />
+        </processorPath>
+        <module name="Ecommerce-redo.src.backend.core.product-service.main" />
+      </profile>
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct-processor/1.5.5.Final/897f6f115930b936287bef552bf5fe28cc64717d/mapstruct-processor-1.5.5.Final.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok-mapstruct-binding/0.2.0/2f1cf9ced7b720ba4996c942b816669e63f0fa4f/lombok-mapstruct-binding-0.2.0.jar" />
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="Ecommerce-redo.src.backend.core.user-service.main" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="24" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="Ecommerce-redo.src.backend.bff.storefront-bff" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.bff.storefront-bff.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.bff.storefront-bff.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.cart-service" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.cart-service.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.cart-service.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.order-service" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.order-service.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.order-service.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.payment-service" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.payment-service.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.payment-service.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.product-service" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.product-service.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.product-service.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.user-service" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.user-service.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.user-service.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.infra.api-gateway" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.infra.api-gateway.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.infra.api-gateway.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.infra.auth-server" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.infra.auth-server.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.infra.auth-server.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.infra.k8s-admin" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.infra.k8s-admin.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.infra.k8s-admin.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.platform.api" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.platform.api.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.platform.api.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.platform.common" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.platform.common.main" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.platform.common.test" options="-parameters" />
+      <module name="api" options="-parameters" />
+      <module name="api-gateway" options="-parameters" />
+      <module name="api-gateway_main" options="-parameters" />
+      <module name="api-gateway_test" options="-parameters" />
+      <module name="api_main" options="-parameters" />
+      <module name="api_test" options="-parameters" />
+      <module name="auth-server" options="-parameters" />
+      <module name="auth-server_main" options="-parameters" />
+      <module name="auth-server_test" options="-parameters" />
+      <module name="cart-service" options="-parameters" />
+      <module name="cart-service_main" options="-parameters" />
+      <module name="cart-service_test" options="-parameters" />
+      <module name="common" options="-parameters" />
+      <module name="common_main" options="-parameters" />
+      <module name="common_test" options="-parameters" />
+      <module name="k8s-admin" options="-parameters" />
+      <module name="k8s-admin_main" options="-parameters" />
+      <module name="k8s-admin_test" options="-parameters" />
+      <module name="order-service" options="-parameters" />
+      <module name="order-service_main" options="-parameters" />
+      <module name="order-service_test" options="-parameters" />
+      <module name="product-service" options="-parameters" />
+      <module name="product-service_main" options="-parameters" />
+      <module name="product-service_test" options="-parameters" />
+      <module name="storefront-bff" options="-parameters" />
+      <module name="storefront-bff_main" options="-parameters" />
+      <module name="storefront-bff_test" options="-parameters" />
+      <module name="user-service" options="-parameters" />
+      <module name="user-service_main" options="-parameters" />
+      <module name="user-service_test" options="-parameters" />
+    </option>
+  </component>
+</project>
