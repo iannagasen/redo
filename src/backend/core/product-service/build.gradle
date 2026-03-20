@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.3'
-    id 'io.spring.dependency-management' version '1.1.7'
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dep.management)
 }
 
 group = 'dev.agasen.core'
@@ -22,59 +22,38 @@ repositories {
 }
 
 dependencies {
-    agent "io.opentelemetry.javaagent:opentelemetry-javaagent:2.20.0"
+    agent libs.otel.javaagent
+
     implementation project(':src:backend:platform:common')
     implementation project(':src:backend:platform:api')
 
-    // Spring Boot Starters
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
-    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
-    implementation 'io.micrometer:micrometer-registry-prometheus'
-//    testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
+    implementation libs.spring.starter.web
+    implementation libs.spring.starter.security
+    implementation libs.spring.starter.oauth2.resource.server
+    implementation libs.spring.starter.data.jpa
+    implementation libs.spring.starter.validation
+    implementation libs.spring.starter.actuator
+    implementation libs.spring.starter.data.redis
+    implementation libs.bundles.observability
+    implementation libs.bundles.persistence
+    implementation libs.jackson.databind
+    implementation libs.springdoc.webmvc
+    implementation libs.mapstruct
 
-    // lombok
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+    annotationProcessor libs.mapstruct.processor
+    annotationProcessor libs.lombok.mapstruct.binding
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
 
-    // mapstruct
-    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    developmentOnly libs.spring.devtools
 
-    // Database
-    implementation 'org.postgresql:postgresql'
-    implementation 'org.liquibase:liquibase-core'
-
-    // JSON Processing (for JSONB columns)
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
-
-    // Redis synchronous
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-    // API Documentation
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
-    testImplementation 'org.springframework.security:spring-security-test'
-
-    // Development Tools
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-    // Testing
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
-    // Test Containers
-    testImplementation "org.testcontainers:testcontainers"
-    testImplementation "org.testcontainers:postgresql"
-    testImplementation "org.testcontainers:junit-jupiter"
-    testImplementation "com.redis:testcontainers-redis"
+    testImplementation libs.spring.starter.test
+    testImplementation libs.spring.security.test
+    testImplementation libs.bundles.testcontainers
+    testImplementation libs.testcontainers.redis
+    testRuntimeOnly libs.junit.launcher
 }
 
 tasks.register('copyAgent', Copy) {

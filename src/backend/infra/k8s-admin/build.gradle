@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.3'
-    id 'io.spring.dependency-management' version '1.1.7'
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dep.management)
 }
 
 group = 'dev.agasen'
@@ -19,14 +19,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation(platform("org.apache.httpcomponents:httpcomponents-client:4.5.14"))
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation libs.spring.starter.web
+    implementation libs.spring.starter.security
+    implementation libs.spring.starter.oauth2.resource.server
+    implementation libs.spring.starter.actuator
+    implementation(platform(libs.httpcomponents.client))
+
+    developmentOnly libs.spring.devtools
+
+    testImplementation libs.spring.starter.test
+    testRuntimeOnly libs.junit.launcher
 }
 
 tasks.named('test') {

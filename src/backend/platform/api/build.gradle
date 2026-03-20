@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.4'
-    id 'io.spring.dependency-management' version '1.1.7'
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dep.management)
 }
 
 group = 'dev.agasen'
@@ -26,21 +26,21 @@ repositories {
 dependencies {
     implementation project(':src:backend:platform:common')
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.data:spring-data-commons'
+    implementation libs.spring.starter.web
+    implementation libs.spring.starter.validation
+    implementation libs.spring.data.commons
 
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    testImplementation libs.spring.starter.test
+    testRuntimeOnly libs.junit.launcher
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
 
-// Add these lines to fix the bootJar error - since this is a common package
 jar {
     enabled = true
     archiveClassifier = ''
@@ -49,4 +49,3 @@ jar {
 bootJar {
     enabled = false
 }
-// End
