@@ -1,5 +1,18 @@
 package dev.agasen.core.order;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
 import dev.agasen.api.order.CreateOrderRequest;
 import dev.agasen.api.order.OrderDetails;
 import dev.agasen.api.order.UpdateOrderStatusRequest;
@@ -7,12 +20,6 @@ import dev.agasen.core.order.application.read.OrderRetrievalService;
 import dev.agasen.core.order.application.write.OrderCommandService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.common.utils.SecurityUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping( "/api/v1/orders" )

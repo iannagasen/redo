@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:payment_test;DB_CLOSE_DELAY=-1;NON_KEYWORDS=value
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+  liquibase:
+    enabled: false
+  kafka:
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+        enable.idempotence: true
+        acks: all
+        retries: 3
+
+# Fake auth URL — SecurityConfig reads this to build the JWK Set URI.
+# Since Kafka tests never make HTTP requests, the JWK endpoint is never contacted.
+env:
+  base:
+    url:
+      internal:
+        auth: http://localhost:9999
+
+logging:
+  level:
+    dev.agasen: DEBUG
+    org.springframework.kafka: INFO
+    org.apache.kafka: WARN
