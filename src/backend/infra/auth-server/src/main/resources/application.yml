@@ -99,7 +99,21 @@ logging:
     root: INFO
     org.springframework.boot.context.config: DEBUG
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  tracing:
+    sampling:
+      probability: 1.0
+
 ---
 spring.config.activate.on-profile: docker
 server.port: 8080
 login-entry-point: /oauth2/login
+
+management:
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4318/v1/traces

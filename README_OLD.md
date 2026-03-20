@@ -15,9 +15,16 @@ make
 | App                            | Local | Docker (Mapped) | Kubernetes      |
 |--------------------------------|-------|-----------------|-----------------|
 | StoreFront (Front End Channel) | 3000  | 8000            | -               |
-| Product Service                | 8081  | 8080            | -               | 
+| Product Service                | 8081  | 8080            | -               |
 | API Gateway                    | 8000  | 8080            | 8000 (NodePort) |
 | Auth Server                    | 8080  | 8080            | 8080            |
+| Grafana                        | -     | -               | /grafana        |
+
+## Credentials
+
+| Service | Username | Password  |
+|---------|----------|-----------|
+| Grafana | admin    | shopbuddy |
 
 k8s enpoints: using host (shopbuddy.com)
 /product/actuator, /product/actuator/{health,info}
@@ -76,5 +83,15 @@ choco install -y skaffold
 ```
 
 TODO: skaffold
-create shortcut for starting up services - maybe use make 
+create shortcut for starting up services - maybe use make
+
+
+  1. Observability — Re-enable OpenTelemetry, deploy Jaeger/Zipkin + Prometheus/Grafana to K8s
+  2. Inventory Service — Stock management to prevent race conditions on checkout
+  3. Skaffold optimization — Integrate Gradle builds into Skaffold for faster dev loop (currently requires
+  manual ./gradlew build first)
+  4. CI/CD — GitHub Actions pipeline for build + test on push
+  5. Frontend enhancements — Real-time order status updates via WebSockets, or NgRx state management
+  6. HTTPS/TLS — cert-manager setup for shopbuddy.com
+  7. LocalStack/MinIO
 

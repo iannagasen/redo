@@ -33,10 +33,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,prometheus
   endpoint:
     health:
       show-details: always
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 springdoc:
   api-docs:
@@ -61,3 +67,8 @@ spring:
     url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/payment_service
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
+
+management:
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4318/v1/traces

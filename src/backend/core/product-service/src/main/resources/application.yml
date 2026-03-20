@@ -88,10 +88,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,prometheus
   endpoint:
     health:
       show-details: always
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 # API Documentation
 springdoc:
@@ -122,6 +128,11 @@ server.port: 8080
 spring.data.redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
+
+management:
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4318/v1/traces
 
 #springdoc:
 #  swagger-ui:

@@ -59,6 +59,7 @@ manifests:
     - k8s/base/infra/postgres/*.yaml
     - k8s/base/infra/redis/*.yaml
     - k8s/base/infra/kafka/*.yaml
+    - k8s/base/infra/observability/*.yaml
     - k8s/base/shared/cert/*.yaml
     - k8s/base/shared/secrets/*.yaml
 deploy:

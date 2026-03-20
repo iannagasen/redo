@@ -103,6 +103,20 @@ spring:
               filters:
                 - RewritePath=/order/order/(?<segment>.*), /order/${segment}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  tracing:
+    sampling:
+      probability: 1.0
+
 ---
 spring.config.activate.on-profile: docker
 server.port: 8080
+
+management:
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4318/v1/traces
