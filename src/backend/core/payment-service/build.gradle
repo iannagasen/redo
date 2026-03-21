@@ -9,7 +9,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(24)
+        languageVersion = JavaLanguageVersion.of(26)
     }
 }
 
@@ -34,7 +34,7 @@ dependencies {
     implementation libs.spring.starter.actuator
     implementation libs.bundles.observability
     implementation libs.bundles.persistence
-    implementation libs.spring.kafka
+    implementation libs.spring.starter.kafka
     implementation libs.springdoc.webmvc
 
     compileOnly libs.lombok

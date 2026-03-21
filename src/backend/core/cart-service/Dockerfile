@@ -1,9 +1,9 @@
-FROM eclipse-temurin:24 as builder
+FROM amazoncorretto:26-alpine3.22-jdk as builder
 WORKDIR extracted
 ADD ./build/libs/*.jar app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
-FROM eclipse-temurin:24
+FROM amazoncorretto:26-alpine3.22-jdk
 WORKDIR application
 COPY --from=builder extracted/dependencies/ ./
 COPY --from=builder extracted/spring-boot-loader/ ./

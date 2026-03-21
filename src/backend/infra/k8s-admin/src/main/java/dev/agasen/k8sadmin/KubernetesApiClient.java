@@ -1,11 +1,14 @@
 package dev.agasen.k8sadmin;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.client.RestClientSsl;
+import org.springframework.boot.ssl.SslBundles;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+
+import java.net.http.HttpClient;
+import tools.jackson.databind.JsonNode;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,10 +22,12 @@ public class KubernetesApiClient {
 
    private final RestClient restClient;
 
-   public KubernetesApiClient( RestClientSsl restClientSsl ) {
+   public KubernetesApiClient( SslBundles sslBundles ) throws Exception {
+      var sslContext = sslBundles.getBundle( "k8s-bundle" ).createSslContext();
+      var httpClient = HttpClient.newBuilder().sslContext( sslContext ).build();
       this.restClient = RestClient.builder()
          .baseUrl( K8S_API_SERVER_URL )
-         .apply( restClientSsl.fromBundle( "k8s-bundle" ) )
+         .requestFactory( new JdkClientHttpRequestFactory( httpClient ) )
          .build();
    }
 

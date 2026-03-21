@@ -15,14 +15,14 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
@@ -50,12 +50,14 @@ public class AuthorizationServerConfig {
    @Bean
    @Order( 1 )
    public SecurityFilterChain authorizationServerSecurityFilterChain( HttpSecurity http ) throws Exception {
-      OAuth2AuthorizationServerConfiguration.applyDefaultSecurity( http );
+      var authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
+      var endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
 
-      http.getConfigurer( OAuth2AuthorizationServerConfigurer.class )
-         .oidc( Customizer.withDefaults() );
-
-      http.cors( Customizer.withDefaults() )
+      http
+         .securityMatcher( endpointsMatcher )
+         .with( authorizationServerConfigurer, server -> server.oidc( Customizer.withDefaults() ) )
+         .authorizeHttpRequests( authorize -> authorize.anyRequest().authenticated() )
+         .cors( Customizer.withDefaults() )
          .exceptionHandling( exceptions -> exceptions
             .defaultAuthenticationEntryPointFor(
                new LoginUrlAuthenticationEntryPoint( "/login" ),
@@ -66,10 +68,6 @@ public class AuthorizationServerConfig {
                new MediaTypeRequestMatcher( MediaType.APPLICATION_JSON )
             )
          );
-
-      http.formLogin()
-         .loginPage( "/login" )
-         .defaultSuccessUrl( "/home", true ); // always go here after login
 
       return http.build();
    }

@@ -27,6 +27,7 @@
             <option value="$PROJECT_DIR$/src/backend/platform/common" />
           </set>
         </option>
+        <option name="resolveExternalAnnotations" value="true" />
       </GradleProjectSettings>
     </option>
   </component>
