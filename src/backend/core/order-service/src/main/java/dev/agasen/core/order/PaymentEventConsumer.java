@@ -1,4 +1,4 @@
-package dev.agasen.core.order.event;
+package dev.agasen.core.order;
 
 import dev.agasen.api.event.PaymentEvent;
 import dev.agasen.core.order.application.write.OrderCommandService;

@@ -2,7 +2,7 @@ package dev.agasen.core.order.kafka;
 
 import dev.agasen.api.event.PaymentEvent;
 import dev.agasen.core.order.application.write.OrderCommandService;
-import dev.agasen.core.order.event.PaymentEventConsumer;
+import dev.agasen.core.order.PaymentEventConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,30 +25,32 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-/**N
+/**
+ * N
  * Integration tests for {@link PaymentEventConsumer} covering:
- *   A. Idempotency — what happens when the same event is delivered twice
- *   C. Poison Pill & Dead Letter Queue — malformed/invalid events are isolated to DLT
- *
+ * A. Idempotency — what happens when the same event is delivered twice
+ * C. Poison Pill & Dead Letter Queue — malformed/invalid events are isolated to DLT
+ * <p>
  * Infrastructure:
- *   @EmbeddedKafka provides a real (in-process) Kafka broker.
- *   OrderCommandService is mocked — we verify interactions, not DB state.
- *   H2 is used for the JPA layer (application-test.yml).
+ *
+ * @EmbeddedKafka provides a real (in-process) Kafka broker.
+ * OrderCommandService is mocked — we verify interactions, not DB state.
+ * H2 is used for the JPA layer (application-test.yml).
  */
 @SpringBootTest
 @ActiveProfiles( "test" )
 @EmbeddedKafka(
-      partitions = 1,
-      topics = { "payment.result", "payment.result.DLT" },
-      brokerProperties = {
-            "transaction.state.log.replication.factor=1",
-            "transaction.state.log.min.isr=1"
-      }
+   partitions = 1,
+   topics = { "payment.result", "payment.result.DLT" },
+   brokerProperties = {
+      "transaction.state.log.replication.factor=1",
+      "transaction.state.log.min.isr=1"
+   }
 )
 @DirtiesContext( classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD )
 class PaymentEventConsumerTest {
 
-   @Autowired private KafkaTemplate<String, Object> kafkaTemplate;
+   @Autowired private KafkaTemplate< String, Object > kafkaTemplate;
    @Autowired private DltCapture dltCapture;
 
    // Mock OrderCommandService so we can assert on interactions without a real DB
@@ -58,16 +60,16 @@ class PaymentEventConsumerTest {
 
    /**
     * KAFKA MECHANISM: At-Least-Once delivery + consumer idempotency gap
-    *
+    * <p>
     * Scenario: A network glitch causes the payment-service producer to retry.
     * The broker (with enable.idempotence=true) deduplicates within the same producer
     * session, but cannot deduplicate across restarts. The order-service consumer
     * receives the same PaymentEvent twice.
-    *
+    * <p>
     * Current behaviour: updateStatus() is called twice. The second DB write is
     * idempotent (sets the same status again) but in a real system this could
     * trigger duplicate downstream effects (e.g., confirmation emails, webhooks).
-    *
+    * <p>
     * This test DOCUMENTS the current at-least-once behaviour.
     * See the test below for the desired idempotent behaviour.
     */
@@ -86,19 +88,19 @@ class PaymentEventConsumerTest {
 
    /**
     * KAFKA MECHANISM: Consumer-side idempotency (desired state after fix)
-    *
+    * <p>
     * The fix: before calling updateStatus(), check whether the order is already
     * in a terminal state (CONFIRMED / PAYMENT_FAILED). If it is, skip the call.
-    *
+    * <p>
     * Example fix to add to PaymentEventConsumer.onPaymentResult():
-    *
-    *   Order existing = orderRepository.findById(event.orderId()).orElse(null);
-    *   if (existing != null && Set.of(OrderStatus.CONFIRMED, OrderStatus.PAYMENT_FAILED)
-    *           .contains(existing.getStatus())) {
-    *       log.warn("Skipping duplicate PaymentEvent for orderId={}", event.orderId());
-    *       return;
-    *   }
-    *
+    * <p>
+    * Order existing = orderRepository.findById(event.orderId()).orElse(null);
+    * if (existing != null && Set.of(OrderStatus.CONFIRMED, OrderStatus.PAYMENT_FAILED)
+    * .contains(existing.getStatus())) {
+    * log.warn("Skipping duplicate PaymentEvent for orderId={}", event.orderId());
+    * return;
+    * }
+    * <p>
     * This test is @Disabled until the fix is applied — it documents the target behaviour.
     */
    @Test
@@ -119,27 +121,27 @@ class PaymentEventConsumerTest {
 
    /**
     * KAFKA MECHANISM: Poison Pill — semantic error (null status)
-    *
+    * <p>
     * A "Poison Pill" is any message that causes the consumer to throw.
     * Here: PaymentEvent.status() is null → NullPointerException inside
     * the switch statement in PaymentEventConsumer.onPaymentResult().
-    *
+    * <p>
     * Without KafkaConsumerConfig's DefaultErrorHandler, the consumer would
     * retry this message forever, blocking ALL subsequent messages on the partition.
-    *
+    * <p>
     * With DefaultErrorHandler (FixedBackOff 1s × 2 retries):
-    *   - Attempt 1: throws NullPointerException
-    *   - Attempt 2 (1s later): throws NullPointerException
-    *   - Attempt 3 (1s later): throws NullPointerException
-    *   - DeadLetterPublishingRecoverer publishes to "payment.result.DLT"
-    *   - Consumer MOVES ON to the next message — partition unblocked
+    * - Attempt 1: throws NullPointerException
+    * - Attempt 2 (1s later): throws NullPointerException
+    * - Attempt 3 (1s later): throws NullPointerException
+    * - DeadLetterPublishingRecoverer publishes to "payment.result.DLT"
+    * - Consumer MOVES ON to the next message — partition unblocked
     */
    @Test
    void poisonPill_nullStatus_retriesThenGoesToDlt() throws Exception {
       PaymentEvent poisonPill = new PaymentEvent(
-            3L, 30L, "user-3", BigDecimal.ONE,
-            null,  // ← null status triggers NullPointerException in switch
-            null
+         3L, 30L, "user-3", BigDecimal.ONE,
+         null,  // ← null status triggers NullPointerException in switch
+         null
       );
 
       kafkaTemplate.send( "payment.result", "3", poisonPill ).get();
@@ -148,23 +150,23 @@ class PaymentEventConsumerTest {
       boolean arrived = dltCapture.latch.await( 10, TimeUnit.SECONDS );
 
       assertThat( arrived ).isTrue()
-            .withFailMessage( "Poison pill never arrived in DLT — partition may be stalled" );
+         .withFailMessage( "Poison pill never arrived in DLT — partition may be stalled" );
 
-      ConsumerRecord<String, String> dltRecord = dltCapture.records.poll();
+      ConsumerRecord< String, String > dltRecord = dltCapture.records.poll();
       assertThat( dltRecord ).isNotNull();
 
       // Spring Kafka DLQ headers carry the full audit trail
       assertThat( headerValue( dltRecord, "kafka_dlt-original-topic" ) )
-            .isEqualTo( "payment.result" );
+         .isEqualTo( "payment.result" );
       assertThat( headerValue( dltRecord, "kafka_dlt-exception-message" ) )
-            .contains( "NullPointerException" );
+         .contains( "NullPointerException" );
       assertThat( headerValue( dltRecord, "kafka_dlt-original-offset" ) )
-            .isNotNull();
+         .isNotNull();
    }
 
    /**
     * KAFKA MECHANISM: Partition unblocked after DLT routing
-    *
+    * <p>
     * Critical property of a DLQ: after a bad message is routed to the DLT,
     * the consumer must continue processing subsequent VALID messages.
     * Without this, one bad message would permanently stall the entire partition.
@@ -178,13 +180,13 @@ class PaymentEventConsumerTest {
       // 2. Wait for it to land in the DLT
       boolean dltReceived = dltCapture.latch.await( 10, TimeUnit.SECONDS );
       assertThat( dltReceived ).isTrue()
-            .withFailMessage( "Poison pill never routed to DLT — partition is stalled" );
+         .withFailMessage( "Poison pill never routed to DLT — partition is stalled" );
 
       // 3. Now send 2 valid messages
       kafkaTemplate.send( "payment.result", "5",
-            new PaymentEvent( 5L, 50L, "user-5", BigDecimal.TEN, "CAPTURED", null ) ).get();
+         new PaymentEvent( 5L, 50L, "user-5", BigDecimal.TEN, "CAPTURED", null ) ).get();
       kafkaTemplate.send( "payment.result", "6",
-            new PaymentEvent( 6L, 60L, "user-6", BigDecimal.TEN, "FAILED", "Card declined" ) ).get();
+         new PaymentEvent( 6L, 60L, "user-6", BigDecimal.TEN, "FAILED", "Card declined" ) ).get();
 
       TimeUnit.SECONDS.sleep( 3 );
 
@@ -195,7 +197,7 @@ class PaymentEventConsumerTest {
 
    /**
     * KAFKA MECHANISM: Unknown status → silent skip, no DLT
-    *
+    * <p>
     * PaymentEventConsumer handles unknown statuses with a log.warn() + null guard,
     * NOT by throwing. So unknown status is not a "poison pill" — it's just ignored.
     * This test documents that contract.
@@ -231,10 +233,10 @@ class PaymentEventConsumerTest {
 
    static class DltCapture {
       final java.util.concurrent.CountDownLatch latch = new java.util.concurrent.CountDownLatch( 1 );
-      final BlockingQueue<ConsumerRecord<String, String>> records = new LinkedBlockingQueue<>();
+      final BlockingQueue< ConsumerRecord< String, String > > records = new LinkedBlockingQueue<>();
 
       @KafkaListener( topics = "payment.result.DLT", groupId = "dlt-capture-group" )
-      void onDlt( ConsumerRecord<String, String> record ) {
+      void onDlt( ConsumerRecord< String, String > record ) {
          records.add( record );
          latch.countDown();
       }
@@ -242,7 +244,7 @@ class PaymentEventConsumerTest {
 
    // ── Helpers ───────────────────────────────────────────────────────────────
 
-   private String headerValue( ConsumerRecord<?, ?> record, String headerName ) {
+   private String headerValue( ConsumerRecord< ?, ? > record, String headerName ) {
       var header = record.headers().lastHeader( headerName );
       if ( header == null ) return null;
       return new String( header.value(), StandardCharsets.UTF_8 );

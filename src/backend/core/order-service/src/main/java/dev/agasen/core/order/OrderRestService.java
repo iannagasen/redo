@@ -1,56 +1,48 @@
 package dev.agasen.core.order;
 
-import java.util.List;
-
+import dev.agasen.api.order.CreateOrderRequest;
+import dev.agasen.api.order.OrderApi;
+import dev.agasen.api.order.OrderDetails;
+import dev.agasen.api.order.OrderSummary;
+import dev.agasen.api.order.UpdateOrderStatusRequest;
+import dev.agasen.core.order.application.read.OrderQueryService;
+import dev.agasen.core.order.application.read.OrderSummaryQueryService;
+import dev.agasen.core.order.application.write.OrderCommandService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.agasen.api.order.CreateOrderRequest;
-import dev.agasen.api.order.OrderDetails;
-import dev.agasen.api.order.UpdateOrderStatusRequest;
-import dev.agasen.core.order.application.read.OrderRetrievalService;
-import dev.agasen.core.order.application.write.OrderCommandService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @RestController
-@RequestMapping( "/api/v1/orders" )
 @RequiredArgsConstructor
-public class OrderRestService {
+public class OrderRestService implements OrderApi {
 
-   private final OrderRetrievalService orderRetrievalService;
+   private final OrderQueryService orderQueryService;
    private final OrderCommandService orderCommandService;
+   private final OrderSummaryQueryService orderSummaryQueryService;
 
-   @GetMapping
    public List< OrderDetails > getOrders() {
-      return orderRetrievalService.getOrders( currentUserId() );
+      return orderQueryService.getOrders();
    }
 
-   @GetMapping( "/{id}" )
-   public OrderDetails getOrderById( @PathVariable Long id ) {
-      return orderRetrievalService.getOrderById( currentUserId(), id );
+   public OrderDetails getOrderById( Long id ) {
+      return orderQueryService.getOrderById( id );
    }
 
-   @PostMapping
    @ResponseStatus( HttpStatus.CREATED )
-   public OrderDetails createOrder( @RequestBody @Valid CreateOrderRequest request ) {
+   public OrderDetails createOrder( CreateOrderRequest request ) {
       return orderCommandService.createOrder( currentUserId(), request );
    }
 
-   @PutMapping( "/{id}/status" )
-   public OrderDetails updateStatus(
-      @PathVariable Long id,
-      @RequestBody @Valid UpdateOrderStatusRequest request
-   ) {
+   public OrderDetails updateStatus( Long id, UpdateOrderStatusRequest request ) {
       return orderCommandService.updateStatus( id, request.getStatus() );
+   }
+
+   public OrderSummary getOrderSummary( Long id ) {
+      return orderSummaryQueryService.getOrderSummary( id );
    }
 
    private String currentUserId() {

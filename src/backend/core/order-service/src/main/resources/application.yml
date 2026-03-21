@@ -33,6 +33,8 @@ server:
     context-path: /order
 
 env.base.url.internal.auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+env.base.url.internal.product: ${INTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
+env.base.url.internal.payment: ${INTERNAL_PAYMENT_SERVICE_BASE_URL:http://localhost:8085}
 
 logging.level.dev.agasen.core.order: DEBUG
 

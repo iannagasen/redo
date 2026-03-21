@@ -1,0 +1,30 @@
+package dev.agasen.api.cart;
+
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.service.annotation.DeleteExchange;
+import org.springframework.web.service.annotation.GetExchange;
+import org.springframework.web.service.annotation.HttpExchange;
+import org.springframework.web.service.annotation.PostExchange;
+import org.springframework.web.service.annotation.PutExchange;
+
+@HttpExchange("/api/v1/cart")
+public interface CartApi {
+
+    @GetExchange
+    CartDetails getCart();
+
+    @PostExchange("/items")
+    CartDetails addItem(@RequestBody @Valid AddToCartRequest req);
+
+    @PutExchange("/items/{productId}")
+    CartDetails updateQuantity(@PathVariable Long productId, @RequestBody @Valid UpdateCartItemRequest req);
+
+    @DeleteExchange("/items/{productId}")
+    ResponseEntity<Void> removeItem(@PathVariable Long productId);
+
+    @DeleteExchange
+    ResponseEntity<Void> clearCart();
+}

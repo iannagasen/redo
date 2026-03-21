@@ -1,42 +1,14 @@
-package dev.agasen.core.order.application.read;
+package dev.agasen.core.order.application.mapper;
 
 import dev.agasen.api.order.OrderDetails;
 import dev.agasen.api.order.OrderItemDetails;
-import dev.agasen.common.exceptions.Exceptions;
+import dev.agasen.core.order.application.read.OrderQueryService;
 import dev.agasen.core.order.domain.Order;
 import dev.agasen.core.order.domain.OrderItem;
-import dev.agasen.core.order.domain.OrderRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-@Transactional( readOnly = true )
-public class OrderRetrievalService {
-
-   private final OrderRepository orderRepository;
-
-   public List<OrderDetails> getOrders( String userId ) {
-      return orderRepository.findByUserIdOrderByCreatedAtDesc( userId )
-         .stream()
-         .map( OrderRetrievalService::toOrderDetails )
-         .toList();
-   }
-
-   public OrderDetails getOrderById( String userId, Long id ) {
-      Order order = orderRepository.findById( id )
-         .orElseThrow( Exceptions.notFound( "Order", id ) );
-
-      if ( !order.getUserId().equals( userId ) ) {
-         throw Exceptions.notFound( "Order", id ).get();
-      }
-
-      return toOrderDetails( order );
-   }
-
+public class OrderDetailsMapper {
    public static OrderDetails toOrderDetails( Order order ) {
       OrderDetails details = new OrderDetails();
       details.setId( order.getId() );
@@ -45,8 +17,8 @@ public class OrderRetrievalService {
       details.setTotal( order.getTotal() );
       details.setCreatedAt( order.getCreatedAt() );
 
-      List<OrderItemDetails> itemDetails = order.getItems().stream()
-         .map( OrderRetrievalService::toOrderItemDetails )
+      List< OrderItemDetails > itemDetails = order.getItems().stream()
+         .map( OrderDetailsMapper::toOrderItemDetails )
          .toList();
       details.setItems( itemDetails );
       details.setItemCount( itemDetails.stream().mapToInt( OrderItemDetails::getQuantity ).sum() );

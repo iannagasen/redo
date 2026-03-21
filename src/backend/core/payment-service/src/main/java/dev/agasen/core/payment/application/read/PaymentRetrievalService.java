@@ -17,17 +17,23 @@ public class PaymentRetrievalService {
 
    private final PaymentRepository paymentRepository;
 
-   public List<PaymentDetails> getPayments( String userId ) {
+   public List< PaymentDetails > getPayments( String userId ) {
       return paymentRepository.findByUserIdOrderByCreatedAtDesc( userId )
-            .stream()
-            .map( PaymentRetrievalService::toPaymentDetails )
-            .toList();
+         .stream()
+         .map( PaymentRetrievalService::toPaymentDetails )
+         .toList();
    }
 
    public PaymentDetails getPaymentById( Long id ) {
       Payment payment = paymentRepository.findById( id )
-            .orElseThrow( Exceptions.notFound( "Payment", id ) );
+         .orElseThrow( Exceptions.notFound( "Payment", id ) );
       return toPaymentDetails( payment );
+   }
+
+   public PaymentDetails getPaymentByOrderId( Long orderId ) {
+      return paymentRepository.findByOrderId( orderId )
+         .map( PaymentRetrievalService::toPaymentDetails )
+         .orElseThrow();
    }
 
    public static PaymentDetails toPaymentDetails( Payment payment ) {

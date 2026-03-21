@@ -5,7 +5,7 @@ import dev.agasen.api.order.OrderDetails;
 import dev.agasen.api.order.OrderItemRequest;
 import dev.agasen.common.exceptions.BadRequestException;
 import dev.agasen.common.exceptions.Exceptions;
-import dev.agasen.core.order.application.read.OrderRetrievalService;
+import dev.agasen.core.order.application.read.OrderQueryService;
 import dev.agasen.core.order.domain.Order;
 import dev.agasen.core.order.domain.OrderItem;
 import dev.agasen.core.order.domain.OrderRepository;
@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+
+import static dev.agasen.core.order.application.mapper.OrderDetailsMapper.toOrderDetails;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +52,7 @@ public class OrderCommandService {
       order.setTotal( total );
       Order saved = orderRepository.save( order );
 
-      return OrderRetrievalService.toOrderDetails( saved );
+      return toOrderDetails( saved );
    }
 
    public OrderDetails updateStatus( Long orderId, String status ) {
@@ -64,6 +66,6 @@ public class OrderCommandService {
       }
 
       Order saved = orderRepository.save( order );
-      return OrderRetrievalService.toOrderDetails( saved );
+      return toOrderDetails( saved );
    }
 }

@@ -51,8 +51,18 @@ dependencies {
     testRuntimeOnly libs.junit.launcher
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['--enable-preview']
+    options.release = 26
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+    jvmArgs(['--enable-preview'])
+}
+
+tasks.named('bootRun') {
+    jvmArgs(['--enable-preview'])
 }
 
 bootJar {

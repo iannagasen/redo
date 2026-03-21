@@ -40,9 +40,9 @@
       <module name="Ecommerce-redo.src.backend.core.cart-service" options="-parameters" />
       <module name="Ecommerce-redo.src.backend.core.cart-service.main" options="-parameters" />
       <module name="Ecommerce-redo.src.backend.core.cart-service.test" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.core.order-service" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.core.order-service.main" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.core.order-service.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.core.order-service" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.core.order-service.main" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.core.order-service.test" options="-parameters --enable-preview" />
       <module name="Ecommerce-redo.src.backend.core.payment-service" options="-parameters" />
       <module name="Ecommerce-redo.src.backend.core.payment-service.main" options="-parameters" />
       <module name="Ecommerce-redo.src.backend.core.payment-service.test" options="-parameters" />
@@ -61,12 +61,12 @@
       <module name="Ecommerce-redo.src.backend.infra.k8s-admin" options="-parameters" />
       <module name="Ecommerce-redo.src.backend.infra.k8s-admin.main" options="-parameters" />
       <module name="Ecommerce-redo.src.backend.infra.k8s-admin.test" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.platform.api" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.platform.api.main" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.platform.api.test" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.platform.common" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.platform.common.main" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.platform.common.test" options="-parameters" />
+      <module name="Ecommerce-redo.src.backend.platform.api" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.api.main" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.api.test" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.common" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.common.main" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.common.test" options="-parameters --enable-preview" />
       <module name="api" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
       <module name="api-gateway_main" options="-parameters" />

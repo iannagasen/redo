@@ -31,8 +31,14 @@ dependencies {
     testImplementation libs.embedded.redis
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['--enable-preview']
+    options.release = 26
+}
+
 test {
     useJUnitPlatform()
+    jvmArgs(['--enable-preview'])
 }
 
 jar {

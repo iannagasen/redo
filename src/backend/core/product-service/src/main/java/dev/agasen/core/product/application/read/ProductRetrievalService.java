@@ -38,6 +38,14 @@ public class ProductRetrievalService {
    }
 
    @PreAuthorize( "hasAnyAuthority('SCOPE_read', 'SCOPE_openid')" )
+   public List<ProductDetails> getProductsByIds( List<Long> ids ) {
+      return productRepository.findAllByIdIn( ids )
+         .stream()
+         .map( productMapper::toDomain )
+         .toList();
+   }
+
+   @PreAuthorize( "hasAnyAuthority('SCOPE_read', 'SCOPE_openid')" )
    public ProductDetails getProductById( Long id ) {
       return productCachingService.getCachedOrCompute( String.valueOf( id ), () -> findProductById( id ) );
    }
