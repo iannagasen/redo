@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 @Component
-public record JsonHelper(
-      ObjectMapper objectMapper
-) {
+public class JsonHelper {
+
+   private final ObjectMapper objectMapper = new ObjectMapper();
 
    public String prettyPrint( String json ) {
       try {

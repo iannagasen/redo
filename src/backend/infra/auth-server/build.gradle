@@ -33,6 +33,7 @@ dependencies {
     developmentOnly libs.spring.devtools
 
     testImplementation libs.spring.starter.test
+    testImplementation libs.spring.starter.webmvc.test
     testImplementation libs.spring.security.test
     testImplementation libs.h2
     testRuntimeOnly libs.junit.launcher

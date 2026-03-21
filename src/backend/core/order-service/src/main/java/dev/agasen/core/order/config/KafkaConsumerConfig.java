@@ -1,5 +1,6 @@
 package dev.agasen.core.order.config;
 
+import org.apache.kafka.common.errors.SerializationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -12,21 +13,18 @@ import org.springframework.util.backoff.FixedBackOff;
 public class KafkaConsumerConfig {
 
    /**
-    * Spring Boot 3.x auto-wires any {@link CommonErrorHandler} bean into the
+    * Spring Boot auto-wires any {@link CommonErrorHandler} bean into the
     * auto-configured {@link org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory}.
     *
     * Retry policy: up to 2 retries with 1-second backoff.
     * After the 3rd failure the message is forwarded to the Dead Letter Topic:
-    *   "payment.result" → "payment.result.DLT"
-    *
-    * SerializationExceptions are not retried — malformed bytes will never fix
-    * themselves and retrying them only delays the inevitable DLQ write.
+    *   "payment.result" → "payment.result-dlt"
     */
    @Bean
    public CommonErrorHandler kafkaErrorHandler( KafkaTemplate<Object, Object> kafkaTemplate ) {
       var recoverer = new DeadLetterPublishingRecoverer( kafkaTemplate );
       var errorHandler = new DefaultErrorHandler( recoverer, new FixedBackOff( 1000L, 2 ) );
-      errorHandler.addNotRetryableExceptions( org.apache.kafka.common.errors.SerializationException.class );
+      errorHandler.addNotRetryableExceptions( SerializationException.class );
       return errorHandler;
    }
 }

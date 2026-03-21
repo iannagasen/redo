@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -17,6 +19,7 @@ public class PaymentEventConsumer {
    @KafkaListener( topics = "payment.result", groupId = "order-service" )
    public void onPaymentResult( PaymentEvent event ) {
       log.info( "Received PaymentEvent: orderId={}, status={}", event.orderId(), event.status() );
+      Objects.requireNonNull( event.status(), "PaymentEvent.status() must not be null" );
 
       String newStatus = switch ( event.status() ) {
          case "CAPTURED" -> "CONFIRMED";

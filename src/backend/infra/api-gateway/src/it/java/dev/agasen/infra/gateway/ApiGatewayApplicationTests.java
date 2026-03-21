@@ -1,9 +1,9 @@
-package dev.agasen.api;
+package dev.agasen.infra.gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-class ApiApplicationTests {
+class ApiGatewayApplicationTests {
 
    @Test
    void contextLoads() {

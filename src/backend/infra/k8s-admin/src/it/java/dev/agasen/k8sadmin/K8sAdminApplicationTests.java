@@ -1,9 +1,9 @@
-package dev.agasen.api;
+package dev.agasen.k8sadmin;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-class ApiApplicationTests {
+class K8sAdminApplicationTests {
 
    @Test
    void contextLoads() {
