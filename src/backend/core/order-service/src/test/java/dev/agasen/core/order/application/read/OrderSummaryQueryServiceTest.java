@@ -1,13 +1,9 @@
 package dev.agasen.core.order.application.read;
 
-import dev.agasen.api.order.OrderDetails;
-import dev.agasen.api.order.OrderItemDetails;
 import dev.agasen.api.order.OrderSummary;
 import dev.agasen.api.order.OrderSummaryItem;
 import dev.agasen.api.payment.PaymentApi;
-import dev.agasen.api.payment.PaymentDetails;
 import dev.agasen.api.product.ProductApi;
-import dev.agasen.api.product.product.ProductDetails;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,10 +12,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.StructuredTaskScope;
 
+import static dev.agasen.core.order.fixtures.OrderDetailsTestBuilder.*;
+import static dev.agasen.core.order.fixtures.OrderItemDetailsTestBuilder.*;
+import static dev.agasen.core.order.fixtures.PaymentDetailsTestBuilder.*;
+import static dev.agasen.core.order.fixtures.ProductDetailsTestBuilder.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -36,13 +35,13 @@ class OrderSummaryQueryServiceTest {
 
    @Test
    void getOrderSummary_returnsCorrectlyAssembledSummary() {
-      var item1 = orderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
-      var item2 = orderItem( 2L, "XPS 15", "Dell", new BigDecimal( "1500.00" ), 2 );
-      var order = orderDetails( 10L, List.of( item1, item2 ) );
+      var item1 = usdOrderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
+      var item2 = usdOrderItem( 2L, "XPS 15", "Dell", new BigDecimal( "1500.00" ), 2 );
+      var order = pendingOrderDetails( 10L, List.of( item1, item2 ) );
 
-      var product1 = product( 1L, "Samsung Galaxy S24 - 256GB AMOLED display" );
-      var product2 = product( 2L, "Dell XPS 15 - 12th Gen Intel, 32GB RAM" );
-      var payment = payment( 10L, new BigDecimal( "3999.00" ) );
+      var product1 = productDetails( 1L, "Samsung Galaxy S24 - 256GB AMOLED display" );
+      var product2 = productDetails( 2L, "Dell XPS 15 - 12th Gen Intel, 32GB RAM" );
+      var payment = capturedPayment( 10L, new BigDecimal( "3999.00" ) );
 
       when( orderQueryService.getOrderById( 10L ) ).thenReturn( order );
       when( productClient.getProducts( anyList() ) ).thenReturn( List.of( product1, product2 ) );
@@ -63,13 +62,13 @@ class OrderSummaryQueryServiceTest {
 
    @Test
    void getOrderSummary_whenProductMissingFromBatchResponse_descriptionIsNull() {
-      var item1 = orderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
-      var item2 = orderItem( 2L, "XPS 15", "Dell", new BigDecimal( "1500.00" ), 1 );
-      var order = orderDetails( 10L, List.of( item1, item2 ) );
+      var item1 = usdOrderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
+      var item2 = usdOrderItem( 2L, "XPS 15", "Dell", new BigDecimal( "1500.00" ), 1 );
+      var order = pendingOrderDetails( 10L, List.of( item1, item2 ) );
 
       // product-service only returns product1 — product2 is missing (e.g. deleted)
-      var product1 = product( 1L, "Samsung Galaxy S24 - 256GB AMOLED display" );
-      var payment = payment( 10L, new BigDecimal( "2499.00" ) );
+      var product1 = productDetails( 1L, "Samsung Galaxy S24 - 256GB AMOLED display" );
+      var payment = capturedPayment( 10L, new BigDecimal( "2499.00" ) );
 
       when( orderQueryService.getOrderById( 10L ) ).thenReturn( order );
       when( productClient.getProducts( anyList() ) ).thenReturn( List.of( product1 ) );
@@ -83,9 +82,9 @@ class OrderSummaryQueryServiceTest {
 
    @Test
    void getOrderSummary_whenPaymentIsNull_summaryStillReturnsWithNullPayment() {
-      var item1 = orderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
-      var order = orderDetails( 10L, List.of( item1 ) );
-      var product1 = product( 1L, "Samsung Galaxy S24" );
+      var item1 = usdOrderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
+      var order = pendingOrderDetails( 10L, List.of( item1 ) );
+      var product1 = productDetails( 1L, "Samsung Galaxy S24" );
 
       when( orderQueryService.getOrderById( 10L ) ).thenReturn( order );
       when( productClient.getProducts( anyList() ) ).thenReturn( List.of( product1 ) );
@@ -100,10 +99,10 @@ class OrderSummaryQueryServiceTest {
    @Test
    @Timeout( 5 )
    void getOrderSummary_tasksRunConcurrently() throws Exception {
-      var item1 = orderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
-      var order = orderDetails( 10L, List.of( item1 ) );
-      var product1 = product( 1L, "Samsung Galaxy S24" );
-      var payment = payment( 10L, new BigDecimal( "999.00" ) );
+      var item1 = usdOrderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
+      var order = pendingOrderDetails( 10L, List.of( item1 ) );
+      var product1 = productDetails( 1L, "Samsung Galaxy S24" );
+      var payment = capturedPayment( 10L, new BigDecimal( "999.00" ) );
 
       when( orderQueryService.getOrderById( 10L ) ).thenReturn( order );
       when( productClient.getProducts( anyList() ) ).thenAnswer( inv -> {
@@ -127,9 +126,9 @@ class OrderSummaryQueryServiceTest {
 
    @Test
    void getOrderSummary_whenPaymentTaskThrows_failedExceptionIsPropagated() {
-      var item1 = orderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
-      var order = orderDetails( 10L, List.of( item1 ) );
-      var product1 = product( 1L, "Samsung Galaxy S24" );
+      var item1 = usdOrderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
+      var order = pendingOrderDetails( 10L, List.of( item1 ) );
+      var product1 = productDetails( 1L, "Samsung Galaxy S24" );
 
       when( orderQueryService.getOrderById( 10L ) ).thenReturn( order );
       when( productClient.getProducts( anyList() ) ).thenReturn( List.of( product1 ) );
@@ -144,9 +143,9 @@ class OrderSummaryQueryServiceTest {
 
    @Test
    void getOrderSummary_whenProductTaskThrows_failedExceptionIsPropagated() {
-      var item1 = orderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
-      var order = orderDetails( 10L, List.of( item1 ) );
-      var payment = payment( 10L, new BigDecimal( "999.00" ) );
+      var item1 = usdOrderItem( 1L, "Galaxy S24", "Samsung", new BigDecimal( "999.00" ), 1 );
+      var order = pendingOrderDetails( 10L, List.of( item1 ) );
+      var payment = capturedPayment( 10L, new BigDecimal( "999.00" ) );
 
       when( orderQueryService.getOrderById( 10L ) ).thenReturn( order );
       when( productClient.getProducts( anyList() ) )
@@ -159,46 +158,4 @@ class OrderSummaryQueryServiceTest {
          .hasMessage( "Product service unavailable" );
    }
 
-   // ── Builders ──────────────────────────────────────────────────────────────
-
-   private static OrderDetails orderDetails( Long id, List< OrderItemDetails > items ) {
-      var order = new OrderDetails();
-      order.setId( id );
-      order.setUserId( "user-1" );
-      order.setStatus( "PENDING" );
-      order.setTotal( items.stream().map( OrderItemDetails::getLineTotal ).reduce( BigDecimal.ZERO, BigDecimal::add ) );
-      order.setItemCount( items.stream().mapToInt( OrderItemDetails::getQuantity ).sum() );
-      order.setItems( items );
-      order.setCreatedAt( Instant.now() );
-      return order;
-   }
-
-   private static OrderItemDetails orderItem( Long productId, String name, String brand, BigDecimal price, int qty ) {
-      var item = new OrderItemDetails();
-      item.setProductId( productId );
-      item.setProductName( name );
-      item.setBrand( brand );
-      item.setPrice( price );
-      item.setCurrency( "USD" );
-      item.setQuantity( qty );
-      item.setLineTotal( price.multiply( BigDecimal.valueOf( qty ) ) );
-      return item;
-   }
-
-   private static ProductDetails product( Long id, String description ) {
-      var product = new ProductDetails();
-      product.setId( id );
-      product.setDescription( description );
-      return product;
-   }
-
-   private static PaymentDetails payment( Long orderId, BigDecimal amount ) {
-      var payment = new PaymentDetails();
-      payment.setId( 100L );
-      payment.setOrderId( orderId );
-      payment.setAmount( amount );
-      payment.setCurrency( "USD" );
-      payment.setStatus( "CAPTURED" );
-      return payment;
-   }
 }
