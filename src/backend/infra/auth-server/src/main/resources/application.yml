@@ -1,4 +1,9 @@
-spring.application.name: auth-server
+spring:
+  application:
+    name: auth-server
+  config:
+    import:
+      - classpath:observability.yml
 
 server:
   port: 8080
@@ -15,11 +20,7 @@ env.base.url:
     product: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
     storefront: ${EXTERNAL_STOREFRONT_CHANNEL_BASE_URL:http://localhost:4200}
 
-# Removed spring.datasource and spring.liquibase in favor of user-service API calls
-
-internal:
-  api:
-    key: ${INTERNAL_API_KEY:shopbuddy-internal-secret}
+internal.api.key: ${INTERNAL_API_KEY:shopbuddy-internal-secret}
 
 oauth2:
   clients:
@@ -44,7 +45,6 @@ oauth2:
         - openid
         - read
         - write
-    # refactor product-service client to 'product-client'
     gateway-client:
       client-id: gateway-client
       client-secret: gateway-secret
@@ -56,20 +56,17 @@ oauth2:
         - access-ttl: PT30M
     angular-client:
       client-id: angular-client
-      #      no client-secret and client authentication method for PKCE
       client-secret: angular-secret
       client-authentication-method: none
       authorization-grant-types:
         - authorization_code
         - refresh_token
       redirect-uris:
-        #        - ${EXTERNAL_STOREFRONT_CHANNEL_BASE_URL:http://localhost:4200/storefront}/login/callback
         - http://shopbuddy.com/storefront/login/callback
         - http://localhost:4200/storefront/login/callback
       scopes:
         - openid
         - read
-      # PKCE
       client-settings:
         require-authorization-consent: true
         require-proof-key: true
@@ -95,25 +92,10 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
-    # For testing if config is loaded
     root: INFO
     org.springframework.boot.context.config: DEBUG
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  tracing:
-    sampling:
-      probability: 1.0
 
 ---
 spring.config.activate.on-profile: docker
 server.port: 8080
 login-entry-point: /oauth2/login
-
-management:
-  otlp:
-    tracing:
-      endpoint: http://otel-collector:4318/v1/traces

@@ -1,23 +1,9 @@
-server:
-  port: 8000
-#  servlet:
-#    context-path: /gateway
-
-spring.application.name: api-gateway
-
-env.base.url:
-  internal:
-    auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
-    product: ${INTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
-    cart: ${INTERNAL_CART_SERVICE_BASE_URL:http://localhost:8082}
-    order: ${INTERNAL_ORDER_SERVICE_BASE_URL:http://localhost:8083}
-  external:
-    auth: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
-    product: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
-    cart: ${EXTERNAL_CART_SERVICE_BASE_URL:http://localhost:8082}
-    order: ${EXTERNAL_ORDER_SERVICE_BASE_URL:http://localhost:8083}
-
 spring:
+  application:
+    name: api-gateway
+  config:
+    import:
+      - classpath:observability.yml
   security:
     oauth2:
       client:
@@ -42,7 +28,6 @@ spring:
           default-filters:
             - TokenRelay
           routes:
-            # Main Swagger UI HTML
             - id: product-service-swagger-ui
               uri: ${env.base.url.internal.product}
               predicates:
@@ -50,7 +35,6 @@ spring:
               filters:
                 - RewritePath=/product/swagger-ui.html, /product/swagger-ui.html
 
-            # API docs
             - id: product-service-docs
               uri: ${env.base.url.internal.product}
               predicates:
@@ -58,7 +42,6 @@ spring:
               filters:
                 - RewritePath=/product/v3/api-docs, /product/v3/api-docs
 
-            # Swagger UI config (needed for Swagger UI to know where to get APIs)
             - id: product-service-swagger-config
               uri: ${env.base.url.internal.product}
               predicates:
@@ -66,7 +49,6 @@ spring:
               filters:
                 - RewritePath=/product/v3/api-docs/swagger-config, /product/v3/api-docs/swagger-config
 
-            # JS, CSS, etc. needed for Swagger UI to render
             - id: product-service-swagger-assets
               uri: ${env.base.url.internal.product}
               predicates:
@@ -74,7 +56,6 @@ spring:
               filters:
                 - RewritePath=/product/swagger-ui/(?<segment>.*), /product/swagger-ui/${segment}
 
-            # Optional: Webjars (icons, fonts, etc. used by older Swagger versions)
             - id: product-service-webjars
               uri: ${env.base.url.internal.product}
               predicates:
@@ -103,20 +84,21 @@ spring:
               filters:
                 - RewritePath=/order/order/(?<segment>.*), /order/${segment}
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  tracing:
-    sampling:
-      probability: 1.0
+server:
+  port: 8000
+
+env.base.url:
+  internal:
+    auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    product: ${INTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
+    cart: ${INTERNAL_CART_SERVICE_BASE_URL:http://localhost:8082}
+    order: ${INTERNAL_ORDER_SERVICE_BASE_URL:http://localhost:8083}
+  external:
+    auth: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    product: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
+    cart: ${EXTERNAL_CART_SERVICE_BASE_URL:http://localhost:8082}
+    order: ${EXTERNAL_ORDER_SERVICE_BASE_URL:http://localhost:8083}
 
 ---
 spring.config.activate.on-profile: docker
 server.port: 8080
-
-management:
-  otlp:
-    tracing:
-      endpoint: http://otel-collector:4318/v1/traces

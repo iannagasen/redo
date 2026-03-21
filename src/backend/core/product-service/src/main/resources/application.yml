@@ -1,21 +1,11 @@
-server.port: 8081
-
-env.base.url:
-  internal:
-    auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
-    product: ${INTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
-  external:
-    auth: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
-    product: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
-
-auth:
-  authorizationUrl: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}/oauth2/authorize
-  tokenUrl: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}/oauth2/token
-
 spring:
   application:
     name: product-service
-
+  config:
+    import:
+      - classpath:observability.yml
+      - classpath:persistence.yml
+      - classpath:springdoc.yml
   datasource:
     url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/product_catalog?currentSchema=public&stringtype=unspecified
     username: product_user
@@ -29,98 +19,52 @@ spring:
       max-lifetime: 1200000
       leak-detection-threshold: 60000
       connection-test-query: SELECT 1
-
-  jpa:
-    hibernate:
-      ddl-auto: none
-    show-sql: true
-
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
-
   data:
     redis:
       host: redis
       port: 6379
-
-  # Removed spring.sql.init.mode in favor of Liquibase
-
   security:
     oauth2:
       resourceserver:
         jwt:
           issuer-uri: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
-        # validate this value by going thru {oauthUrl}/.well-know/openid-configuration
-        # this is for Swagger UI's OAuth2 flow (client)
-        #      client:
-        #        registration:
-        #          swagger-ui:
-        #            client-id: swagger-ui
-        #            client-secret: swagger-secret
-        #            authorization-grant-type: authorization_code
-        #            scope:
-        #              - openid
-        #              - read
-        # Add custom scopes if your OAuth2 server supports them
-        # - write
-#            redirect-uri: http://localhost:8081/swagger-ui/oauth2-redirect.html
 
-#        provider:
-#          swagger-ui:
-#            authorization-uri: http://localhost:8080/oauth2/authorize
-#            token-uri: http://localhost:8080/oauth2/token
-#            user-info-uri: http://localhost:8080/userinfo
-#            jwk-set-uri: http://localhost:8080/oauth2/jwks
+server:
+  port: 8081
+  servlet:
+    context-path: /product
+
+env.base.url:
+  internal:
+    auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    product: ${INTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
+  external:
+    auth: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
+    product: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
+
+auth:
+  authorizationUrl: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}/oauth2/authorize
+  tokenUrl: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}/oauth2/token
+
+# Product-service specific springdoc extras (base config is in springdoc.yml)
+springdoc.swagger-ui:
+  oauth2-redirect-url: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}/swagger-ui/oauth2-redirect.html
+  display-request-duration: true
+  operations-sorter: method
+  oauth:
+    client-id: swagger-ui
+    client-secret: swagger-secret
+    use-basic-authentication-with-access-code-grant: true
+    scopes: openid
 
 logging:
   level:
     org.springframework.jdbc: DEBUG
     org.springframework.data.jdbc: DEBUG
     dev.agasen.core.product: DEBUG
-  #    org.springframework.security: DEBUG
-  #    org.springframework.security.oauth2: DEBUG
-  #    org.springframework.security.web.util.matcher: TRACE
-  #    org.springframework.boot.autoconfigure: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-  endpoint:
-    health:
-      show-details: always
-  tracing:
-    sampling:
-      probability: 1.0
-  metrics:
-    tags:
-      application: ${spring.application.name}
-
-# API Documentation
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-    try-it-out-enabled: true
-    oauth2-redirect-url: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}/swagger-ui/oauth2-redirect.html
-    use-root-path: true
-    display-request-duration: true
-    operations-sorter: method
-    # This enables the "Authorize" button and defines OAuth2 security scheme
-    oauth:
-      client-id: swagger-ui
-      client-secret: swagger-secret
-      use-basic-authentication-with-access-code-grant: true
-      scopes: openid
-#    server-url: /product
-
-server:
-  servlet:
-    context-path: /product
 ---
 spring.config.activate.on-profile: docker
 server.port: 8080
@@ -128,14 +72,3 @@ server.port: 8080
 spring.data.redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
-
-management:
-  otlp:
-    tracing:
-      endpoint: http://otel-collector:4318/v1/traces
-
-#springdoc:
-#  swagger-ui:
-#    url: /product/v3/api-docs
-#  api-docs:
-#    path: /product/v3/api-docs

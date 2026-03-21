@@ -1,0 +1,20 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+  tracing:
+    sampling:
+      probability: 1.0
+  metrics:
+    tags:
+      application: ${spring.application.name}
+---
+spring.config.activate.on-profile: docker
+management:
+  otlp:
+    tracing:
+      endpoint: http://otel-collector:4318/v1/traces
