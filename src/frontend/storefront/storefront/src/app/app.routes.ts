@@ -7,6 +7,7 @@ import { Cart } from './pages/cart/cart';
 import { Orders } from './pages/orders/orders';
 import { Checkout } from './pages/checkout/checkout';
 import { authGuard } from './pages/login/auth-guard';
+import { OrderSummaryPage } from './pages/order-summary/order-summary';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -16,5 +17,6 @@ export const routes: Routes = [
   { path: 'products/:id', component: ProductDetail, canActivate: [ authGuard ] },
   { path: 'cart', component: Cart, canActivate: [ authGuard ] },
   { path: 'checkout', component: Checkout, canActivate: [ authGuard ] },
-  { path: 'orders', component: Orders, canActivate: [ authGuard ] }
+  { path: 'orders', component: Orders, canActivate: [ authGuard ] },
+  { path: 'orders/:id', component: OrderSummaryPage, canActivate: [ authGuard ] }
 ];

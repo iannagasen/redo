@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { OauthService } from './oauth-service';
 import { OrderDetails } from '../model/order-details';
+import { OrderSummary } from '../model/order-summary';
 import { CreateOrderRequest } from '../model/create-order-request';
 import { CartItemDetails } from '../model/cart-item-details';
 
@@ -37,6 +38,10 @@ export class OrderService {
 
   getOrderById( id: number ): Observable<OrderDetails> {
     return this.http.get<OrderDetails>( `${ this.BASE_URL }/${ id }`, { headers: this.authHeaders() } );
+  }
+
+  getOrderSummary( id: number ): Observable<OrderSummary> {
+    return this.http.get<OrderSummary>( `${ this.BASE_URL }/${ id }/summary`, { headers: this.authHeaders() } );
   }
 
   private authHeaders(): HttpHeaders {

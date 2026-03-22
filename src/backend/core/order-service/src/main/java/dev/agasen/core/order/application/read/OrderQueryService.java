@@ -1,7 +1,6 @@
 package dev.agasen.core.order.application.read;
 
 import dev.agasen.api.order.OrderDetails;
-import dev.agasen.common.context.user.UserContext;
 import dev.agasen.common.exceptions.Exceptions;
 import dev.agasen.core.order.application.mapper.OrderDetailsMapper;
 import dev.agasen.core.order.domain.OrderRepository;
@@ -18,8 +17,8 @@ public class OrderQueryService {
 
    private final OrderRepository orderRepository;
 
-   public List< OrderDetails > getOrders() {
-      return orderRepository.findByUserIdOrderByCreatedAtDesc( UserContext.currentUserId() )
+   public List< OrderDetails > getOrders( String userId ) {
+      return orderRepository.findByUserIdOrderByCreatedAtDesc( userId )
          .stream()
          .map( OrderDetailsMapper::toOrderDetails )
          .toList();

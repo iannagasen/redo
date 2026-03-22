@@ -32,5 +32,9 @@ subprojects {
         }
 
         check.dependsOn integrationTest
+
+        tasks.withType(Test).configureEach {
+            onlyIf { !project.hasProperty("skipTests") }
+        }
     }
 }

@@ -47,16 +47,34 @@ public class UserContextBinder extends OncePerRequestFilter {
          return;
       }
 
+      var token = extractBearerToken( request );
+      var scope = ScopedValue.where( UserContext.CURRENT_USER, userId.get() );
+
       try {
-         ScopedValue.where( UserContext.CURRENT_USER, userId.get() )
-            .call( () -> {
+         if ( token.isPresent() ) {
+            scope.where( UserContext.CURRENT_TOKEN, token.get() )
+               .call( () -> {
+                  chain.doFilter( request, response );
+                  return null;
+               } );
+         } else {
+            scope.call( () -> {
                chain.doFilter( request, response );
                return null;
             } );
+         }
       } catch ( IOException | ServletException e ) {
          throw e;
       } catch ( Exception e ) {
          throw new ServletException( e );
       }
+   }
+
+   private java.util.Optional<String> extractBearerToken( HttpServletRequest request ) {
+      var header = request.getHeader( "Authorization" );
+      if ( header != null && header.startsWith( "Bearer " ) ) {
+         return java.util.Optional.of( header.substring( 7 ) );
+      }
+      return java.util.Optional.empty();
    }
 }

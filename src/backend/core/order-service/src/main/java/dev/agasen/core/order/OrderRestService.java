@@ -25,7 +25,7 @@ public class OrderRestService implements OrderApi {
    private final OrderSummaryQueryService orderSummaryQueryService;
 
    public List< OrderDetails > getOrders() {
-      return orderQueryService.getOrders();
+      return orderQueryService.getOrders( currentUserId() );
    }
 
    public OrderDetails getOrderById( Long id ) {

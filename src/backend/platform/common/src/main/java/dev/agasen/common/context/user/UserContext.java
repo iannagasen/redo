@@ -26,7 +26,12 @@ public final class UserContext {
     * The scoped value holding the current user's ID.
     * Bound per-request by {@link UserContextBinder} for REST, or manually for other callers.
     */
-   public static final ScopedValue<String> CURRENT_USER = ScopedValue.newInstance();
+   public static final ScopedValue< String > CURRENT_USER = ScopedValue.newInstance();
+
+   /**
+    * The scoped value holding the current request's raw Bearer token.
+    */
+   public static final ScopedValue< String > CURRENT_TOKEN = ScopedValue.newInstance();
 
    /**
     * Returns the current user's ID.
@@ -38,12 +43,28 @@ public final class UserContext {
    }
 
    /**
+    * Returns the current Bearer token value.
+    *
+    * @throws java.util.NoSuchElementException if called outside a bound scope
+    */
+   public static String currentToken() {
+      return CURRENT_TOKEN.get();
+   }
+
+   /**
     * Returns {@code true} if a user ID is bound in the current scope.
-    * Useful in contexts where the caller may be unauthenticated (e.g., public endpoints).
     */
    public static boolean isBound() {
       return CURRENT_USER.isBound();
    }
 
-   private UserContext() {}
+   /**
+    * Returns {@code true} if a Bearer token is bound in the current scope.
+    */
+   public static boolean isTokenBound() {
+      return CURRENT_TOKEN.isBound();
+   }
+
+   private UserContext() {
+   }
 }

@@ -1,5 +1,7 @@
 package dev.agasen.core.order.config;
 
+import dev.agasen.common.context.user.UserContextBinder;
+import dev.agasen.common.context.user.UserIdResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
@@ -26,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Configuration
 @EnableWebSecurity
@@ -103,6 +107,20 @@ public class SecurityConfig {
 
          return authorities;
       };
+   }
+
+   @Bean
+   public UserIdResolver userIdResolver() {
+      return request -> {
+         var auth = SecurityContextHolder.getContext().getAuthentication();
+         if ( auth == null || !auth.isAuthenticated() ) return Optional.empty();
+         return Optional.of( auth.getName() );
+      };
+   }
+
+   @Bean
+   public UserContextBinder userContextBinder( UserIdResolver userIdResolver ) {
+      return new UserContextBinder( userIdResolver );
    }
 
    @Bean

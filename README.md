@@ -4,71 +4,6 @@ A full-stack e-commerce platform built as a microservices reference project. Spr
 
 > Architecture diagrams, flow diagrams, and event flows: [ARCHITECTURE.md](./ARCHITECTURE.md)
 
----
-
-## Features & Capabilities
-
-### Storefront (Angular)
-- Product catalog with paginated browsing and brand filtering
-- Product detail page with add-to-cart
-- Shopping cart — add, update quantity, remove items; persists across devices via Redis
-- Checkout flow: cart → place order → payment form → live status polling → confirmation
-- Mock payment: any card succeeds; `4000000000000002` simulates a decline
-- Order history list with status badges (PENDING, CONFIRMED, PAYMENT_FAILED, etc.)
-- Order summary detail page — itemized breakdown with product descriptions + payment receipt
-- OAuth2 PKCE login / logout via Angular-managed auth flow
-- Route guards protecting all authenticated pages
-- Zoneless change detection using Angular signals throughout
-
-### Product Service
-- Paginated product listing and single-product lookup
-- Brand autocomplete / search
-- Admin endpoint to create products (requires `SCOPE_product:write-create`)
-- Redis caching: individual products (`product:{id}`) and pages (`page:p-{page}:s-{size}`), 10-minute TTL
-- OpenAPI / Swagger UI at `/product/swagger-ui.html`
-
-### Cart Service
-- Redis-backed cart keyed by user ID (cross-device persistence)
-- Add items, update quantity, remove items
-- Cart total and item count computed server-side
-
-### Order Service
-- Create orders from a list of cart items
-- Order status lifecycle: `PENDING` → `CONFIRMED` | `PAYMENT_FAILED`
-- List all orders for the authenticated user
-- Order summary endpoint: enriched items (name, brand, description, line total) + linked payment details
-- Kafka consumer on topic `payment.result` — updates order status when payment settles
-
-### Payment Service
-- Initiates payment for an order (amount, currency, card details)
-- Facade pattern over `PaymentGatewayClient` — swap payment providers without touching business logic
-- Active mock gateway: card `4000000000000002` → declined, any other number → success
-- Publishes `PaymentEvent` to Kafka topic `payment.result` after every attempt
-- Stripe provider stub ready (`@Profile("stripe")`)
-
-### Auth Server
-- Spring Authorization Server with RSA-signed JWTs
-- OAuth2 Authorization Code + PKCE flow (Angular storefront)
-- OAuth2 Client Credentials flow (service-to-service)
-- Clients: `angular-client` (PKCE), `internal-client` (client credentials)
-- Default credentials: `admin` / `pass`
-
-### API Gateway
-- Single entry point routing all traffic under `shopbuddy.com`
-- Spring Cloud Gateway (WebFlux)
-
-### Security (all resource servers)
-- Stateless JWT validation via auth server's JWKS endpoint
-- Two `SecurityFilterChain` beans per service: public chain (actuator, swagger) and secured chain
-- Scope-based method security (`@PreAuthorize("hasAuthority('SCOPE_...')")`)
-
-### Infrastructure
-- Database migrations managed by Liquibase
-- PostgreSQL per service (product, user, order, payment)
-- Redis for cart and product cache
-- Kafka for async payment result events
-- Kubernetes manifests for all services, infra, and ingress
-- Observability manifests included (Prometheus, Grafana, Jaeger — infrastructure in place)
 
 ---
 
@@ -352,3 +287,69 @@ payment-service  ──publishes──▶  payment.result  ──consumes──�
 - [ ] Skaffold hot reload — integrate Gradle builds into Skaffold for faster dev loop
 - [ ] Real-time order updates — WebSocket push for status changes
 - [ ] gRPC — explore for high-throughput inter-service calls (e.g. Order ↔ Inventory)
+
+---
+
+## Features & Capabilities
+
+### Storefront (Angular)
+- Product catalog with paginated browsing and brand filtering
+- Product detail page with add-to-cart
+- Shopping cart — add, update quantity, remove items; persists across devices via Redis
+- Checkout flow: cart → place order → payment form → live status polling → confirmation
+- Mock payment: any card succeeds; `4000000000000002` simulates a decline
+- Order history list with status badges (PENDING, CONFIRMED, PAYMENT_FAILED, etc.)
+- Order summary detail page — itemized breakdown with product descriptions + payment receipt
+- OAuth2 PKCE login / logout via Angular-managed auth flow
+- Route guards protecting all authenticated pages
+- Zoneless change detection using Angular signals throughout
+
+### Product Service
+- Paginated product listing and single-product lookup
+- Brand autocomplete / search
+- Admin endpoint to create products (requires `SCOPE_product:write-create`)
+- Redis caching: individual products (`product:{id}`) and pages (`page:p-{page}:s-{size}`), 10-minute TTL
+- OpenAPI / Swagger UI at `/product/swagger-ui.html`
+
+### Cart Service
+- Redis-backed cart keyed by user ID (cross-device persistence)
+- Add items, update quantity, remove items
+- Cart total and item count computed server-side
+
+### Order Service
+- Create orders from a list of cart items
+- Order status lifecycle: `PENDING` → `CONFIRMED` | `PAYMENT_FAILED`
+- List all orders for the authenticated user
+- Order summary endpoint: enriched items (name, brand, description, line total) + linked payment details
+- Kafka consumer on topic `payment.result` — updates order status when payment settles
+
+### Payment Service
+- Initiates payment for an order (amount, currency, card details)
+- Facade pattern over `PaymentGatewayClient` — swap payment providers without touching business logic
+- Active mock gateway: card `4000000000000002` → declined, any other number → success
+- Publishes `PaymentEvent` to Kafka topic `payment.result` after every attempt
+- Stripe provider stub ready (`@Profile("stripe")`)
+
+### Auth Server
+- Spring Authorization Server with RSA-signed JWTs
+- OAuth2 Authorization Code + PKCE flow (Angular storefront)
+- OAuth2 Client Credentials flow (service-to-service)
+- Clients: `angular-client` (PKCE), `internal-client` (client credentials)
+- Default credentials: `admin` / `pass`
+
+### API Gateway
+- Single entry point routing all traffic under `shopbuddy.com`
+- Spring Cloud Gateway (WebFlux)
+
+### Security (all resource servers)
+- Stateless JWT validation via auth server's JWKS endpoint
+- Two `SecurityFilterChain` beans per service: public chain (actuator, swagger) and secured chain
+- Scope-based method security (`@PreAuthorize("hasAuthority('SCOPE_...')")`)
+
+### Infrastructure
+- Database migrations managed by Liquibase
+- PostgreSQL per service (product, user, order, payment)
+- Redis for cart and product cache
+- Kafka for async payment result events
+- Kubernetes manifests for all services, infra, and ingress
+- Observability manifests included (Prometheus, Grafana, Jaeger — infrastructure in place)

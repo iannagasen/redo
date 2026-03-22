@@ -11,6 +11,10 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import tools.jackson.databind.DefaultTyping;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 
 import java.time.Duration;
 
@@ -38,7 +42,20 @@ public class PageProductDetailsCachingServiceConfig {
       RedisTemplate< String, PagedResult< ProductDetails > > template = new RedisTemplate<>();
       template.setConnectionFactory( connectionFactory );
       template.setKeySerializer( new StringRedisSerializer() );
-      template.setValueSerializer( GenericJacksonJsonRedisSerializer.builder().build() );
+      template.setValueSerializer( new GenericJacksonJsonRedisSerializer( typingObjectMapper() ) );
       return template;
+   }
+
+   private ObjectMapper typingObjectMapper() {
+
+      return JsonMapper.builder()
+         .activateDefaultTyping(
+            BasicPolymorphicTypeValidator.builder()
+               .allowIfSubType( "dev.agasen." )
+               .allowIfSubType( "java." )
+               .build(),
+            DefaultTyping.NON_FINAL
+         )
+         .build();
    }
 }
