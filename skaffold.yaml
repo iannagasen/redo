@@ -64,3 +64,33 @@ manifests:
     - k8s/base/shared/secrets/*.yaml
 deploy:
   kubectl: { }
+
+portForward:
+  - resourceType: deployment
+    resourceName: auth-deployment
+    port: 5005
+    localPort: 5005
+  - resourceType: deployment
+    resourceName: gateway-deployment
+    port: 5006
+    localPort: 5006
+  - resourceType: deployment
+    resourceName: product-deployment
+    port: 5007
+    localPort: 5007
+  - resourceType: deployment
+    resourceName: user-deployment
+    port: 5008
+    localPort: 5008
+  - resourceType: deployment
+    resourceName: cart-deployment
+    port: 5009
+    localPort: 5009
+  - resourceType: deployment
+    resourceName: order-deployment
+    port: 5010
+    localPort: 5010
+  - resourceType: deployment
+    resourceName: payment-deployment
+    port: 5011
+    localPort: 5011
