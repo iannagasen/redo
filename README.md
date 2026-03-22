@@ -1,8 +1,74 @@
 # ShopBuddy
 
-A full-stack e-commerce platform built with a microservices architecture, Spring Boot backend, and Angular frontend deployed on Kubernetes.
+A full-stack e-commerce platform built as a microservices reference project. Spring Boot backend, Angular storefront, OAuth2 PKCE authentication, async payment processing via Kafka, and Kubernetes deployment on Minikube.
 
 > Architecture diagrams, flow diagrams, and event flows: [ARCHITECTURE.md](./ARCHITECTURE.md)
+
+---
+
+## Features & Capabilities
+
+### Storefront (Angular)
+- Product catalog with paginated browsing and brand filtering
+- Product detail page with add-to-cart
+- Shopping cart — add, update quantity, remove items; persists across devices via Redis
+- Checkout flow: cart → place order → payment form → live status polling → confirmation
+- Mock payment: any card succeeds; `4000000000000002` simulates a decline
+- Order history list with status badges (PENDING, CONFIRMED, PAYMENT_FAILED, etc.)
+- Order summary detail page — itemized breakdown with product descriptions + payment receipt
+- OAuth2 PKCE login / logout via Angular-managed auth flow
+- Route guards protecting all authenticated pages
+- Zoneless change detection using Angular signals throughout
+
+### Product Service
+- Paginated product listing and single-product lookup
+- Brand autocomplete / search
+- Admin endpoint to create products (requires `SCOPE_product:write-create`)
+- Redis caching: individual products (`product:{id}`) and pages (`page:p-{page}:s-{size}`), 10-minute TTL
+- OpenAPI / Swagger UI at `/product/swagger-ui.html`
+
+### Cart Service
+- Redis-backed cart keyed by user ID (cross-device persistence)
+- Add items, update quantity, remove items
+- Cart total and item count computed server-side
+
+### Order Service
+- Create orders from a list of cart items
+- Order status lifecycle: `PENDING` → `CONFIRMED` | `PAYMENT_FAILED`
+- List all orders for the authenticated user
+- Order summary endpoint: enriched items (name, brand, description, line total) + linked payment details
+- Kafka consumer on topic `payment.result` — updates order status when payment settles
+
+### Payment Service
+- Initiates payment for an order (amount, currency, card details)
+- Facade pattern over `PaymentGatewayClient` — swap payment providers without touching business logic
+- Active mock gateway: card `4000000000000002` → declined, any other number → success
+- Publishes `PaymentEvent` to Kafka topic `payment.result` after every attempt
+- Stripe provider stub ready (`@Profile("stripe")`)
+
+### Auth Server
+- Spring Authorization Server with RSA-signed JWTs
+- OAuth2 Authorization Code + PKCE flow (Angular storefront)
+- OAuth2 Client Credentials flow (service-to-service)
+- Clients: `angular-client` (PKCE), `internal-client` (client credentials)
+- Default credentials: `admin` / `pass`
+
+### API Gateway
+- Single entry point routing all traffic under `shopbuddy.com`
+- Spring Cloud Gateway (WebFlux)
+
+### Security (all resource servers)
+- Stateless JWT validation via auth server's JWKS endpoint
+- Two `SecurityFilterChain` beans per service: public chain (actuator, swagger) and secured chain
+- Scope-based method security (`@PreAuthorize("hasAuthority('SCOPE_...')")`)
+
+### Infrastructure
+- Database migrations managed by Liquibase
+- PostgreSQL per service (product, user, order, payment)
+- Redis for cart and product cache
+- Kafka for async payment result events
+- Kubernetes manifests for all services, infra, and ingress
+- Observability manifests included (Prometheus, Grafana, Jaeger — infrastructure in place)
 
 ---
 
@@ -11,12 +77,12 @@ A full-stack e-commerce platform built with a microservices architecture, Spring
 ### Backend
 | Technology | Purpose |
 |---|---|
-| Java 24 | Primary language |
-| Spring Boot 3 | Microservice framework |
-| Spring Cloud Gateway (WebFlux) | API Gateway / reverse proxy |
+| Java 26 | Primary language |
+| Spring Boot 4.0.4 | Microservice framework |
+| Spring Cloud 2025.1.1 | Gateway, config |
 | Spring Authorization Server | OAuth2 / JWT auth server |
 | Spring Data JPA | Database ORM |
-| Spring Data Redis | Caching |
+| Spring Data Redis | Caching + cart storage |
 | Spring Kafka | Event-driven messaging |
 | Liquibase | Database migrations |
 | MapStruct | DTO mapping |
@@ -26,7 +92,7 @@ A full-stack e-commerce platform built with a microservices architecture, Spring
 ### Frontend
 | Technology | Purpose |
 |---|---|
-| Angular 20 | Storefront SPA |
+| Angular 19+ | Storefront SPA |
 | Tailwind CSS | Styling |
 | Zoneless (Signals) | Change detection |
 
@@ -37,7 +103,7 @@ A full-stack e-commerce platform built with a microservices architecture, Spring
 | Skaffold | Local K8s dev workflow |
 | Docker | Containerization |
 | PostgreSQL 17 | Relational database |
-| Redis | Caching + cart storage |
+| Redis 6 | Caching + cart storage |
 | Apache Kafka | Event streaming |
 | NGINX Ingress | Ingress controller |
 
@@ -70,7 +136,7 @@ choco install make
 ```
 
 Also required:
-- **Java 24** (JDK)
+- **Java 26** (JDK)
 - **Docker Desktop**
 - **Node.js + Angular CLI** (`npm install -g @angular/cli`)
 
@@ -120,13 +186,9 @@ skaffold dev
 ### Frontend
 
 ```bash
-# Storefront (port 4200)
 cd src/frontend/storefront/storefront
 ng serve
-
-# K8s Dashboard (port 4300)
-cd src/frontend/k8s-dashboard/k8s-dashboard
-ng serve
+# open http://localhost:4200/storefront/
 ```
 
 ---
@@ -139,7 +201,6 @@ Pre-configured in `.idea/runConfigurations/`:
 |---|---|
 | `Skaffold Dev` | Runs `skaffold dev --port-forward` |
 | `Angular - storefront` | `ng serve` on port 4200 |
-| `Angular - k8s-dashboard` | `ng serve` on port 4300 |
 | `Remote Debug - auth-server` | Attaches to port 5005 |
 | `Remote Debug - api-gateway` | Attaches to port 5006 |
 | `Remote Debug - product-service` | Attaches to port 5007 |
@@ -147,7 +208,6 @@ Pre-configured in `.idea/runConfigurations/`:
 | `Remote Debug - cart-service` | Attaches to port 5009 |
 | `Remote Debug - order-service` | Attaches to port 5010 |
 | `Remote Debug - payment-service` | Attaches to port 5011 |
-| `Open All UIs` | Opens all UIs in Chrome |
 
 ### Remote Debugging
 
@@ -158,8 +218,6 @@ Forward the debug port before attaching IntelliJ:
 kubectl port-forward deployment/order-deployment 5010:5010
 ```
 
-Then run the corresponding `Remote Debug - *` config in IntelliJ.
-
 ---
 
 ## URLs
@@ -169,7 +227,6 @@ Then run the corresponding `Remote Debug - *` config in IntelliJ.
 | UI | URL |
 |---|---|
 | Storefront | http://shopbuddy.com/storefront |
-| K8s Dashboard | http://shopbuddy.com/k8s-dashboard |
 | Kafka UI | http://shopbuddy.com/kafka-ui |
 | Redis Insight | http://redis.shopbuddy.com |
 
@@ -214,6 +271,9 @@ make
 # Rebuild Docker images only (after code changes)
 make rebuild
 
+# Exclude a service from the build
+make EXCLUDE=storefront rebuild
+
 # Deploy to K8s only (images already built)
 make k8s-up
 ```
@@ -227,7 +287,7 @@ src/
 ├── backend/
 │   ├── platform/
 │   │   ├── common/          # Shared utilities: CQRS, caching, validation
-│   │   └── api/             # Shared DTOs and service interfaces
+│   │   └── api/             # Shared DTOs, service interfaces, Kafka events
 │   ├── core/
 │   │   ├── product-service/
 │   │   ├── user-service/
@@ -239,33 +299,56 @@ src/
 │       ├── auth-server/
 │       └── k8s-admin/
 └── frontend/
-    ├── storefront/          # Main shopping app (port 4200)
-    └── k8s-dashboard/       # K8s monitoring UI (port 4300)
+    └── storefront/          # Main shopping app (port 4200)
 k8s/                         # Kubernetes manifests
-scripts/                     # Utility scripts
 ```
 
 ---
 
 ## Architecture
 
-### Request Flow
+### Checkout Flow
 
 ```
-Browser → NGINX Ingress → API Gateway → Microservice
-                                      ↓
-                              Auth Server (JWT validation)
+1. POST /order/api/v1/orders      → order-service creates Order (PENDING)
+2. Navigate to /checkout?orderId=X
+3. POST /payment/api/v1/payments  → payment-service saves Payment, calls gateway,
+                                    publishes PaymentEvent → Kafka "payment.result"
+4. Kafka consumer (order-service) → updates Order to CONFIRMED | PAYMENT_FAILED
+5. Frontend polls GET /orders/{id} → detects settled status, shows result page
 ```
 
 ### Event Flow (Kafka)
 
 ```
-Order Service ──publishes──▶ payment-events ──consumes──▶ Payment Service
-Payment Service ─publishes──▶ payment-result-events ──consumes──▶ Order Service
+payment-service  ──publishes──▶  payment.result  ──consumes──▶  order-service
 ```
 
 ### Security
 
 - **Auth flow**: PKCE Authorization Code (Angular → Auth Server)
-- **Service auth**: JWT validated at API Gateway and each resource server
-- **Scopes**: `product:read`, `product:write-create`, etc.
+- **Service auth**: JWT validated at each resource server via JWKS endpoint
+- **Scopes**: `product:read`, `product:write-create`, `cart:read`, `cart:write`, etc.
+
+---
+
+## Mock Credentials
+
+| Resource | Value |
+|---|---|
+| Login | `admin` / `pass` |
+| Payment success | Any card number |
+| Payment decline | `4000000000000002` |
+
+---
+
+## Roadmap
+
+- [ ] Observability — re-enable OpenTelemetry agent, activate Jaeger + Prometheus/Grafana
+- [ ] Inventory Service — stock management to prevent overselling race conditions
+- [ ] HTTPS/TLS — cert-manager with self-signed certs for `shopbuddy.com`
+- [ ] CI/CD — GitHub Actions pipeline (build + test on push)
+- [ ] Kustomize — replace raw k8s YAML with Kustomize overlays for dev/prod environments
+- [ ] Skaffold hot reload — integrate Gradle builds into Skaffold for faster dev loop
+- [ ] Real-time order updates — WebSocket push for status changes
+- [ ] gRPC — explore for high-throughput inter-service calls (e.g. Order ↔ Inventory)
