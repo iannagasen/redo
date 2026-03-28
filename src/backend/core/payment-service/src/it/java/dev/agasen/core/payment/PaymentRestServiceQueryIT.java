@@ -41,21 +41,17 @@ class PaymentRestServiceQueryIT {
    @MockitoBean private IdempotencyStore idempotencyStore;
    @MockitoBean private PaymentGatewayClient paymentGatewayClient;
 
-   // ── GET /api/v1/payments/{id} ──────────────────────────────────────────────
-
    @Test
    void getPaymentById_whenNotFound_returns404() throws Exception {
       when( paymentRetriever.getPaymentById( 999L ) )
          .thenThrow( new NotFoundException( "Payment with id: 999" ) );
 
       mockMvc.perform( get( "/api/v1/payments/999" )
-               .with( jwt().jwt( b -> b.subject( "user-1" ) ) ) )
+            .with( jwt().jwt( b -> b.subject( "user-1" ) ) ) )
          .andExpect( status().isNotFound() )
          .andExpect( jsonPath( "$.status" ).value( 404 ) )
          .andExpect( jsonPath( "$.message" ).value( "Payment with id: 999" ) );
    }
-
-   // ── GET /api/v1/payments/order/{orderId} ──────────────────────────────────
 
    @Test
    void getPaymentByOrderId_whenNotFound_returns404() throws Exception {
@@ -63,7 +59,7 @@ class PaymentRestServiceQueryIT {
          .thenThrow( new NotFoundException( "Payment with id: 201" ) );
 
       mockMvc.perform( get( "/api/v1/payments/order/201" )
-               .with( jwt().jwt( b -> b.subject( "user-1" ) ) ) )
+            .with( jwt().jwt( b -> b.subject( "user-1" ) ) ) )
          .andExpect( status().isNotFound() )
          .andExpect( jsonPath( "$.status" ).value( 404 ) )
          .andExpect( jsonPath( "$.message" ).value( "Payment with id: 201" ) );

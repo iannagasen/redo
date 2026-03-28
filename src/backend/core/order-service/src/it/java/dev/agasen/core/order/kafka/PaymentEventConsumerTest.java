@@ -3,6 +3,9 @@ package dev.agasen.core.order.kafka;
 import dev.agasen.api.event.PaymentEvent;
 import dev.agasen.core.order.application.write.OrderCommandService;
 import dev.agasen.core.order.PaymentEventConsumer;
+import dev.agasen.core.order.domain.Order;
+import dev.agasen.core.order.domain.OrderRepository;
+import dev.agasen.core.order.domain.OrderStatus;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -53,8 +57,8 @@ class PaymentEventConsumerTest {
    @Autowired private KafkaTemplate< String, Object > kafkaTemplate;
    @Autowired private DltCapture dltCapture;
 
-   // Mock OrderCommandService so we can assert on interactions without a real DB
    @MockitoBean private OrderCommandService orderCommandService;
+   @MockitoBean private OrderRepository orderRepository;
 
    // ── A. Idempotency Tests ──────────────────────────────────────────────────
 
@@ -74,6 +78,7 @@ class PaymentEventConsumerTest {
     * See the test below for the desired idempotent behaviour.
     */
    @Test
+   @org.junit.jupiter.api.Disabled( "Requires idempotency guard in PaymentEventConsumer — see Javadoc above" )
    void currentBehaviour_updateStatusCalledTwice_whenSameEventArrivesAgain() throws Exception {
       PaymentEvent duplicate = new PaymentEvent( 1L, 10L, "user-1", BigDecimal.TEN, "CAPTURED", null );
 
@@ -104,16 +109,20 @@ class PaymentEventConsumerTest {
     * This test is @Disabled until the fix is applied — it documents the target behaviour.
     */
    @Test
-   @org.junit.jupiter.api.Disabled( "Requires idempotency guard in PaymentEventConsumer — see Javadoc above" )
    void desiredBehaviour_updateStatusCalledOnce_evenWhenSameEventArrivesAgain() throws Exception {
       PaymentEvent duplicate = new PaymentEvent( 2L, 20L, "user-2", BigDecimal.TEN, "CAPTURED", null );
+
+      // First check: order is PENDING — let it through
+      // Second check: order is CONFIRMED — idempotency guard fires, skip
+      when( orderRepository.findById( 2L ) )
+         .thenReturn( Optional.of( orderWithStatus( OrderStatus.PENDING ) ) )
+         .thenReturn( Optional.of( orderWithStatus( OrderStatus.CONFIRMED ) ) );
 
       kafkaTemplate.send( "payment.result", "2", duplicate ).get();
       kafkaTemplate.send( "payment.result", "2", duplicate ).get();
 
       TimeUnit.SECONDS.sleep( 3 );
 
-      // DESIRED BEHAVIOUR: called once regardless of duplicates
       verify( orderCommandService, times( 1 ) ).updateStatus( 2L, "CONFIRMED" );
    }
 
@@ -248,5 +257,11 @@ class PaymentEventConsumerTest {
       var header = record.headers().lastHeader( headerName );
       if ( header == null ) return null;
       return new String( header.value(), StandardCharsets.UTF_8 );
+   }
+
+   private Order orderWithStatus( OrderStatus status ) {
+      Order order = new Order();
+      order.setStatus( status );
+      return order;
    }
 }
