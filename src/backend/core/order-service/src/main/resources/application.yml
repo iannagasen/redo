@@ -6,26 +6,8 @@ spring:
       - classpath:observability.yml
       - classpath:persistence.yml
       - classpath:springdoc.yml
-  datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/order_service
-    username: ${DB_USER:product_user}
-    password: ${DB_PASSWORD:product_password}
-  kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    consumer:
-      group-id: order-service
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      enable-auto-commit: false
-      properties:
-        spring.json.trusted.packages: "dev.agasen.api.event"
-        spring.json.value.default.type: "dev.agasen.api.event.PaymentEvent"
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        spring.json.add.type.headers: false
+      - classpath:database.yml
+      - classpath:kafka.yml
 
 server:
   port: 8083
@@ -40,6 +22,4 @@ logging.level.dev.agasen.core.order: DEBUG
 
 ---
 spring.config.activate.on-profile: docker
-server.port: 8080
-spring.datasource.url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/order_service
 spring.kafka.bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:kafka:9092}
