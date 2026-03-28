@@ -1,12 +1,12 @@
 package dev.agasen.core.order;
 
-import dev.agasen.api.order.CreateOrderRequest;
+import dev.agasen.api.order.write.CreateOrderRequest;
 import dev.agasen.api.order.OrderApi;
-import dev.agasen.api.order.OrderDetails;
-import dev.agasen.api.order.OrderSummary;
-import dev.agasen.api.order.UpdateOrderStatusRequest;
+import dev.agasen.api.order.read.OrderDetails;
+import dev.agasen.api.order.read.OrderSummary;
+import dev.agasen.api.order.write.UpdateOrderStatusRequest;
 import dev.agasen.core.order.application.read.OrderQueryService;
-import dev.agasen.core.order.application.read.OrderSummaryQueryService;
+import dev.agasen.core.order.application.read.OrderSummaryAggregator;
 import dev.agasen.core.order.application.write.OrderCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class OrderRestService implements OrderApi {
 
    private final OrderQueryService orderQueryService;
    private final OrderCommandService orderCommandService;
-   private final OrderSummaryQueryService orderSummaryQueryService;
+   private final OrderSummaryAggregator orderSummaryAggregator;
 
    public List< OrderDetails > getOrders() {
       return orderQueryService.getOrders( currentUserId() );
@@ -42,7 +42,7 @@ public class OrderRestService implements OrderApi {
    }
 
    public OrderSummary getOrderSummary( Long id ) {
-      return orderSummaryQueryService.getOrderSummary( id );
+      return orderSummaryAggregator.getOrderSummary( id );
    }
 
    private String currentUserId() {

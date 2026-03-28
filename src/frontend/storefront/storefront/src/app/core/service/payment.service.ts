@@ -19,8 +19,10 @@ export class PaymentService {
   ) {
   }
 
-  initiatePayment( request: InitiatePaymentRequest ): Observable<PaymentDetails> {
-    return this.http.post<PaymentDetails>( this.BASE_URL, request, { headers: this.authHeaders() } );
+  initiatePayment( request: InitiatePaymentRequest, idempotencyKey: string ): Observable<PaymentDetails> {
+    return this.http.post<PaymentDetails>( this.BASE_URL, request, {
+      headers: this.authHeaders().set( 'Idempotency-Key', idempotencyKey ),
+    } );
   }
 
   /**

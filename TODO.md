@@ -6,8 +6,7 @@
   users buy the last item simultaneously.
 * Cart Service: While the frontend can use local storage, a backend Cart Service (using Redis) is better for
   cross-device persistence and "saved for later" features.
-    *
-  You'd switch to PostgreSQL (or add it alongside Redis) if you needed:
+    * You'd switch to PostgreSQL (or add it alongside Redis) if you needed:
     - Order history — a placed order should be permanent, which is why checkout would write to a separate orders
       service with Postgres
     - Analytics — "what do users abandon most?" requires historical cart data
@@ -30,6 +29,9 @@
 * start containers in sequential order
 * Utilize fully Skaffold for development - fast restart
     * Currently still using `./gradlew build` then `skaffold dev`
+* API Gateway should run last, instead of first since it requires all other service to be running specially the auth
+    * Auth Server should run first
+* Application properties should be refreshable without restarting the server
 
 
 3. Technical Debt & Enhancements
@@ -50,3 +52,7 @@
   complex cart and user session states.
 * Real-time Updates: Use WebSockets (Spring Websocket/STOMP) to push order status updates (e.g., "Processing" ->
   "Shipped") directly to the UI.
+
+5. DevEx (Development Experience)
+
+* Setup Agent for Angular Skills

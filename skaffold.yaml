@@ -94,3 +94,7 @@ portForward:
     resourceName: payment-deployment
     port: 5011
     localPort: 5011
+  - resourceType: statefulset
+    resourceName: postgres
+    port: 5432
+    localPort: 5432

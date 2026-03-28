@@ -1,7 +1,7 @@
 package dev.agasen.core.cart.application.write;
 
-import dev.agasen.api.cart.AddToCartRequest;
-import dev.agasen.api.cart.CartDetails;
+import dev.agasen.api.cart.write.AddCartItemRequest;
+import dev.agasen.api.cart.read.CartDetails;
 import dev.agasen.core.cart.application.read.CartRetrievalService;
 import dev.agasen.core.cart.domain.Cart;
 import dev.agasen.core.cart.domain.CartItem;
@@ -20,7 +20,7 @@ public class CartCommandService {
    private final CartRepository cartRepository;
 
    @PreAuthorize( "hasAnyAuthority('SCOPE_openid')" )
-   public CartDetails addItem( String userId, AddToCartRequest req ) {
+   public CartDetails addItem( String userId, AddCartItemRequest req ) {
       Cart cart = cartRepository.findByUserId( userId )
          .orElseGet( () -> {
             Cart c = new Cart();
@@ -70,7 +70,7 @@ public class CartCommandService {
       cartRepository.delete( userId );
    }
 
-   private CartItem fromRequest( AddToCartRequest req ) {
+   private CartItem fromRequest( AddCartItemRequest req ) {
       CartItem item = new CartItem();
       item.setProductId( req.getProductId() );
       item.setProductName( req.getProductName() );

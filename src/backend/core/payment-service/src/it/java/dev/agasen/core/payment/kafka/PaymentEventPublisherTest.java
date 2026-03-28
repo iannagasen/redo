@@ -1,11 +1,11 @@
 package dev.agasen.core.payment.kafka;
 
 import dev.agasen.api.event.PaymentEvent;
-import dev.agasen.api.payment.InitiatePaymentRequest;
-import dev.agasen.core.payment.application.write.PaymentCommandService;
-import dev.agasen.core.payment.domain.Payment;
-import dev.agasen.core.payment.domain.PaymentRepository;
-import dev.agasen.core.payment.domain.PaymentStatus;
+import dev.agasen.api.payment.write.InitiatePaymentRequest;
+import dev.agasen.core.payment.application.PaymentInitiator;
+import dev.agasen.core.payment.repository.entity.Payment;
+import dev.agasen.core.payment.repository.PaymentRepository;
+import dev.agasen.core.payment.repository.entity.PaymentStatus;
 import dev.agasen.core.payment.event.PaymentEventPublisher;
 import dev.agasen.core.payment.gateway.GatewayPaymentResponse;
 import dev.agasen.core.payment.gateway.PaymentGatewayClient;
@@ -62,7 +62,7 @@ class PaymentEventPublisherTest {
 
    @Autowired private EmbeddedKafkaBroker embeddedKafkaBroker;
    @Autowired private PaymentEventPublisher paymentEventPublisher;
-   @Autowired private PaymentCommandService paymentCommandService;
+   @Autowired private PaymentInitiator paymentInitiator;
    @Autowired private KafkaTemplate< String, PaymentEvent > kafkaTemplate;
 
    @MockitoBean private PaymentRepository paymentRepository;
@@ -133,7 +133,7 @@ class PaymentEventPublisherTest {
       stubRepositoryAndGateway( 1L, true );
 
       InitiatePaymentRequest request = buildRequest( 1L );
-      paymentCommandService.initiatePayment( "user-1", request );
+      paymentInitiator.initiatePayment( "user-1", request );
 
       ConsumerRecord< String, String > record = KafkaTestUtils.getSingleRecord( rawConsumer, PaymentEventPublisher.TOPIC );
 
@@ -148,7 +148,7 @@ class PaymentEventPublisherTest {
       stubRepositoryAndGateway( 2L, false );
 
       InitiatePaymentRequest request = buildRequest( 2L );
-      paymentCommandService.initiatePayment( "user-2", request );
+      paymentInitiator.initiatePayment( "user-2", request );
 
       ConsumerRecord< String, String > record = KafkaTestUtils.getSingleRecord( rawConsumer, PaymentEventPublisher.TOPIC );
 

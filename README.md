@@ -288,6 +288,9 @@ payment-service  ──publishes──▶  payment.result  ──consumes──�
 - [ ] Real-time order updates — WebSocket push for status changes
 - [ ] gRPC — explore for high-throughput inter-service calls (e.g. Order ↔ Inventory)
 
+- [ ] Should have configuration to not start the observability/monitoring/other infra image when skaffold dev
+- [ ] Learn about live property change with config map, say you want to set some properties live, but dont start the server
+
 ---
 
 ## Features & Capabilities

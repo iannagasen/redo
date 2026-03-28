@@ -46,6 +46,8 @@ dependencies {
 
     testImplementation libs.spring.starter.test
     testImplementation libs.spring.security.test
+    testImplementation libs.spring.starter.webmvc.test
+    testImplementation libs.spring.starter.jpa.test
     testImplementation libs.spring.kafka.test
     testImplementation libs.h2
     testRuntimeOnly libs.junit.launcher

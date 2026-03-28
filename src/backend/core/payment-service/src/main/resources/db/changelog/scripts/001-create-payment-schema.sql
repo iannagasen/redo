@@ -18,3 +18,7 @@ CREATE TABLE IF NOT EXISTS payments (
     created_at      TIMESTAMP,
     updated_at      TIMESTAMP
 );
+
+-- changeset agasen:003-add-unique-order-id
+ALTER TABLE payments
+ADD CONSTRAINT uk_payments_order_id UNIQUE (order_id);

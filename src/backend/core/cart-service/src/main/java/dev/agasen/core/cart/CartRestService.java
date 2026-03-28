@@ -1,9 +1,9 @@
 package dev.agasen.core.cart;
 
-import dev.agasen.api.cart.AddToCartRequest;
+import dev.agasen.api.cart.write.AddCartItemRequest;
 import dev.agasen.api.cart.CartApi;
-import dev.agasen.api.cart.CartDetails;
-import dev.agasen.api.cart.UpdateCartItemRequest;
+import dev.agasen.api.cart.read.CartDetails;
+import dev.agasen.api.cart.write.UpdateCartItemRequest;
 import dev.agasen.core.cart.application.read.CartRetrievalService;
 import dev.agasen.core.cart.application.write.CartCommandService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class CartRestService implements CartApi {
       return retrievalService.getCart( userId() );
    }
 
-   public CartDetails addItem( AddToCartRequest req ) {
+   public CartDetails addItem( AddCartItemRequest req ) {
       return commandService.addItem( userId(), req );
    }
 

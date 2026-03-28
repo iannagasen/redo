@@ -1,11 +1,10 @@
 package dev.agasen.core.order.application.write;
 
-import dev.agasen.api.order.CreateOrderRequest;
-import dev.agasen.api.order.OrderDetails;
-import dev.agasen.api.order.OrderItemRequest;
+import dev.agasen.api.order.write.CreateOrderRequest;
+import dev.agasen.api.order.read.OrderDetails;
+import dev.agasen.api.order.write.OrderItemRequest;
 import dev.agasen.common.exceptions.BadRequestException;
 import dev.agasen.common.exceptions.Exceptions;
-import dev.agasen.core.order.application.read.OrderQueryService;
 import dev.agasen.core.order.domain.Order;
 import dev.agasen.core.order.domain.OrderItem;
 import dev.agasen.core.order.domain.OrderRepository;

@@ -1,7 +1,7 @@
 package dev.agasen.core.order.fixtures;
 
-import dev.agasen.api.order.OrderDetails;
-import dev.agasen.api.order.OrderItemDetails;
+import dev.agasen.api.order.read.OrderDetails;
+import dev.agasen.api.order.read.OrderItemDetails;
 
 import java.math.BigDecimal;
 import java.time.Instant;

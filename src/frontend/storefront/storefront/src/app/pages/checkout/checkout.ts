@@ -72,6 +72,7 @@ import { OrderDetails } from '../../core/model/order-details';
             <label class="block text-sm font-medium text-gray-700 mb-1">Cardholder Name</label>
             <input
               type="text"
+              [value]="cardholderName()"
               (input)="cardholderName.set($any($event.target).value)"
               placeholder="Jane Doe"
               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-400 placeholder:italic"/>
@@ -81,6 +82,7 @@ import { OrderDetails } from '../../core/model/order-details';
             <label class="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
             <input
               type="text"
+              [value]="cardNumber()"
               (input)="cardNumber.set($any($event.target).value)"
               maxlength="19"
               placeholder="4242 4242 4242 4242"
@@ -92,6 +94,7 @@ import { OrderDetails } from '../../core/model/order-details';
               <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Month</label>
               <input
                 type="number"
+                [value]="expiryMonth()"
                 (input)="expiryMonth.set(+$any($event.target).value)"
                 min="1" max="12"
                 placeholder="MM"
@@ -101,6 +104,7 @@ import { OrderDetails } from '../../core/model/order-details';
               <label class="block text-sm font-medium text-gray-700 mb-1">Expiry Year</label>
               <input
                 type="number"
+                [value]="expiryYear()"
                 (input)="expiryYear.set(+$any($event.target).value)"
                 min="2025"
                 placeholder="YYYY"
@@ -110,6 +114,7 @@ import { OrderDetails } from '../../core/model/order-details';
               <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
               <input
                 type="text"
+                [value]="cvv()"
                 (input)="cvv.set($any($event.target).value)"
                 maxlength="4"
                 placeholder="123"
@@ -142,13 +147,14 @@ export class Checkout implements OnInit {
   settled = signal( false );
   paymentError = signal<string | null>( null );
 
-  cardholderName = signal( '' );
-  cardNumber = signal( '' );
-  expiryMonth = signal( 0 );
-  expiryYear = signal( 0 );
-  cvv = signal( '' );
+  cardholderName = signal( 'Test User' );
+  cardNumber = signal( '4242424242424242' );
+  expiryMonth = signal( 12 );
+  expiryYear = signal( 2030 );
+  cvv = signal( '123' );
 
   private orderId!: number;
+  private idempotencyKey = crypto.randomUUID();
 
   constructor(
     private route: ActivatedRoute,
@@ -196,7 +202,7 @@ export class Checkout implements OnInit {
       expiryMonth: this.expiryMonth(),
       expiryYear: this.expiryYear(),
       cvv: this.cvv(),
-    } ).subscribe( {
+    }, this.idempotencyKey ).subscribe( {
       next: () => {
         this.submitting.set( false );
         this.pollForResult();
@@ -220,12 +226,13 @@ export class Checkout implements OnInit {
   }
 
   resetForm(): void {
+    this.idempotencyKey = crypto.randomUUID();
     this.settled.set( false );
     this.paymentError.set( null );
-    this.cardholderName.set( '' );
-    this.cardNumber.set( '' );
-    this.expiryMonth.set( 0 );
-    this.expiryYear.set( 0 );
-    this.cvv.set( '' );
+    this.cardholderName.set( 'Test User' );
+    this.cardNumber.set( '4242424242424242' );
+    this.expiryMonth.set( 12 );
+    this.expiryYear.set( 2030 );
+    this.cvv.set( '123' );
   }
 }

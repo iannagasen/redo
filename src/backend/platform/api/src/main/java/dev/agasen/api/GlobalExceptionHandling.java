@@ -2,6 +2,7 @@ package dev.agasen.api;
 
 import dev.agasen.common.exceptions.BadRequestException;
 import dev.agasen.common.exceptions.NotFoundException;
+import java.util.NoSuchElementException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -20,8 +21,8 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandling {
 
-   @ExceptionHandler( NotFoundException.class )
-   public ResponseEntity< Map< String, Object > > handleNotFound( NotFoundException ex ) {
+   @ExceptionHandler( { NotFoundException.class, NoSuchElementException.class } )
+   public ResponseEntity< Map< String, Object > > handleNotFound( Exception ex ) {
       var body = new HashMap< String, Object >();
       body.put( "timestamp", LocalDateTime.now() );
       body.put( "status", HttpStatus.NOT_FOUND.value() );
@@ -65,4 +66,5 @@ public class GlobalExceptionHandling {
       body.put( "message", ex.getMessage() );
       return new ResponseEntity<>( body, HttpStatus.BAD_REQUEST );
    }
+
 }

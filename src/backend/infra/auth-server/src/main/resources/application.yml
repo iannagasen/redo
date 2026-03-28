@@ -13,6 +13,8 @@ server:
   port: 8080
   servlet:
     context-path: /auth
+    session:
+      tracking-modes: cookie
 
 env.base.url:
   internal:
