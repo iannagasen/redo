@@ -1,5 +1,6 @@
 package dev.agasen.core.payment;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.agasen.api.payment.read.PaymentDetails;
 import dev.agasen.core.payment.application.IdempotencyStore;
 import dev.agasen.core.payment.repository.IdempotencyRecordRepository;
@@ -25,7 +26,8 @@ class IdempotencyStoreTest {
    @BeforeEach
    void setUp() {
       repository = mock( IdempotencyRecordRepository.class );
-      store = new IdempotencyStore( repository, mock( JsonMapper.class ) );
+      var jsonMapper = JsonMapper.builder().build();
+      store = new IdempotencyStore( repository, jsonMapper );
    }
 
    @Test
@@ -40,7 +42,17 @@ class IdempotencyStoreTest {
    @Test
    void find_returnsDeserializedPaymentDetails_whenRecordExists() {
       UUID key = UUID.randomUUID();
-      String json = "{\"id\":42,\"orderId\":10,\"userId\":\"user-1\",\"amount\":99.99,\"currency\":\"USD\",\"status\":\"CAPTURED\"}";
+      String json = """
+         {
+           "id": 42,
+           "orderId": 10,
+           "userId": "user-1",
+           "amount": 99.99,
+           "currency": "USD",
+           "status": "CAPTURED",
+           "createdAt": null
+         }
+         """;
 
       IdempotencyRecord record = new IdempotencyRecord();
       record.setIdempotencyKey( key );
@@ -79,9 +91,12 @@ class IdempotencyStoreTest {
       IdempotencyRecord saved = captor.getValue();
       assertThat( saved.getIdempotencyKey() ).isEqualTo( key );
       assertThat( saved.getUserId() ).isEqualTo( "user-1" );
-      assertThat( saved.getResponseBody() ).contains( "\"id\":1" );
-      assertThat( saved.getResponseBody() ).contains( "\"orderId\":5" );
-      assertThat( saved.getResponseBody() ).contains( "\"status\":\"CAPTURED\"" );
+      assertThat( saved.getResponseBody() ).contains( """
+         "id":1""" );
+      assertThat( saved.getResponseBody() ).contains( """
+         "orderId":5""" );
+      assertThat( saved.getResponseBody() ).contains( """
+         "status":"CAPTURED\"""" );
    }
 
    @Test

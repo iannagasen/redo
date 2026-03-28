@@ -104,7 +104,7 @@ class PaymentEventConsumerTest {
     * This test is @Disabled until the fix is applied — it documents the target behaviour.
     */
    @Test
-//   @org.junit.jupiter.api.Disabled( "Requires idempotency guard in PaymentEventConsumer — see Javadoc above" )
+   @org.junit.jupiter.api.Disabled( "Requires idempotency guard in PaymentEventConsumer — see Javadoc above" )
    void desiredBehaviour_updateStatusCalledOnce_evenWhenSameEventArrivesAgain() throws Exception {
       PaymentEvent duplicate = new PaymentEvent( 2L, 20L, "user-2", BigDecimal.TEN, "CAPTURED", null );
 

@@ -32,6 +32,8 @@
 * API Gateway should run last, instead of first since it requires all other service to be running specially the auth
     * Auth Server should run first
 * Application properties should be refreshable without restarting the server
+* Design an exceptions service (maybe logging too not sure), so any service can asynchrounously call it when there is
+  an issue - subject to discussion if its valuable or is this already solved by Observability
 
 
 3. Technical Debt & Enhancements
@@ -44,6 +46,8 @@
   services instead of standard REST.
 * Database Migrations: If not already using it, integrate Flyway or Liquibase into your Spring Boot services to
   manage schema changes automatically.
+* Create additional jar for beans that should be require by each service - then let each service implement, sample is
+  the UserContextBinder, which has UserIdResolver which should be implemented by the service
 
 
 4. Frontend (Storefront)
