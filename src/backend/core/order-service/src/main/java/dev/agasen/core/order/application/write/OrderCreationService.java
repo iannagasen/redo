@@ -20,7 +20,7 @@ import static dev.agasen.core.order.application.mapper.OrderDetailsMapper.toOrde
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class OrderCreateService {
+public class OrderCreationService {
 
    private final OrderRepository orderRepository;
 
