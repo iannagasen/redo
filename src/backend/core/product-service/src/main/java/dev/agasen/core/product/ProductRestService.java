@@ -3,7 +3,7 @@ package dev.agasen.core.product;
 import dev.agasen.api.product.ProductApi;
 import dev.agasen.api.product.product.ProductCreationDetails;
 import dev.agasen.api.product.product.ProductDetails;
-import dev.agasen.common.pagination.PagedResult;
+import dev.agasen.common.http.pagination.PagedResult;
 import dev.agasen.core.product.application.read.BrandRetrievalService;
 import dev.agasen.core.product.application.read.ProductRetrievalService;
 import dev.agasen.core.product.application.write.ProductCreationService;

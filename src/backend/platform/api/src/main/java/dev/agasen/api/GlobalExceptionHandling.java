@@ -1,8 +1,10 @@
 package dev.agasen.api;
 
-import dev.agasen.common.exceptions.BadRequestException;
-import dev.agasen.common.exceptions.NotFoundException;
+import dev.agasen.common.http.exceptions.BadRequestException;
+import dev.agasen.common.http.exceptions.NotFoundException;
+
 import java.util.NoSuchElementException;
+
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

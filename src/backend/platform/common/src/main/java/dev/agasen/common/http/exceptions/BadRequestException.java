@@ -1,4 +1,4 @@
-package dev.agasen.common.exceptions;
+package dev.agasen.common.http.exceptions;
 
 public class BadRequestException extends RuntimeException {
 

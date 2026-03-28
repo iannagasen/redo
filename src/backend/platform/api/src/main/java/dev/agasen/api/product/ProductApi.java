@@ -2,7 +2,7 @@ package dev.agasen.api.product;
 
 import dev.agasen.api.product.product.ProductCreationDetails;
 import dev.agasen.api.product.product.ProductDetails;
-import dev.agasen.common.pagination.PagedResult;
+import dev.agasen.common.http.pagination.PagedResult;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;

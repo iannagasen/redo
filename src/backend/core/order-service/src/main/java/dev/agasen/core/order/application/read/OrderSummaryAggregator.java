@@ -6,7 +6,7 @@ import dev.agasen.api.order.read.OrderItemDetails;
 import dev.agasen.api.payment.PaymentApi;
 import dev.agasen.api.product.ProductApi;
 import dev.agasen.api.product.product.ProductDetails;
-import dev.agasen.common.exceptions.NotFoundException;
+import dev.agasen.common.http.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;

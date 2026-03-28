@@ -2,7 +2,7 @@ package dev.agasen.core.user;
 
 import dev.agasen.api.user.UserService;
 import dev.agasen.api.user.user.*;
-import dev.agasen.common.exceptions.Exceptions;
+import dev.agasen.common.http.exceptions.Exceptions;
 import dev.agasen.core.user.mapper.UserMapper;
 import dev.agasen.core.user.persistence.RoleRepository;
 import dev.agasen.core.user.persistence.UserRepository;
@@ -36,15 +36,15 @@ public class UserRestService implements UserService {
    @Transactional( readOnly = true )
    public Page< UserDetails > getUsers( int page, int size, List< String > roles, List< String > permissions ) {
       return userRepository.findFilteredUsers( roles, permissions, PageRequest.of( page, size ) )
-            .map( userMapper::toUserDetails );
+         .map( userMapper::toUserDetails );
    }
 
    @Override
    @Transactional( readOnly = true )
    public UserDetails getUser( long id ) {
       return userRepository.findById( id )
-            .map( userMapper::toUserDetails )
-            .orElseThrow( Exceptions.notFound( "User", id ) );
+         .map( userMapper::toUserDetails )
+         .orElseThrow( Exceptions.notFound( "User", id ) );
    }
 
    @Override
@@ -55,8 +55,8 @@ public class UserRestService implements UserService {
       Collection< Role > roles = roleRepository.findAllExistByNameIn( userCreationDetails.getRoles() );
 
       var userRoles = roles.stream()
-            .map( r -> new UserRole( null, user, r ) )
-            .collect( Collectors.toSet() );
+         .map( r -> new UserRole( null, user, r ) )
+         .collect( Collectors.toSet() );
       user.setUserRoles( userRoles );
 
       userRepository.save( user );
@@ -66,7 +66,7 @@ public class UserRestService implements UserService {
    @Transactional
    public void updateUserPassword( long id, UserPasswordChange userPasswordChange ) {
       User user = userRepository.findById( id )
-            .orElseThrow( Exceptions.notFound( "User", id ) );
+         .orElseThrow( Exceptions.notFound( "User", id ) );
 
       if ( passwordEncoder.matches( userPasswordChange.getCurrentPassword(), user.getPassword() ) ) {
          user.setPassword( passwordEncoder.encode( userPasswordChange.getNewPassword() ) );
@@ -84,23 +84,23 @@ public class UserRestService implements UserService {
    @Override
    public void deleteUser( long id ) {
       userRepository.findById( id )
-            .orElseThrow( Exceptions.notFound( "User", id ) )
-            .setDeleted( true );
+         .orElseThrow( Exceptions.notFound( "User", id ) )
+         .setDeleted( true );
    }
 
    @Override
    @Transactional
    public void enableUser( long id ) {
       userRepository.findById( id )
-            .orElseThrow( Exceptions.notFound( "User", id ) )
-            .setEnabled( true );
+         .orElseThrow( Exceptions.notFound( "User", id ) )
+         .setEnabled( true );
    }
 
    @Override
    public void addRole( long id, UserRoleAssignmentDetails userRoleAssignmentDetails ) {
       userRepository.findById( id )
-            .orElseThrow( Exceptions.notFound( "User", id ) )
-            .addRoles( roleRepository.findAllExistByNameIn( userRoleAssignmentDetails.getRoles() ) );
+         .orElseThrow( Exceptions.notFound( "User", id ) )
+         .addRoles( roleRepository.findAllExistByNameIn( userRoleAssignmentDetails.getRoles() ) );
    }
 
    @Override

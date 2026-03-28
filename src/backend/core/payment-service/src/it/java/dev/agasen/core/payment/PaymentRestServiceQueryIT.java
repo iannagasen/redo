@@ -5,7 +5,7 @@ import dev.agasen.core.payment.application.PaymentInitiator;
 import dev.agasen.core.payment.application.PaymentRetriever;
 import dev.agasen.core.payment.event.PaymentEventPublisher;
 import dev.agasen.core.payment.gateway.PaymentGatewayClient;
-import dev.agasen.common.exceptions.NotFoundException;
+import dev.agasen.common.http.exceptions.NotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

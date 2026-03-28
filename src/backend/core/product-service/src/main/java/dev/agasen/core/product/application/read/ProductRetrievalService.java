@@ -2,7 +2,7 @@ package dev.agasen.core.product.application.read;
 
 import dev.agasen.api.product.product.ProductDetails;
 import dev.agasen.common.cache.CachingService;
-import dev.agasen.common.pagination.PagedResult;
+import dev.agasen.common.http.pagination.PagedResult;
 import dev.agasen.core.product.application.mapper.ProductMapper;
 import dev.agasen.core.product.domain.product.ProductRepository;
 import dev.agasen.core.product.infrastructure.cache.PageProductDetailsCachingServiceConfig;
@@ -38,7 +38,7 @@ public class ProductRetrievalService {
    }
 
    @PreAuthorize( "hasAnyAuthority('SCOPE_read', 'SCOPE_openid')" )
-   public List<ProductDetails> getProductsByIds( List<Long> ids ) {
+   public List< ProductDetails > getProductsByIds( List< Long > ids ) {
       return productRepository.findAllByIdIn( ids )
          .stream()
          .map( productMapper::toDomain )

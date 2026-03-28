@@ -1,7 +1,7 @@
 package dev.agasen.core.payment.application;
 
 import dev.agasen.api.payment.read.PaymentDetails;
-import dev.agasen.common.exceptions.Exceptions;
+import dev.agasen.common.http.exceptions.Exceptions;
 import dev.agasen.core.payment.repository.entity.Payment;
 import dev.agasen.core.payment.repository.PaymentRepository;
 import lombok.RequiredArgsConstructor;
