@@ -1,8 +1,8 @@
 package dev.agasen.core.user.mapper;
 
-import dev.agasen.api.user.role.RoleDetails;
-import dev.agasen.api.user.user.UserCreationDetails;
-import dev.agasen.api.user.user.UserDetails;
+import dev.agasen.api.core.user.role.RoleDetails;
+import dev.agasen.api.core.user.user.UserCreationDetails;
+import dev.agasen.api.core.user.user.UserDetails;
 import dev.agasen.core.user.persistence.entity.User;
 import dev.agasen.core.user.persistence.entity.UserRole;
 import org.mapstruct.Mapper;
@@ -16,9 +16,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Mapper(
-      componentModel = "spring",
-      uses = { RoleMapper.class },
-      unmappedTargetPolicy = ReportingPolicy.ERROR
+   componentModel = "spring",
+   uses = { RoleMapper.class },
+   unmappedTargetPolicy = ReportingPolicy.ERROR
 )
 public interface UserMapper {
 
@@ -39,9 +39,9 @@ public interface UserMapper {
       if ( userRoles == null ) return new HashSet<>();
 
       return userRoles.stream()
-            .map( UserRole::getRole )
-            .map( RoleMapper.INSTANCE::roleToRoleDetails )
-            .collect( Collectors.toSet() );
+         .map( UserRole::getRole )
+         .map( RoleMapper.INSTANCE::roleToRoleDetails )
+         .collect( Collectors.toSet() );
    }
 
 }

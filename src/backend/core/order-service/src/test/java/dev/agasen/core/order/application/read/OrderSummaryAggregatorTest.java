@@ -1,9 +1,9 @@
 package dev.agasen.core.order.application.read;
 
-import dev.agasen.api.order.read.OrderSummary;
-import dev.agasen.api.order.read.OrderSummaryItem;
-import dev.agasen.api.payment.PaymentApi;
-import dev.agasen.api.product.ProductApi;
+import dev.agasen.api.core.order.read.OrderSummary;
+import dev.agasen.api.core.order.read.OrderSummaryItem;
+import dev.agasen.api.core.payment.PaymentApi;
+import dev.agasen.api.core.product.ProductApi;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;

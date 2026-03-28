@@ -1,11 +1,11 @@
 package dev.agasen.core.order.application.read;
 
-import dev.agasen.api.order.read.OrderSummary;
-import dev.agasen.api.order.read.OrderSummaryItem;
-import dev.agasen.api.order.read.OrderItemDetails;
-import dev.agasen.api.payment.PaymentApi;
-import dev.agasen.api.product.ProductApi;
-import dev.agasen.api.product.product.ProductDetails;
+import dev.agasen.api.core.order.read.OrderSummary;
+import dev.agasen.api.core.order.read.OrderSummaryItem;
+import dev.agasen.api.core.order.read.OrderItemDetails;
+import dev.agasen.api.core.payment.PaymentApi;
+import dev.agasen.api.core.product.ProductApi;
+import dev.agasen.api.core.product.product.ProductDetails;
 import dev.agasen.common.http.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

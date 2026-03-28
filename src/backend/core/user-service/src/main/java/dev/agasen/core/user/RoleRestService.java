@@ -1,10 +1,10 @@
 package dev.agasen.core.user;
 
-import dev.agasen.api.user.RoleService;
-import dev.agasen.api.user.role.RoleCreationDetails;
-import dev.agasen.api.user.role.RoleDetails;
-import dev.agasen.api.user.role.RoleModificationDetails;
-import dev.agasen.api.user.role.RoleRemovalDetails;
+import dev.agasen.api.core.user.RoleService;
+import dev.agasen.api.core.user.role.RoleCreationDetails;
+import dev.agasen.api.core.user.role.RoleDetails;
+import dev.agasen.api.core.user.role.RoleModificationDetails;
+import dev.agasen.api.core.user.role.RoleRemovalDetails;
 import dev.agasen.core.user.mapper.RoleMapper;
 import dev.agasen.core.user.persistence.PermissionRepository;
 import dev.agasen.core.user.persistence.RoleRepository;

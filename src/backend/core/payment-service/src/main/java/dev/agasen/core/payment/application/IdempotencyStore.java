@@ -1,6 +1,6 @@
 package dev.agasen.core.payment.application;
 
-import dev.agasen.api.payment.read.PaymentDetails;
+import dev.agasen.api.core.payment.read.PaymentDetails;
 import dev.agasen.core.payment.repository.IdempotencyRecordRepository;
 import dev.agasen.core.payment.repository.entity.IdempotencyRecord;
 import org.springframework.stereotype.Service;

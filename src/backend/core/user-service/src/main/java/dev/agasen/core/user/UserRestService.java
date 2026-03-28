@@ -1,7 +1,7 @@
 package dev.agasen.core.user;
 
-import dev.agasen.api.user.UserService;
-import dev.agasen.api.user.user.*;
+import dev.agasen.api.core.user.UserService;
+import dev.agasen.api.core.user.user.*;
 import dev.agasen.common.http.exceptions.Exceptions;
 import dev.agasen.core.user.mapper.UserMapper;
 import dev.agasen.core.user.persistence.RoleRepository;

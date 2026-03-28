@@ -1,6 +1,6 @@
 package dev.agasen.core.payment.event;
 
-import dev.agasen.api.event.PaymentEvent;
+import dev.agasen.api.core.event.PaymentEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -13,7 +13,7 @@ public class PaymentEventPublisher {
 
    public static final String TOPIC = "payment.result";
 
-   private final KafkaTemplate<String, PaymentEvent> kafkaTemplate;
+   private final KafkaTemplate< String, PaymentEvent > kafkaTemplate;
 
    public void publish( PaymentEvent event ) {
       log.info( "Publishing PaymentEvent to topic '{}': orderId={}, status={}", TOPIC, event.orderId(), event.status() );

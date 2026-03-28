@@ -1,10 +1,10 @@
 package dev.agasen.core.order;
 
-import dev.agasen.api.order.write.CreateOrderRequest;
-import dev.agasen.api.order.OrderApi;
-import dev.agasen.api.order.read.OrderDetails;
-import dev.agasen.api.order.read.OrderSummary;
-import dev.agasen.api.order.write.UpdateOrderStatusRequest;
+import dev.agasen.api.core.order.write.CreateOrderRequest;
+import dev.agasen.api.core.order.OrderApi;
+import dev.agasen.api.core.order.read.OrderDetails;
+import dev.agasen.api.core.order.read.OrderSummary;
+import dev.agasen.api.core.order.write.UpdateOrderStatusRequest;
 import dev.agasen.core.order.application.read.OrderQueryService;
 import dev.agasen.core.order.application.read.OrderSummaryAggregator;
 import dev.agasen.core.order.application.write.OrderCommandService;

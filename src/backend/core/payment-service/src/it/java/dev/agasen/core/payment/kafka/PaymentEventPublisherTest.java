@@ -1,7 +1,7 @@
 package dev.agasen.core.payment.kafka;
 
-import dev.agasen.api.event.PaymentEvent;
-import dev.agasen.api.payment.write.InitiatePaymentRequest;
+import dev.agasen.api.core.event.PaymentEvent;
+import dev.agasen.api.core.payment.write.InitiatePaymentRequest;
 import dev.agasen.core.payment.application.PaymentInitiator;
 import dev.agasen.core.payment.repository.entity.Payment;
 import dev.agasen.core.payment.repository.PaymentRepository;

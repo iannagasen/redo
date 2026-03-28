@@ -260,7 +260,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "dev.agasen.api.event"
-        spring.json.value.default.type: "dev.agasen.api.event.PaymentEvent"
+        spring.json.value.default.type: "dev.agasen.api.core.event.PaymentEvent"
 ```
 
 ### Property Reference
@@ -272,7 +272,7 @@ spring:
 | `key-deserializer` | `StringDeserializer` | Keys are plain strings |
 | `value-deserializer` | `JsonDeserializer` | Deserialize JSON payload to a Java object |
 | `spring.json.trusted.packages` | `dev.agasen.api.event` | Security whitelist — JsonDeserializer refuses to instantiate classes from untrusted packages |
-| `spring.json.value.default.type` | `dev.agasen.api.event.PaymentEvent` | Which class to deserialize to when there is no `__TypeId__` header (because producer set `add.type.headers=false`) |
+| `spring.json.value.default.type` | `dev.agasen.api.core.event.PaymentEvent` | Which class to deserialize to when there is no `__TypeId__` header (because producer set `add.type.headers=false`) |
 
 ### Listener
 

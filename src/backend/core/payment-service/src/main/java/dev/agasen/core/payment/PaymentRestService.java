@@ -1,8 +1,8 @@
 package dev.agasen.core.payment;
 
-import dev.agasen.api.payment.write.InitiatePaymentRequest;
-import dev.agasen.api.payment.PaymentApi;
-import dev.agasen.api.payment.read.PaymentDetails;
+import dev.agasen.api.core.payment.write.InitiatePaymentRequest;
+import dev.agasen.api.core.payment.PaymentApi;
+import dev.agasen.api.core.payment.read.PaymentDetails;
 import dev.agasen.core.payment.application.IdempotencyStore;
 import dev.agasen.core.payment.application.PaymentRetriever;
 import dev.agasen.core.payment.application.PaymentInitiator;

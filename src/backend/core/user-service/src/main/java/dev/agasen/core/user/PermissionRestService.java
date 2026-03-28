@@ -1,7 +1,7 @@
 package dev.agasen.core.user;
 
-import dev.agasen.api.user.PermissionService;
-import dev.agasen.api.user.permission.PermissionCreationDetails;
+import dev.agasen.api.core.user.PermissionService;
+import dev.agasen.api.core.user.permission.PermissionCreationDetails;
 import dev.agasen.core.user.mapper.PermissionMapper;
 import dev.agasen.core.user.persistence.PermissionRepository;
 import lombok.RequiredArgsConstructor;

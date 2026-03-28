@@ -1,6 +1,6 @@
 package dev.agasen.core.product.domain;
 
-import dev.agasen.api.product.product.ProductDetails;
+import dev.agasen.api.core.product.product.ProductDetails;
 import dev.agasen.common.cache.CachingService;
 import dev.agasen.core.product.application.mapper.ProductMapper;
 import dev.agasen.core.product.domain.product.ProductRepository;

@@ -1,8 +1,8 @@
 package dev.agasen.core.payment.application;
 
-import dev.agasen.api.event.PaymentEvent;
-import dev.agasen.api.payment.write.InitiatePaymentRequest;
-import dev.agasen.api.payment.read.PaymentDetails;
+import dev.agasen.api.core.event.PaymentEvent;
+import dev.agasen.api.core.payment.write.InitiatePaymentRequest;
+import dev.agasen.api.core.payment.read.PaymentDetails;
 import dev.agasen.common.http.exceptions.BadRequestException;
 import dev.agasen.core.payment.repository.entity.Payment;
 import dev.agasen.core.payment.repository.PaymentRepository;

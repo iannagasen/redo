@@ -1,8 +1,8 @@
 package dev.agasen.core.user.mapper;
 
-import dev.agasen.api.user.permission.PermissionDetails;
-import dev.agasen.api.user.role.RoleCreationDetails;
-import dev.agasen.api.user.role.RoleDetails;
+import dev.agasen.api.core.user.permission.PermissionDetails;
+import dev.agasen.api.core.user.role.RoleCreationDetails;
+import dev.agasen.api.core.user.role.RoleDetails;
 import dev.agasen.core.user.persistence.entity.Role;
 import dev.agasen.core.user.persistence.entity.RolePermission;
 import org.mapstruct.Mapper;

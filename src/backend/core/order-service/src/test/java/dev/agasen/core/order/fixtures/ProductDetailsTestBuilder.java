@@ -1,6 +1,6 @@
 package dev.agasen.core.order.fixtures;
 
-import dev.agasen.api.product.product.ProductDetails;
+import dev.agasen.api.core.product.product.ProductDetails;
 
 public class ProductDetailsTestBuilder {
 

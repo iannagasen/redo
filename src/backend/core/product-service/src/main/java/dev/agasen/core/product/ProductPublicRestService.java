@@ -1,6 +1,6 @@
 package dev.agasen.core.product;
 
-import dev.agasen.api.product.ProductPublicApi;
+import dev.agasen.api.core.product.ProductPublicApi;
 import dev.agasen.core.product.application.read.BrandRetrievalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +15,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductPublicRestService implements ProductPublicApi {
 
-    private final BrandRetrievalService brandRetrievalService;
+   private final BrandRetrievalService brandRetrievalService;
 
-    @Override
-    public List<String> getBrands(String query, int page, int size) {
-        return brandRetrievalService.getBrands(query, page, size);
-    }
+   @Override
+   public List< String > getBrands( String query, int page, int size ) {
+      return brandRetrievalService.getBrands( query, page, size );
+   }
 }

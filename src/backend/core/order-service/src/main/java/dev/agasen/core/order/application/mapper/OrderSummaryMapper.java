@@ -1,9 +1,9 @@
 package dev.agasen.core.order.application.mapper;
 
-import dev.agasen.api.order.read.OrderItemDetails;
-import dev.agasen.api.order.read.OrderSummaryItem;
-import dev.agasen.api.payment.read.PaymentDetails;
-import dev.agasen.api.product.product.ProductDetails;
+import dev.agasen.api.core.order.read.OrderItemDetails;
+import dev.agasen.api.core.order.read.OrderSummaryItem;
+import dev.agasen.api.core.payment.read.PaymentDetails;
+import dev.agasen.api.core.product.product.ProductDetails;
 import dev.agasen.common.Result;
 
 public class OrderSummaryMapper {

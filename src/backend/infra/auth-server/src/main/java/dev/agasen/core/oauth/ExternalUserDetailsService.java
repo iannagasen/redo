@@ -1,6 +1,6 @@
 package dev.agasen.core.oauth;
 
-import dev.agasen.api.user.user.UserAuthInfo;
+import dev.agasen.api.core.user.user.UserAuthInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,28 +24,28 @@ import java.util.List;
 @Slf4j
 public class ExternalUserDetailsService implements UserDetailsService {
 
-    private final RestTemplate restTemplate;
+   private final RestTemplate restTemplate;
 
-    @Value("${env.base.url.internal.user}")
-    private String userServiceUrl;
+   @Value( "${env.base.url.internal.user}" )
+   private String userServiceUrl;
 
-    @Value("${internal.api.key}")
-    private String internalApiKey;
+   @Value( "${internal.api.key}" )
+   private String internalApiKey;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("Fetching user info for '{}' from user-service", username);
-        
-        String url = userServiceUrl + "/internal/users/" + username + "/auth-info";
-        
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("X-Internal-Api-Key", internalApiKey);
-            HttpEntity<String> entity = new HttpEntity<>(headers);
+   @Override
+   public UserDetails loadUserByUsername( String username ) throws UsernameNotFoundException {
+      log.info( "Fetching user info for '{}' from user-service", username );
 
-            UserAuthInfo authInfo = restTemplate.exchange(url, HttpMethod.GET, entity, UserAuthInfo.class).getBody();
-            
-            if (authInfo == null) {
+      String url = userServiceUrl + "/internal/users/" + username + "/auth-info";
+
+      try {
+         HttpHeaders headers = new HttpHeaders();
+         headers.set( "X-Internal-Api-Key", internalApiKey );
+         HttpEntity< String > entity = new HttpEntity<>( headers );
+
+         UserAuthInfo authInfo = restTemplate.exchange( url, HttpMethod.GET, entity, UserAuthInfo.class ).getBody();
+
+         if ( authInfo == null ) {
 
             throw new UsernameNotFoundException( "User not found: " + username );
          }

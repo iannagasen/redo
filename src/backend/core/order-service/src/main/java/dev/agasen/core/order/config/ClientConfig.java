@@ -1,7 +1,7 @@
 package dev.agasen.core.order.config;
 
-import dev.agasen.api.payment.PaymentApi;
-import dev.agasen.api.product.ProductApi;
+import dev.agasen.api.core.payment.PaymentApi;
+import dev.agasen.api.core.product.ProductApi;
 import dev.agasen.common.context.user.UserContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

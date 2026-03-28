@@ -1,7 +1,6 @@
 package dev.agasen.core.payment;
 
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dev.agasen.api.payment.read.PaymentDetails;
+import dev.agasen.api.core.payment.read.PaymentDetails;
 import dev.agasen.core.payment.application.IdempotencyStore;
 import dev.agasen.core.payment.repository.IdempotencyRecordRepository;
 import dev.agasen.core.payment.repository.entity.IdempotencyRecord;

@@ -191,7 +191,7 @@ Published to topic `payment.result` after every payment attempt.
 Defined in `platform:api` as a Java record:
 
 ```java
-// dev.agasen.api.event.PaymentEvent
+// dev.agasen.api.core.event.PaymentEvent
 record PaymentEvent(
     Long orderId,
     Long paymentId,
