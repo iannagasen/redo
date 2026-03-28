@@ -1,7 +1,7 @@
 package dev.agasen.core.order;
 
 import dev.agasen.api.core.event.PaymentEvent;
-import dev.agasen.core.order.application.write.OrderCommandService;
+import dev.agasen.core.order.application.write.OrderCreateService;
 import dev.agasen.core.order.domain.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import java.util.Set;
 @Slf4j
 public class PaymentEventConsumer {
 
-   private final OrderCommandService orderCommandService;
+   private final OrderCreateService orderCreateService;
    private final OrderRepository orderRepository;
 
    @KafkaListener( topics = "payment.result", groupId = "order-service" )
@@ -39,7 +39,7 @@ public class PaymentEventConsumer {
       };
 
       if ( newStatus != null ) {
-         orderCommandService.updateStatus( event.orderId(), newStatus );
+         orderCreateService.updateStatus( event.orderId(), newStatus );
          log.info( "Order {} updated to {}", event.orderId(), newStatus );
       }
    }

@@ -1,7 +1,7 @@
 package dev.agasen.core.order.kafka;
 
 import dev.agasen.api.core.event.PaymentEvent;
-import dev.agasen.core.order.application.write.OrderCommandService;
+import dev.agasen.core.order.application.write.OrderCreateService;
 import dev.agasen.core.order.PaymentEventConsumer;
 import dev.agasen.core.order.domain.Order;
 import dev.agasen.core.order.domain.OrderRepository;
@@ -57,7 +57,7 @@ class PaymentEventConsumerTest {
    @Autowired private KafkaTemplate< String, Object > kafkaTemplate;
    @Autowired private DltCapture dltCapture;
 
-   @MockitoBean private OrderCommandService orderCommandService;
+   @MockitoBean private OrderCreateService orderCreateService;
    @MockitoBean private OrderRepository orderRepository;
 
    // ── A. Idempotency Tests ──────────────────────────────────────────────────
@@ -88,7 +88,7 @@ class PaymentEventConsumerTest {
       TimeUnit.SECONDS.sleep( 3 );
 
       // CURRENT BEHAVIOUR: called twice — no idempotency guard in PaymentEventConsumer
-      verify( orderCommandService, times( 2 ) ).updateStatus( 1L, "CONFIRMED" );
+      verify( orderCreateService, times( 2 ) ).updateStatus( 1L, "CONFIRMED" );
    }
 
    /**
@@ -123,7 +123,7 @@ class PaymentEventConsumerTest {
 
       TimeUnit.SECONDS.sleep( 3 );
 
-      verify( orderCommandService, times( 1 ) ).updateStatus( 2L, "CONFIRMED" );
+      verify( orderCreateService, times( 1 ) ).updateStatus( 2L, "CONFIRMED" );
    }
 
    // ── C. Poison Pill & DLQ Tests ────────────────────────────────────────────
@@ -200,8 +200,8 @@ class PaymentEventConsumerTest {
       TimeUnit.SECONDS.sleep( 3 );
 
       // Valid messages must have been processed despite the preceding poison pill
-      verify( orderCommandService ).updateStatus( 5L, "CONFIRMED" );
-      verify( orderCommandService ).updateStatus( 6L, "PAYMENT_FAILED" );
+      verify( orderCreateService ).updateStatus( 5L, "CONFIRMED" );
+      verify( orderCreateService ).updateStatus( 6L, "PAYMENT_FAILED" );
    }
 
    /**
@@ -220,7 +220,7 @@ class PaymentEventConsumerTest {
       TimeUnit.SECONDS.sleep( 3 );
 
       // Consumer logs a warning but does not call updateStatus
-      verify( orderCommandService, never() ).updateStatus( eq( 7L ), any() );
+      verify( orderCreateService, never() ).updateStatus( eq( 7L ), any() );
 
       // And it does NOT go to DLT (no exception thrown)
       assertThat( dltCapture.records ).isEmpty();

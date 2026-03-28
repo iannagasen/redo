@@ -7,7 +7,7 @@ import dev.agasen.api.core.order.read.OrderSummary;
 import dev.agasen.api.core.order.write.UpdateOrderStatusRequest;
 import dev.agasen.core.order.application.read.OrderQueryService;
 import dev.agasen.core.order.application.read.OrderSummaryAggregator;
-import dev.agasen.core.order.application.write.OrderCommandService;
+import dev.agasen.core.order.application.write.OrderCreateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,7 +21,7 @@ import java.util.List;
 public class OrderRestService implements OrderApi {
 
    private final OrderQueryService orderQueryService;
-   private final OrderCommandService orderCommandService;
+   private final OrderCreateService orderCreateService;
    private final OrderSummaryAggregator orderSummaryAggregator;
 
    public List< OrderDetails > getOrders() {
@@ -34,11 +34,11 @@ public class OrderRestService implements OrderApi {
 
    @ResponseStatus( HttpStatus.CREATED )
    public OrderDetails createOrder( CreateOrderRequest request ) {
-      return orderCommandService.createOrder( currentUserId(), request );
+      return orderCreateService.createOrder( currentUserId(), request );
    }
 
    public OrderDetails updateStatus( Long id, UpdateOrderStatusRequest request ) {
-      return orderCommandService.updateStatus( id, request.getStatus() );
+      return orderCreateService.updateStatus( id, request.getStatus() );
    }
 
    public OrderSummary getOrderSummary( Long id ) {
