@@ -1,4 +1,4 @@
-package dev.agasen.core.oauth;
+package dev.agasen.core.order.config;
 
 import dev.agasen.common.context.user.UserContextConfiguration;
 import dev.agasen.common.context.user.UserIdResolver;
@@ -20,4 +20,5 @@ public class UserContextConfig extends UserContextConfiguration {
          return Optional.of( auth.getName() );
       };
    }
+
 }

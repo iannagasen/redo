@@ -1,0 +1,9 @@
+system:
+  topics:
+    checkout:
+      order:
+        created: checkout.order.created
+      payment:
+        processed: checkout.payment.processed
+        refunded: checkout.payment.refunded
+        declined: checkout.payment.declined

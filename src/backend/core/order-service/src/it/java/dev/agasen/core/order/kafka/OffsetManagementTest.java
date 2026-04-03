@@ -168,7 +168,7 @@ class OffsetManagementTest {
       Map< String, Object > props = KafkaTestUtils.consumerProps( GROUP + "-auto", "true", broker );
       props.put( ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, 100 ); // commit every 100ms
       props.put( ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true );
-      props.put( JsonDeserializer.TRUSTED_PACKAGES, "dev.agasen.api.event" );
+      props.put( JsonDeserializer.TRUSTED_PACKAGES, "dev.agasen.api.core.event" );
       props.put( JsonDeserializer.VALUE_DEFAULT_TYPE, PaymentEvent.class.getName() );
 
       try ( KafkaConsumer< String, PaymentEvent > consumer =
@@ -220,7 +220,7 @@ class OffsetManagementTest {
    private KafkaConsumer< String, PaymentEvent > buildConsumer( EmbeddedKafkaBroker broker, String groupId ) {
       Map< String, Object > props = KafkaTestUtils.consumerProps( groupId, "false", broker );
       props.put( ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false );
-      props.put( JsonDeserializer.TRUSTED_PACKAGES, "dev.agasen.api.event" );
+      props.put( JsonDeserializer.TRUSTED_PACKAGES, "dev.agasen.api.core.event" );
       props.put( JsonDeserializer.VALUE_DEFAULT_TYPE, PaymentEvent.class.getName() );
       return new KafkaConsumer<>( props, new StringDeserializer(), new JsonDeserializer<>( PaymentEvent.class ) );
    }

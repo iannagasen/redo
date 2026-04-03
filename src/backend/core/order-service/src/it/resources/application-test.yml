@@ -20,16 +20,18 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       enable-auto-commit: false
       properties:
-        spring.json.trusted.packages: "dev.agasen.api.event"
-        spring.json.value.default.type: "dev.agasen.api.event.PaymentEvent"
+        # Trust both PaymentEvent subtypes and OrderCheckoutSagaEvent subtypes
+        spring.json.trusted.packages: "dev.agasen.api.events.payment,dev.agasen.api.events.order"
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        spring.json.add.type.headers: false
+        # Enable type headers in tests so the consumer's JsonDeserializer can pick the correct subtype
+        # (e.g. PaymentEvent$Processed vs PaymentEvent$Declined) without a fixed default type.
+        spring.json.add.type.headers: true
 
 # Fake auth URL — SecurityConfig reads this to build the JWK Set URI.
-# Since Kafka tests never make HTTP requests, the JWK endpoint is never contacted.
+# Kafka tests never make HTTP requests, so the JWK endpoint is never contacted.
 env:
   base:
     url:

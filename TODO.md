@@ -26,6 +26,7 @@
 * Kustomize/Helm: Your skaffold.yaml uses rawYaml. Refactor your k8s/ directory to use Kustomize to manage
   environment-specific configurations (e.g., dev vs. prod database credentials).
 * CI/CD Pipeline: Set up a GitHub Action to run ./gradlew build and linting on every push.
+    * Only trigger at specific tag
 * start containers in sequential order
 * Utilize fully Skaffold for development - fast restart
     * Currently still using `./gradlew build` then `skaffold dev`

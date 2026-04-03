@@ -7,8 +7,7 @@ spring.kafka:
     value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
     enable-auto-commit: false
     properties:
-      spring.json.trusted.packages: "dev.agasen.api.event"
-      spring.json.value.default.type: "dev.agasen.api.event.PaymentEvent"
+      spring.json.trusted.packages: "dev.agasen.api.events.payment"
   producer:
     key-serializer: org.apache.kafka.common.serialization.StringSerializer
     value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -17,8 +16,19 @@ spring.kafka:
 
 system:
   topics:
-    # pattern: {saga}.{aggregate}.{event}
-    order-created: checkout.order.created
+    checkout:
+      order:
+        created: checkout.order.created
+        confirmed: checkout.order.confirmed
+        cancelled: checkout.order.cancelled
+        failed: checkout.order.failed
+      payment:
+        processed: checkout.payment.processed
+        refunded: checkout.payment.refunded
+        declined: checkout.payment.declined
+      cart:
+        cleared: checkout.cart.cleared
+        restored: checkout.cart.restored
 
 ---
 spring.config.activate.on-profile: docker

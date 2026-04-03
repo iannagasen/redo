@@ -1,7 +1,5 @@
 package dev.agasen.core.order.config;
 
-import dev.agasen.common.context.user.UserContextBinder;
-import dev.agasen.common.context.user.UserIdResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -25,11 +23,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Configuration
 @EnableWebSecurity
@@ -108,27 +102,13 @@ public class SecurityConfig {
          return authorities;
       };
    }
-
-   @Bean
-   public UserIdResolver userIdResolver() {
-      return request -> {
-         var auth = SecurityContextHolder.getContext().getAuthentication();
-         if ( auth == null || !auth.isAuthenticated() ) return Optional.empty();
-         return Optional.of( auth.getName() );
-      };
-   }
-
-   @Bean
-   public UserContextBinder userContextBinder( UserIdResolver userIdResolver ) {
-      return new UserContextBinder( userIdResolver );
-   }
-
+   
    @Bean
    public CorsConfigurationSource corsConfigurationSource() {
       CorsConfiguration configuration = new CorsConfiguration();
-      configuration.setAllowedOriginPatterns( Arrays.asList( "*" ) );
+      configuration.setAllowedOriginPatterns( List.of( "*" ) );
       configuration.setAllowedMethods( Arrays.asList( "GET", "POST", "PUT", "DELETE", "OPTIONS" ) );
-      configuration.setAllowedHeaders( Arrays.asList( "*" ) );
+      configuration.setAllowedHeaders( List.of( "*" ) );
       configuration.setAllowCredentials( true );
 
       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

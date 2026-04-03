@@ -1,5 +1,7 @@
 package dev.agasen.common.event;
 
+import java.util.Optional;
+
 /// Represents one step in the saga pipeline.
 /// Consumes an incoming event of type `T`, executes a local transaction,
 /// and produces a result event of type `R`.
@@ -24,6 +26,6 @@ public interface EventProcessor< T extends DomainEvent, R extends DomainEvent > 
 
    /// Handles the incoming event, executes a local transaction,
    /// and returns the next event in the saga chain.
-   R process( T event );
+   Optional< R > process( T event );
 
 }

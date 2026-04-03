@@ -3,6 +3,7 @@ package dev.agasen.core.order.application.write;
 import dev.agasen.api.core.order.write.CreateOrderRequest;
 import dev.agasen.api.core.order.read.OrderDetails;
 import dev.agasen.api.core.order.write.OrderItemRequest;
+import dev.agasen.common.context.user.UserContext;
 import dev.agasen.common.http.exceptions.BadRequestException;
 import dev.agasen.common.http.exceptions.Exceptions;
 import dev.agasen.core.order.domain.Order;
@@ -24,9 +25,9 @@ public class OrderCreationService {
 
    private final OrderRepository orderRepository;
 
-   public OrderDetails createOrder( String userId, CreateOrderRequest request ) {
+   public OrderDetails createOrder( CreateOrderRequest request ) {
       Order order = new Order();
-      order.setUserId( userId );
+      order.setUserId( UserContext.currentUserId() );
       order.setStatus( OrderStatus.PENDING );
 
       BigDecimal total = BigDecimal.ZERO;
