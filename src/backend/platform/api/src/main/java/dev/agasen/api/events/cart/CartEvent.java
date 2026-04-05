@@ -15,6 +15,7 @@ import java.util.UUID;
 public sealed interface CartEvent extends DomainEvent, OrderCheckoutSaga
    permits CartEvent.Cleared {
 
+
    /// Published by cart-service when the cart is cleared after a successful payment.
    /// Terminal event — no further saga steps follow this.
    @Builder

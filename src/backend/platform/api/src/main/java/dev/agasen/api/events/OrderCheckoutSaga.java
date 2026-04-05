@@ -6,6 +6,4 @@ public interface OrderCheckoutSaga extends Saga {
 
    Long orderId();
 
-   String sagaName();
-
 }

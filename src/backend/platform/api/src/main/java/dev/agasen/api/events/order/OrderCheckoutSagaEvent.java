@@ -23,10 +23,6 @@ public sealed interface OrderCheckoutSagaEvent extends DomainEvent, OrderCheckou
    OrderCheckoutSagaEvent.Created, OrderCheckoutSagaEvent.Confirmed, OrderCheckoutSagaEvent.Cancelled,
    OrderCheckoutSagaEvent.Failed {
 
-   @Override default String sagaName() {
-      return "ORDER_CHECKOUT";
-   }
-
    /// Published by order-service immediately after saving a new order.
    /// This event starts the checkout saga — payment-service listens to this.
    ///
