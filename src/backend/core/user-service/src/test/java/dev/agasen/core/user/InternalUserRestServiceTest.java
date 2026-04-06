@@ -1,6 +1,7 @@
 package dev.agasen.core.user;
 
 import dev.agasen.api.core.user.user.UserAuthInfo;
+import dev.agasen.core.user.inbound.rest.InternalUserRestService;
 import dev.agasen.core.user.persistence.UserRepository;
 import dev.agasen.core.user.persistence.entity.*;
 import org.junit.jupiter.api.DisplayName;

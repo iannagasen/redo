@@ -348,6 +348,7 @@ payment-service  ──publishes──▶  payment.result  ──consumes──�
 - Stateless JWT validation via auth server's JWKS endpoint
 - Two `SecurityFilterChain` beans per service: public chain (actuator, swagger) and secured chain
 - Scope-based method security (`@PreAuthorize("hasAuthority('SCOPE_...')")`)
+- Security - gRPC and Kafka
 
 ### Infrastructure
 - Database migrations managed by Liquibase

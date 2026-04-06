@@ -13,29 +13,29 @@ import static dev.agasen.common.utility.StringHelper.blankCoalescing;
 
 @ConfigurationProperties( prefix = "oauth2" )
 public record OAuth2ClientProperties(
-      Map< String, ClientConfig > clients
+   Map< String, ClientConfig > clients
 ) {
 
    @ConstructorBinding
    public OAuth2ClientProperties {
       clients = clients != null
-            ? Map.copyOf( clients )
-            : Map.of();
+         ? Map.copyOf( clients )
+         : Map.of();
    }
 
    public record ClientConfig(
-         String clientId,
-         String clientSecret,
-         String clientAuthenticationMethod,
-         List< String > authorizationGrantTypes,
-         List< String > redirectUris,
-         List< String > scopes,
-         TokenConfig token,
-         ClientSettingsConfig clientSettings
+      String clientId,
+      String clientSecret,
+      String clientAuthenticationMethod,
+      List< String > authorizationGrantTypes,
+      List< String > redirectUris,
+      List< String > scopes,
+      TokenConfig token,
+      ClientSettingsConfig clientSettings
    ) {
 
       public ClientConfig {
-         scopes = scopes != null ? scopes : java.util.List.of();
+         scopes = scopes != null ? scopes : List.of();
          scopes.add( "read" );
       }
 
@@ -44,7 +44,7 @@ public record OAuth2ClientProperties(
       }
 
       public List< String > getAuthorizationGrantTypesOrDefault() {
-         return isNullOrEmpty( authorizationGrantTypes ) ? java.util.List.of( "authorization_code" ) : authorizationGrantTypes;
+         return isNullOrEmpty( authorizationGrantTypes ) ? List.of( "authorization_code" ) : authorizationGrantTypes;
       }
 
       public TokenConfig getToken() {
@@ -70,8 +70,8 @@ public record OAuth2ClientProperties(
    }
 
    public record ClientSettingsConfig(
-         Boolean requireAuthorizationConsent,
-         Boolean requireProofKey ) {
+      Boolean requireAuthorizationConsent,
+      Boolean requireProofKey ) {
 
       public ClientSettingsConfig {
          if ( requireAuthorizationConsent == null ) {

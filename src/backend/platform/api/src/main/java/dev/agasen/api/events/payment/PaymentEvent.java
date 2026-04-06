@@ -8,9 +8,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 public sealed interface PaymentEvent extends DomainEvent, OrderCheckoutSaga permits PaymentEvent.Declined, PaymentEvent.Refunded, PaymentEvent.Processed {
-
-   @Override default String sagaName() {return "ORDER_CHECKOUT";}
-
+   
    @Builder
    public record Processed(
       UUID eventId,

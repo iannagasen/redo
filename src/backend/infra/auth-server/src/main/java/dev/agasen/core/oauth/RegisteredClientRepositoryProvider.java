@@ -1,5 +1,6 @@
 package dev.agasen.core.oauth;
 
+import dev.agasen.core.oauth.outbound.rest.UserDetailsRestService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,26 +48,26 @@ public class RegisteredClientRepositoryProvider {
 
       properties.clients().forEach( ( clientName, config ) -> {
          RegisteredClient.Builder clientBuilder = RegisteredClient.withId( UUID.randomUUID().toString() )
-               .clientId( config.clientId() )
-               // PKCE
-               .clientSettings( ClientSettings.builder()
-                     .requireAuthorizationConsent( config.getClientSettingsConfig().requireAuthorizationConsent() )
-                     .requireProofKey( config.getClientSettingsConfig().requireProofKey() )
-                     .build()
-               )
-               .authorizationGrantTypes( grantTypes -> {
-                  config.getAuthorizationGrantTypesOrDefault()
-                        .stream()
-                        .map( AuthorizationGrantType::new )
-                        .forEach( grantTypes::add );
-               } )
-               .scopes( scopes -> scopes.addAll( config.scopes() ) )
-               .tokenSettings( TokenSettings.builder()
-                     .accessTokenTimeToLive( config.getToken().accessTtl() )
-                     .build() )
-               .redirectUris( redirectUris -> {
-                  redirectUris.addAll( config.getRedirectUris() );
-               } );
+            .clientId( config.clientId() )
+            // PKCE
+            .clientSettings( ClientSettings.builder()
+               .requireAuthorizationConsent( config.getClientSettingsConfig().requireAuthorizationConsent() )
+               .requireProofKey( config.getClientSettingsConfig().requireProofKey() )
+               .build()
+            )
+            .authorizationGrantTypes( grantTypes -> {
+               config.getAuthorizationGrantTypesOrDefault()
+                  .stream()
+                  .map( AuthorizationGrantType::new )
+                  .forEach( grantTypes::add );
+            } )
+            .scopes( scopes -> scopes.addAll( config.scopes() ) )
+            .tokenSettings( TokenSettings.builder()
+               .accessTokenTimeToLive( config.getToken().accessTtl() )
+               .build() )
+            .redirectUris( redirectUris -> {
+               redirectUris.addAll( config.getRedirectUris() );
+            } );
 
          if ( config.clientSecret() != null ) {
             clientBuilder.clientSecret( passwordEncoder.encode( config.clientSecret() ) );

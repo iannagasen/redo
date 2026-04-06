@@ -1,7 +1,8 @@
 package dev.agasen.core.user;
 
 import dev.agasen.api.core.user.user.UserPasswordChange;
-import dev.agasen.core.user.mapper.UserMapper;
+import dev.agasen.core.user.application.mapper.UserMapper;
+import dev.agasen.core.user.inbound.rest.UserRestService;
 import dev.agasen.core.user.persistence.RoleRepository;
 import dev.agasen.core.user.persistence.UserRepository;
 import dev.agasen.core.user.persistence.entity.User;

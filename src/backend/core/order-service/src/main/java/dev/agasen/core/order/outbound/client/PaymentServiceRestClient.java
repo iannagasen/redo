@@ -13,7 +13,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 @Configuration
 public class PaymentServiceRestClient {
    @Bean
-   public PaymentApi paymentServiceRestClient(
+   public PaymentApi paymentApi(
       @Value( "${env.base.url.internal.payment}" ) String baseUrl
    ) {
       var restClient = RestClient.builder()

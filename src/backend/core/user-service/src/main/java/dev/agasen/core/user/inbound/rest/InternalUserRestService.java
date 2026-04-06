@@ -1,4 +1,4 @@
-package dev.agasen.core.user;
+package dev.agasen.core.user.inbound.rest;
 
 import dev.agasen.api.core.user.InternalUserService;
 import dev.agasen.api.core.user.user.UserAuthInfo;

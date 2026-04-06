@@ -10,6 +10,9 @@ testcontainers           = "1.21.0"
 embedded-redis           = "0.7.2"
 jetbrains-annotations    = "24.1.0"
 httpcomponents-client    = "4.5.14"
+grpc                     = "1.68.1"
+protobuf-java            = "3.25.3"
+protobuf-plugin          = "0.9.4"
 
 [libraries]
 # Spring Boot Starters (version managed by Spring Boot BOM)
@@ -71,6 +74,13 @@ embedded-redis            = { module = "it.ozimov:embedded-redis", version.ref =
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 httpcomponents-client = { module = "org.apache.httpcomponents:httpcomponents-client", version.ref = "httpcomponents-client" }
 
+# gRPC
+grpc-netty-shaded    = { module = "io.grpc:grpc-netty-shaded",             version.ref = "grpc" }
+grpc-protobuf        = { module = "io.grpc:grpc-protobuf",                 version.ref = "grpc" }
+grpc-stub            = { module = "io.grpc:grpc-stub",                     version.ref = "grpc" }
+protobuf-java        = { module = "com.google.protobuf:protobuf-java",     version.ref = "protobuf-java" }
+javax-annotation-api = { module = "javax.annotation:javax.annotation-api", version = "1.3.2" }
+
 [bundles]
 # Observability stack shared by all services
 observability = ["micrometer-otel", "otel-exporter-otlp", "micrometer-prometheus"]
@@ -84,3 +94,4 @@ testcontainers = ["testcontainers-core", "testcontainers-postgresql", "testconta
 [plugins]
 spring-boot           = { id = "org.springframework.boot", version.ref = "spring-boot" }
 spring-dep-management = { id = "io.spring.dependency-management", version.ref = "spring-dep-management" }
+protobuf              = { id = "com.google.protobuf", version.ref = "protobuf-plugin" }

@@ -15,7 +15,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 public class ProductServiceRestClient {
 
    @Bean
-   public ProductApi paymentServiceRestClient(
+   public ProductApi productApi(
       @Value( "${env.base.url.internal.product}" ) String baseUrl
    ) {
       var restClient = RestClient.builder()

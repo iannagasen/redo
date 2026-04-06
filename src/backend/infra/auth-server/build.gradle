@@ -27,6 +27,13 @@ dependencies {
     implementation libs.spring.starter.actuator
     implementation libs.bundles.observability
 
+    // grpc
+    implementation libs.grpc.netty.shaded
+    implementation libs.grpc.protobuf
+    implementation libs.grpc.stub
+    implementation libs.protobuf.java
+    compileOnly libs.javax.annotation.api
+
     compileOnly libs.lombok
     annotationProcessor libs.lombok
 

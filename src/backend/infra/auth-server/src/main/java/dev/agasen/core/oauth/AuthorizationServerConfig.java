@@ -1,6 +1,5 @@
 package dev.agasen.core.oauth;
 
-import dev.agasen.common.context.user.UserIdResolver;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
@@ -41,7 +39,6 @@ import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -79,12 +76,12 @@ public class AuthorizationServerConfig {
    @Order( 2 )
    public SecurityFilterChain defaultSecurityFilterChain( HttpSecurity http ) throws Exception {
       http.authorizeHttpRequests( authorize -> authorize
-               .requestMatchers( "/oauth2/**" ).permitAll()
-               .requestMatchers( "/.well-known/appspecific/**" ).permitAll()
-//
-//                  // for the angular to introspect the token if it is still valid
-               .requestMatchers( "/oauth2/introspect" ).permitAll()
-               .anyRequest().authenticated()
+            .requestMatchers( "/oauth2/**" ).permitAll()
+            .requestMatchers( "/.well-known/appspecific/**" ).permitAll()
+            //
+            //                  // for the angular to introspect the token if it is still valid
+            .requestMatchers( "/oauth2/introspect" ).permitAll()
+            .anyRequest().authenticated()
          )
          .cors( Customizer.withDefaults() )
          .formLogin( Customizer.withDefaults() );
@@ -171,7 +168,7 @@ public class AuthorizationServerConfig {
       @Value( "${env.base.url.external.storefront}" ) String storefront
    ) {
       CorsConfiguration config = new CorsConfiguration();
-//      config.setAllowedOrigins( List.of( "http://localhost:8081", "http://localhost:4200" ) );
+      //      config.setAllowedOrigins( List.of( "http://localhost:8081", "http://localhost:4200" ) );
       config.setAllowedOrigins(
          List.of(
             productService,

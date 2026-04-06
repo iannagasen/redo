@@ -44,6 +44,11 @@ dependencies {
     testCompileOnly libs.lombok
     testAnnotationProcessor libs.lombok
 
+    implementation libs.grpc.netty.shaded
+    implementation libs.grpc.protobuf
+    implementation libs.grpc.stub
+    compileOnly libs.javax.annotation.api
+
     developmentOnly libs.spring.devtools
 
     testImplementation libs.spring.starter.test

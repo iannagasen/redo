@@ -17,6 +17,8 @@ env.base.url.internal:
   auth: ${INTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
   user: ${INTERNAL_USER_SERVICE_BASE_URL:http://user-service:8080}
 
+env.grpc.server.port: 9090
+
 internal.api.key: ${INTERNAL_API_KEY:shopbuddy-internal-secret}
 
 ---

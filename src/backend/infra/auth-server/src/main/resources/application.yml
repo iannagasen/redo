@@ -8,6 +8,9 @@ spring:
   config:
     import:
       - classpath:observability.yml
+  threads:
+    virtual:
+      enabled: true
 
 server:
   port: 8080
@@ -25,6 +28,15 @@ env.base.url:
     auth: ${EXTERNAL_AUTH_SERVER_BASE_URL:http://localhost:8080}
     product: ${EXTERNAL_PRODUCT_SERVICE_BASE_URL:http://localhost:8081}
     storefront: ${EXTERNAL_STOREFRONT_CHANNEL_BASE_URL:http://localhost:4200}
+
+env.base.ports.grpc:
+  user: ${INTERNAL_USER_SERVICE_GRPC_PORT:9090}
+
+env.base.host.grpc:
+  user: ${INTERNAL_USER_SERVICE_GRPC_HOST:user-service}
+
+userdetails:
+  transport: grpc
 
 internal.api.key: ${INTERNAL_API_KEY:shopbuddy-internal-secret}
 

@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+// java package the generated classes land in
+option java_package = "dev.agasen.api.grpc.user";
+option java_outer_classname = "UserAuthProto";
+option java_multiple_files = true;
+
+message UserAuthInfoRequest {
+  string username = 1;
+}
+
+message UserAuthInfo {
+  int64 id = 1;
+  string username = 2;
+  string password_hash = 3;
+  bool enabled = 4;
+  bool locked = 5;
+  bool deleted = 6;
+  repeated string roles = 7;
+  repeated string permissions = 8;
+}
+
+service UserAuthService {
+  rpc GetUserAuthInfo (UserAuthInfoRequest) returns (UserAuthInfo);
+}
