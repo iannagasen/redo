@@ -26,7 +26,7 @@ import { CommonModule } from '@angular/common';
 export class FormInput {
   @Input() label!: string;
   @Input() type: string = 'text';
-  @Input() formControlName?: string;
+  @Input() formControlName?: string
   @Input() formControl?: FormControl;
 
   private readonly defaultMessages: { [ key: string ]: ( err?: any ) => string } = {

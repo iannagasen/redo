@@ -3,10 +3,11 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { OrderService } from '../../core/service/order-service';
 import { OrderDetails } from '../../core/model/order-details';
+import { OrderStatusPipe } from '../../core/pipes/order-status.pipe';
 
 @Component( {
   selector: 'app-orders',
-  imports: [ CommonModule, RouterModule, CurrencyPipe, DatePipe ],
+  imports: [ CommonModule, RouterModule, CurrencyPipe, DatePipe, OrderStatusPipe ],
   template: `
     <div class="p-5 max-w-4xl mx-auto">
       <h1 class="text-3xl font-bold text-gray-900 mb-8">Your Orders</h1>
@@ -21,27 +22,28 @@ import { OrderDetails } from '../../core/model/order-details';
           </svg>
           <p class="text-xl text-gray-500 mb-2">No orders yet</p>
           <p class="text-gray-400 mb-6">Your order history will appear here.</p>
-          <a
-            [routerLink]="['/dashboard']"
-            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+          <a [routerLink]="['/dashboard']"
+             class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
             Start Shopping
           </a>
         </div>
       } @else {
         <div class="space-y-3">
           @for (order of orders(); track order.id) {
-            <div
-              class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md hover:border-gray-300 transition-all cursor-pointer"
-              (click)="viewSummary(order.id)">
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md
+                        hover:border-gray-300 transition-all cursor-pointer"
+                 (click)="viewSummary(order.id)">
               <div class="flex items-center justify-between p-5">
                 <div class="flex items-center gap-4">
                   <div>
                     <p class="font-semibold text-gray-900">Order #{{ order.id }}</p>
                     <p class="text-sm text-gray-500">
-                      {{ order.createdAt | date: 'mediumDate' }} · {{ order.itemCount }} item{{ order.itemCount !== 1 ? 's' : '' }}
+                      {{ order.createdAt | date: 'mediumDate' }} ·
+                      {{ order.itemCount }} item{{ order.itemCount !== 1 ? 's' : '' }}
                     </p>
                   </div>
-                  <span [class]="statusClass(order.status)" class="px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                  <span [class]="order.status | orderStatus"
+                        class="px-2.5 py-0.5 rounded-full text-xs font-semibold">
                     {{ order.status }}
                   </span>
                 </div>
@@ -68,32 +70,16 @@ export class Orders implements OnInit {
   constructor(
     private orderService: OrderService,
     private router: Router,
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.orderService.getOrders().subscribe( {
-      next: orders => {
-        this.orders.set( orders );
-        this.loading.set( false );
-      },
+      next: orders => { this.orders.set( orders ); this.loading.set( false ); },
       error: () => this.loading.set( false ),
     } );
   }
 
   viewSummary( orderId: number ): void {
     this.router.navigate( [ '/orders', orderId ] );
-  }
-
-  statusClass( status: string ): string {
-    switch ( status ) {
-      case 'PENDING': return 'bg-yellow-100 text-yellow-800';
-      case 'CONFIRMED': return 'bg-blue-100 text-blue-800';
-      case 'SHIPPED': return 'bg-purple-100 text-purple-800';
-      case 'DELIVERED': return 'bg-green-100 text-green-800';
-      case 'PAYMENT_FAILED': return 'bg-red-100 text-red-800';
-      case 'CANCELLED': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
   }
 }

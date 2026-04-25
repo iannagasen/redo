@@ -349,6 +349,8 @@ payment-service  ──publishes──▶  payment.result  ──consumes──�
 - Two `SecurityFilterChain` beans per service: public chain (actuator, swagger) and secured chain
 - Scope-based method security (`@PreAuthorize("hasAuthority('SCOPE_...')")`)
 - Security - gRPC and Kafka
+- GRPC load balancing
+    - hard to achieve since it uses HTTP2 long live connection. Explain how to LB gRPC
 
 ### Infrastructure
 - Database migrations managed by Liquibase
@@ -357,3 +359,36 @@ payment-service  ──publishes──▶  payment.result  ──consumes──�
 - Kafka for async payment result events
 - Kubernetes manifests for all services, infra, and ingress
 - Observability manifests included (Prometheus, Grafana, Jaeger — infrastructure in place)
+
+
+GRPC
+-   5. No observability on the gRPC calls
+
+    You have OpenTelemetry set up for HTTP calls already. gRPC calls are currently
+    invisible to your tracing stack — no spans, no metrics.
+
+    Add grpc-java's OpenTelemetry interceptor:
+    io.opentelemetry.instrumentation:opentelemetry-grpc-1.6
+
+    This auto-creates spans for every gRPC call and propagates trace context
+    between auth-server and user-service — so a login trace shows the gRPC call as
+    a child span.
+
+-   1. Security — mTLS (most important)
+
+    Right now the gRPC channel uses .usePlaintext() — no encryption, no
+    authentication. Any pod in the cluster can call user-service:9090 and get
+    password hashes back.
+
+    The fix is mutual TLS (mTLS):
+    - Both sides present certificates
+    - auth-server proves it's auth-server, user-service proves it's user-service
+    - Traffic is encrypted
+
+    In Kubernetes you already have cert-manager. You'd:
+    1. Create a Certificate resource for user-service gRPC
+    2. Mount the cert as a Kubernetes secret into both pods
+    3. Replace .usePlaintext() with .useTransportSecurity() + load the certs
+
+    This is the single most important improvement — password hashes travelling in
+    plaintext over the network is a real vulnerability even inside a cluster.

@@ -3,10 +3,12 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { OrderService } from '../../core/service/order-service';
 import { OrderSummary } from '../../core/model/order-summary';
+import { OrderStatusPipe } from '../../core/pipes/order-status.pipe';
+import { PaymentStatusPipe } from '../../core/pipes/payment-status.pipe';
 
 @Component( {
   selector: 'app-order-summary',
-  imports: [ CommonModule, RouterModule, CurrencyPipe, DatePipe ],
+  imports: [ CommonModule, RouterModule, CurrencyPipe, DatePipe, OrderStatusPipe, PaymentStatusPipe ],
   template: `
     <div class="p-5 max-w-3xl mx-auto">
 
@@ -29,13 +31,14 @@ import { OrderSummary } from '../../core/model/order-summary';
           </button>
         </div>
       } @else if (summary()) {
-        <!-- Order Header -->
+
+        <!-- Order header -->
         <div class="flex items-start justify-between mb-6">
           <div>
             <h1 class="text-3xl font-bold text-gray-900">Order #{{ summary()!.id }}</h1>
             <p class="text-gray-500 mt-1">Placed on {{ summary()!.createdAt | date: 'longDate' }}</p>
           </div>
-          <span [class]="statusClass(summary()!.status)"
+          <span [class]="summary()!.status | orderStatus"
                 class="px-3 py-1 rounded-full text-sm font-semibold mt-1">
             {{ summary()!.status }}
           </span>
@@ -78,7 +81,7 @@ import { OrderSummary } from '../../core/model/order-summary';
           </div>
         </div>
 
-        <!-- Payment Details -->
+        <!-- Payment details -->
         @if (summary()!.payment) {
           <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
             <div class="px-6 py-4 border-b border-gray-100">
@@ -87,7 +90,7 @@ import { OrderSummary } from '../../core/model/order-summary';
             <div class="px-6 py-4 space-y-3">
               <div class="flex justify-between text-sm">
                 <span class="text-gray-500">Status</span>
-                <span [class]="paymentStatusClass(summary()!.payment.status)"
+                <span [class]="summary()!.payment.status | paymentStatus"
                       class="px-2.5 py-0.5 rounded-full text-xs font-semibold">
                   {{ summary()!.payment.status }}
                 </span>
@@ -124,8 +127,7 @@ export class OrderSummaryPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private orderService: OrderService,
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     const id = Number( this.route.snapshot.paramMap.get( 'id' ) );
@@ -134,10 +136,7 @@ export class OrderSummaryPage implements OnInit {
       return;
     }
     this.orderService.getOrderSummary( id ).subscribe( {
-      next: summary => {
-        this.summary.set( summary );
-        this.loading.set( false );
-      },
+      next: summary => { this.summary.set( summary ); this.loading.set( false ); },
       error: () => {
         this.error.set( 'Could not load order summary. Please try again.' );
         this.loading.set( false );
@@ -147,26 +146,5 @@ export class OrderSummaryPage implements OnInit {
 
   goBack(): void {
     this.router.navigate( [ '/orders' ] );
-  }
-
-  statusClass( status: string ): string {
-    switch ( status ) {
-      case 'PENDING': return 'bg-yellow-100 text-yellow-800';
-      case 'CONFIRMED': return 'bg-blue-100 text-blue-800';
-      case 'SHIPPED': return 'bg-purple-100 text-purple-800';
-      case 'DELIVERED': return 'bg-green-100 text-green-800';
-      case 'PAYMENT_FAILED': return 'bg-red-100 text-red-800';
-      case 'CANCELLED': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  }
-
-  paymentStatusClass( status: string ): string {
-    switch ( status ) {
-      case 'COMPLETED': return 'bg-green-100 text-green-800';
-      case 'PENDING': return 'bg-yellow-100 text-yellow-800';
-      case 'FAILED': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
   }
 }
