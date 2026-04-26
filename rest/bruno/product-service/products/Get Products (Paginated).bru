@@ -1,0 +1,15 @@
+meta {
+  name: Get Products (Paginated)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{product_service_url}}/api/v1/products?page=0&size=20
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}

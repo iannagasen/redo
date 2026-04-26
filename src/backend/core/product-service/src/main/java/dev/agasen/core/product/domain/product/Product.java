@@ -25,6 +25,8 @@ public class Product extends BaseEntity {
    @Column( columnDefinition = "TEXT" )
    private String description;
 
+   private String imageKey;
+
    @Column( nullable = false )
    private String sku;
 

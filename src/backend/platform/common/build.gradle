@@ -24,6 +24,7 @@ dependencies {
     implementation libs.spring.starter.data.redis
     implementation libs.postgresql
     implementation libs.jackson.databind
+    implementation libs.aws.s3
 
     testImplementation libs.junit.jupiter
     testImplementation libs.spring.starter.test

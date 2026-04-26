@@ -1,0 +1,32 @@
+meta {
+  name: Add Product
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{product_service_url}}/api/v1/products
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+body:json {
+  {
+    "name": "New Awesome Product",
+    "description": "This is a great product",
+    "sku": "SKU-12345",
+    "slug": "new-awesome-product",
+    "brand": "BrandX",
+    "price": 99.99,
+    "currency": "USD",
+    "stock": 100,
+    "attributesJson": {
+      "color": "red",
+      "size": "L"
+    }
+  }
+}

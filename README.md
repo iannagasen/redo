@@ -86,6 +86,7 @@ Add these entries to `C:\Windows\System32\drivers\etc\hosts` (run as Administrat
 ```
 127.0.0.1 shopbuddy.com
 127.0.0.1 redis.shopbuddy.com
+127.0.0.1 localstack
 ```
 
 ### 2. Enable Minikube Ingress Addon

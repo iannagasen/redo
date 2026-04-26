@@ -2,10 +2,14 @@ package dev.agasen.core.product.application.read;
 
 import dev.agasen.api.core.product.product.ProductDetails;
 import dev.agasen.common.cache.CachingService;
+import dev.agasen.common.file.FileReference;
+import dev.agasen.common.file.FileStoragePort;
 import dev.agasen.common.http.pagination.PagedResult;
 import dev.agasen.core.product.application.mapper.ProductMapper;
+import dev.agasen.core.product.domain.product.Product;
 import dev.agasen.core.product.domain.product.ProductRepository;
 import dev.agasen.core.product.infrastructure.cache.PageProductDetailsCachingServiceConfig;
+import dev.agasen.core.product.infrastructure.s3.ProductImageBucket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +27,7 @@ public class ProductRetrievalService {
 
    private final ProductRepository productRepository;
    private final ProductMapper productMapper;
+   private final FileStoragePort< ProductImageBucket > productImageFileStoragePort;
    private final CachingService< String, PagedResult< ProductDetails > > productDetailsCacheService;
    private final CachingService< String, ProductDetails > productCachingService;
 
@@ -41,7 +46,7 @@ public class ProductRetrievalService {
    public List< ProductDetails > getProductsByIds( List< Long > ids ) {
       return productRepository.findAllByIdIn( ids )
          .stream()
-         .map( productMapper::toDomain )
+         .map( this::toDetailsWithImageUrl )
          .toList();
    }
 
@@ -52,13 +57,21 @@ public class ProductRetrievalService {
 
    private PagedResult< ProductDetails > findAllProducts( int page, int size ) {
       return PagedResult.from(
-         productRepository.findAll( PageRequest.of( page, size ) ).map( productMapper::toDomain )
+         productRepository.findAll( PageRequest.of( page, size ) ).map( this::toDetailsWithImageUrl )
       );
    }
 
    private ProductDetails findProductById( Long id ) {
       return productRepository.findById( id )
-         .map( productMapper::toDomain )
+         .map( this::toDetailsWithImageUrl )
          .orElseThrow( () -> new ResponseStatusException( HttpStatus.NOT_FOUND, "Product not found: " + id ) );
+   }
+
+   private ProductDetails toDetailsWithImageUrl( Product product ) {
+      ProductDetails details = productMapper.toDomain( product );
+      if ( product.getImageKey() != null ) {
+         details.setImageUrl( productImageFileStoragePort.getAccessUri( new FileReference( product.getImageKey() ) ).toString() );
+      }
+      return details;
    }
 }

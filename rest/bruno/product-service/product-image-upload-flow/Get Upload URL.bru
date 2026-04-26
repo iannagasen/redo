@@ -1,0 +1,25 @@
+meta {
+  name: Get Upload URL
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{product_service_url}}/api/v1/products/{{product_id}}/image/upload-url?filename=test-product-image.jpg
+  body: none
+  auth: bearer
+}
+
+params:query {
+  filename: test-product-image.jpg
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+script:post-response {
+  // Save for use in the next two requests
+  bru.setVar("presigned_url", res.body.destination);
+  bru.setVar("image_key", res.body.fileReference.path);
+}

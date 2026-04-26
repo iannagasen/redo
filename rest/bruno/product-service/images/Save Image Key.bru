@@ -1,0 +1,21 @@
+meta {
+  name: Save Image Key
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{product_service_url}}/api/v1/products/{{product_id}}/image
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+body:json {
+  {
+    "imageKey": "{{image_key}}"
+  }
+}

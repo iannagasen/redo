@@ -1,0 +1,19 @@
+meta {
+  name: Upload to S3
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{presigned_url}}
+  body: text
+  auth: none
+}
+
+headers {
+  Content-Type: application/octet-stream
+}
+
+body:text {
+  fake image content for local testing
+}

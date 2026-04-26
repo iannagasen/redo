@@ -9,6 +9,7 @@ public class ProductDetails {
    private Long id;
    private String name;
    private String description;
+   private String imageUrl;
    private String sku;
    private String slug;
    private String brand;

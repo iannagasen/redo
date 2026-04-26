@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: localstack-bucket-init
+spec:
+  # clean up after finishing - wont need this since we need the logs
+  #  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: awscli
+          image: amazon/aws-cli:latest
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              value: "test"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "test"
+            - name: AWS_DEFAULT_REGION
+              value: "us-east-1"
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for LocalStack to be ready..."
+              until aws --endpoint-url=http://localstack:4566 s3 ls > /dev/null 2>&1; do
+                echo "LocalStack not ready yet, retrying in 3s..."
+                sleep 3
+              done
+              echo "LocalStack is ready. Creating bucket..."
+              aws --endpoint-url=http://localstack:4566 s3 mb s3://shopbuddy-products --region us-east-1
+              echo "Done."

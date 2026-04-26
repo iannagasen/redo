@@ -13,6 +13,7 @@ httpcomponents-client    = "4.5.14"
 grpc                     = "1.68.1"
 protobuf-java            = "3.25.3"
 protobuf-plugin          = "0.9.4"
+aws-sdk                  = "2.26.27"
 
 [libraries]
 # Spring Boot Starters (version managed by Spring Boot BOM)
@@ -81,6 +82,9 @@ grpc-stub            = { module = "io.grpc:grpc-stub",                     versi
 protobuf-java        = { module = "com.google.protobuf:protobuf-java",     version.ref = "protobuf-java" }
 javax-annotation-api = { module = "javax.annotation:javax.annotation-api", version = "1.3.2" }
 
+# AWS
+aws-s3 = { module = "software.amazon.awssdk:s3", version.ref = "aws-sdk" }
+
 [bundles]
 # Observability stack shared by all services
 observability = ["micrometer-otel", "otel-exporter-otlp", "micrometer-prometheus"]
@@ -90,6 +94,7 @@ persistence = ["spring-starter-data-jpa", "postgresql", "spring-starter-liquibas
 
 # Testcontainers base (core + JUnit integration + PostgreSQL)
 testcontainers = ["testcontainers-core", "testcontainers-postgresql", "testcontainers-junit"]
+
 
 [plugins]
 spring-boot           = { id = "org.springframework.boot", version.ref = "spring-boot" }

@@ -39,6 +39,7 @@ dependencies {
     implementation libs.jackson.databind
     implementation libs.springdoc.webmvc
     implementation libs.mapstruct
+    implementation libs.aws.s3
 
     compileOnly libs.lombok
     annotationProcessor libs.lombok

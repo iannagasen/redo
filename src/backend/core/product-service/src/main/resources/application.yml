@@ -59,11 +59,18 @@ springdoc.swagger-ui:
 
 logging:
   level:
-    org.springframework.jdbc: DEBUG
-    org.springframework.data.jdbc: DEBUG
+    org.springframework.jdbc: TRACE
+    org.springframework.data.jdbc: TRACE
     dev.agasen.core.product: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+storage:
+  s3:
+    bucket-name: shopbuddy-products
+    region: us-east-1
+    base-url: http://localhost:4566/shopbuddy-products
+    endpoint-override: http://localhost:4566
 
 ---
 spring.config.activate.on-profile: docker
@@ -72,3 +79,8 @@ server.port: 8080
 spring.data.redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
+
+storage:
+  s3:
+    endpoint-override: http://localstack:4566
+    base-url: http://localhost:4566/shopbuddy-products

@@ -55,7 +55,21 @@ public class AuthorizationServerConfig {
 
       http
          .securityMatcher( endpointsMatcher )
-         .with( authorizationServerConfigurer, server -> server.oidc( Customizer.withDefaults() ) )
+         .with( authorizationServerConfigurer, server -> server
+            .oidc( Customizer.withDefaults() )
+            .authorizationEndpoint( authEndpoint -> authEndpoint
+               .errorResponseHandler( ( req, res, ex ) -> {
+                  log.error( "Authorization endpoint failed: {}", ex.getMessage() );
+                  res.sendError( HttpStatus.BAD_REQUEST.value(), ex.getMessage() );
+               } )
+            )
+            .tokenEndpoint( tokenEndpoint -> tokenEndpoint
+               .errorResponseHandler( ( req, res, ex ) -> {
+                  log.error( "Token endpoint failed: {}", ex.getMessage() );
+                  res.sendError( HttpStatus.BAD_REQUEST.value(), ex.getMessage() );
+               } )
+            )
+         )
          .authorizeHttpRequests( authorize -> authorize.anyRequest().authenticated() )
          .cors( Customizer.withDefaults() )
          .exceptionHandling( exceptions -> exceptions
@@ -78,6 +92,7 @@ public class AuthorizationServerConfig {
       http.authorizeHttpRequests( authorize -> authorize
             .requestMatchers( "/oauth2/**" ).permitAll()
             .requestMatchers( "/.well-known/appspecific/**" ).permitAll()
+            .requestMatchers( "/error" ).permitAll() // ADD THIS
             //
             //                  // for the angular to introspect the token if it is still valid
             .requestMatchers( "/oauth2/introspect" ).permitAll()

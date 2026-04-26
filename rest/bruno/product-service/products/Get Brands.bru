@@ -1,0 +1,15 @@
+meta {
+  name: Get Brands
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{product_service_url}}/api/v1/products/brands?q=a&p=0&s=10
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}

@@ -59,6 +59,7 @@ manifests:
     - k8s/base/infra/postgres/*.yaml
     - k8s/base/infra/redis/*.yaml
     - k8s/base/infra/kafka/*.yaml
+    - k8s/base/infra/localstack/s3/*.yaml
     - k8s/base/infra/observability/*.yaml
     - k8s/base/shared/cert/*.yaml
     - k8s/base/shared/secrets/*.yaml
@@ -98,3 +99,7 @@ portForward:
     resourceName: postgres
     port: 5432
     localPort: 5432
+  - resourceType: service
+    resourceName: localstack
+    port: 4566
+    localPort: 4566

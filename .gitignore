@@ -57,3 +57,5 @@ CLAUDE.md
 GEMINI.md
 .claude/
 .gemini/
+
+k8s/base/infra/localstack/s3/secret.yaml

@@ -50,6 +50,8 @@ oauth2:
       scopes:
         - read
         - write
+        - openid
+        - product:write-create
       token:
         access-ttl: PT30M
     swagger-ui:

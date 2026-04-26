@@ -37,4 +37,5 @@ public interface ProductApi {
 
    @PostExchange
    ProductDetails addProduct( @RequestBody @Valid ProductCreationDetails productCreationDetails );
+
 }
