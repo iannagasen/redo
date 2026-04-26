@@ -24,8 +24,8 @@ repositories {
 dependencies {
     agent libs.otel.javaagent
 
-    implementation project(':src:backend:platform:common')
-    implementation project(':src:backend:platform:api')
+    implementation project(':src:backend:platform:platform-core')
+    implementation project(':src:backend:platform:platform-contracts')
 
     implementation libs.spring.starter.web
     implementation libs.spring.starter.security

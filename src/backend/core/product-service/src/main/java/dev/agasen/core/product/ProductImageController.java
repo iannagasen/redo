@@ -1,6 +1,6 @@
 package dev.agasen.core.product;
 
-import dev.agasen.common.file.UploadDirective;
+import dev.agasen.platform.core.storage.UploadDirective;
 import dev.agasen.core.product.application.write.ProductImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

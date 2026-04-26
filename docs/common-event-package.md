@@ -1,4 +1,4 @@
-# `dev.agasen.common.event` — Package Documentation
+# `dev.agasen.platform.core.event` — Package Documentation
 
 Foundation abstractions for the choreography-based saga system.
 Lives in `platform:common` — shared across all services.

@@ -25,14 +25,14 @@ one container, no dependency chain.
 
 ### Key Concepts
 
-| Term | Description |
-|---|---|
-| **Topic** | Named channel for messages (e.g. `payment.result`) |
-| **Producer** | Service that writes messages to a topic |
-| **Consumer** | Service that reads messages from a topic |
-| **Consumer Group** | Group of consumers sharing the read load. Each message is delivered to one member of the group |
-| **Offset** | Position of a consumer within a topic partition. Kafka tracks this per group |
-| **Bootstrap Servers** | The broker address(es) a client connects to initially |
+| Term                  | Description                                                                                    |
+|-----------------------|------------------------------------------------------------------------------------------------|
+| **Topic**             | Named channel for messages (e.g. `payment.result`)                                             |
+| **Producer**          | Service that writes messages to a topic                                                        |
+| **Consumer**          | Service that reads messages from a topic                                                       |
+| **Consumer Group**    | Group of consumers sharing the read load. Each message is delivered to one member of the group |
+| **Offset**            | Position of a consumer within a topic partition. Kafka tracks this per group                   |
+| **Bootstrap Servers** | The broker address(es) a client connects to initially                                          |
 
 ---
 
@@ -71,17 +71,17 @@ kafka-ui:
 
 ### Environment Variable Reference
 
-| Variable | Value | Why |
-|---|---|---|
-| `KAFKA_NODE_ID` | `1` | Unique ID for this broker node |
-| `KAFKA_PROCESS_ROLES` | `broker,controller` | KRaft: this node handles both roles |
-| `KAFKA_LISTENERS` | `PLAINTEXT://:9092,CONTROLLER://:9093` | Internal listener addresses |
-| `KAFKA_ADVERTISED_LISTENERS` | `PLAINTEXT://localhost:9092` | Address that **clients** use to connect. Use `localhost` for Docker Compose, `kafka` for k8s |
-| `KAFKA_CONTROLLER_QUORUM_VOTERS` | `1@localhost:9093` | Raft quorum: `nodeId@host:port` |
-| `KAFKA_CONTROLLER_LISTENER_NAMES` | `CONTROLLER` | Which listener handles Raft traffic |
-| `KAFKA_LISTENER_SECURITY_PROTOCOL_MAP` | `PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT` | Maps listener names to protocols |
-| `KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR` | `1` | Single-node — must be 1, otherwise Kafka waits for more replicas |
-| `KAFKA_AUTO_CREATE_TOPICS_ENABLE` | `true` | Kafka creates a topic on first publish (no manual setup needed) |
+| Variable                                 | Value                                      | Why                                                                                          |
+|------------------------------------------|--------------------------------------------|----------------------------------------------------------------------------------------------|
+| `KAFKA_NODE_ID`                          | `1`                                        | Unique ID for this broker node                                                               |
+| `KAFKA_PROCESS_ROLES`                    | `broker,controller`                        | KRaft: this node handles both roles                                                          |
+| `KAFKA_LISTENERS`                        | `PLAINTEXT://:9092,CONTROLLER://:9093`     | Internal listener addresses                                                                  |
+| `KAFKA_ADVERTISED_LISTENERS`             | `PLAINTEXT://localhost:9092`               | Address that **clients** use to connect. Use `localhost` for Docker Compose, `kafka` for k8s |
+| `KAFKA_CONTROLLER_QUORUM_VOTERS`         | `1@localhost:9093`                         | Raft quorum: `nodeId@host:port`                                                              |
+| `KAFKA_CONTROLLER_LISTENER_NAMES`        | `CONTROLLER`                               | Which listener handles Raft traffic                                                          |
+| `KAFKA_LISTENER_SECURITY_PROTOCOL_MAP`   | `PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT` | Maps listener names to protocols                                                             |
+| `KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR` | `1`                                        | Single-node — must be 1, otherwise Kafka waits for more replicas                             |
+| `KAFKA_AUTO_CREATE_TOPICS_ENABLE`        | `true`                                     | Kafka creates a topic on first publish (no manual setup needed)                              |
 
 > **`KAFKA_ADVERTISED_LISTENERS` is the most important variable.**
 > It is the address Kafka tells clients to connect to after the initial handshake.
@@ -259,20 +259,20 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "dev.agasen.api.event"
-        spring.json.value.default.type: "dev.agasen.api.core.event.PaymentEvent"
+        spring.json.trusted.packages: "dev.agasen.platform.contracts.event"
+        spring.json.value.default.type: "event.core.dev.agasen.platform.contracts.PaymentEvent"
 ```
 
 ### Property Reference
 
-| Property | Value | Why |
-|---|---|---|
-| `group-id` | `order-service` | Consumer group name. Kafka tracks offsets per group. All instances of order-service share this group |
-| `auto-offset-reset` | `earliest` | On first startup (no committed offset yet), start reading from the beginning of the topic rather than only new messages |
-| `key-deserializer` | `StringDeserializer` | Keys are plain strings |
-| `value-deserializer` | `JsonDeserializer` | Deserialize JSON payload to a Java object |
-| `spring.json.trusted.packages` | `dev.agasen.api.event` | Security whitelist — JsonDeserializer refuses to instantiate classes from untrusted packages |
-| `spring.json.value.default.type` | `dev.agasen.api.core.event.PaymentEvent` | Which class to deserialize to when there is no `__TypeId__` header (because producer set `add.type.headers=false`) |
+| Property                         | Value                                                   | Why                                                                                                                     |
+|----------------------------------|---------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| `group-id`                       | `order-service`                                         | Consumer group name. Kafka tracks offsets per group. All instances of order-service share this group                    |
+| `auto-offset-reset`              | `earliest`                                              | On first startup (no committed offset yet), start reading from the beginning of the topic rather than only new messages |
+| `key-deserializer`               | `StringDeserializer`                                    | Keys are plain strings                                                                                                  |
+| `value-deserializer`             | `JsonDeserializer`                                      | Deserialize JSON payload to a Java object                                                                               |
+| `spring.json.trusted.packages`   | `dev.agasen.platform.contracts.event`                                  | Security whitelist — JsonDeserializer refuses to instantiate classes from untrusted packages                            |
+| `spring.json.value.default.type` | `event.core.dev.agasen.platform.contracts.PaymentEvent` | Which class to deserialize to when there is no `__TypeId__` header (because producer set `add.type.headers=false`)      |
 
 ### Listener
 
@@ -307,10 +307,10 @@ handles it).
 
 ### Accessing
 
-| Environment | URL |
-|---|---|
-| Docker Compose | `http://localhost:9090` |
-| Kubernetes | `http://shopbuddy.com/kafka-ui` |
+| Environment    | URL                             |
+|----------------|---------------------------------|
+| Docker Compose | `http://localhost:9090`         |
+| Kubernetes     | `http://shopbuddy.com/kafka-ui` |
 
 ### What to Look For
 
@@ -344,10 +344,10 @@ The single most common Kafka connection failure. The advertised listener is what
 clients to connect to _after_ the initial bootstrap. If it is set to `localhost:9092` inside
 k8s, pods will try to connect to their own loopback instead of the Kafka broker.
 
-| Environment | Correct value |
-|---|---|
+| Environment                          | Correct value                |
+|--------------------------------------|------------------------------|
 | Docker Compose (Spring Boot on host) | `PLAINTEXT://localhost:9092` |
-| Kubernetes | `PLAINTEXT://kafka:9092` |
+| Kubernetes                           | `PLAINTEXT://kafka:9092`     |
 
 ### `KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR` must be 1 on single-node
 
@@ -370,6 +370,7 @@ normal.
 ### Consumer Lag stuck / not consuming
 
 Check that:
+
 1. `spring.json.value.default.type` matches the exact fully-qualified class name of the event record
 2. `spring.json.trusted.packages` includes the package of that class
 3. The consumer's `bootstrap-servers` resolves to the actual Kafka broker

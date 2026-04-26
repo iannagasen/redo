@@ -1,11 +1,12 @@
 package dev.agasen.core.oauth;
 
-import dev.agasen.common.utility.JsonHelper;
+import dev.agasen.platform.core.utility.JsonHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -14,7 +15,6 @@ import java.util.logging.Logger;
 @SpringBootTest( webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT )
 @AutoConfigureMockMvc
 @ActiveProfiles( "test" )
-@ComponentScan( basePackages = { "dev.agasen.common", "dev.agasen.core" } )
 public class BaseSecurityTest {
 
    public static final String CLIENT_ID = "test-id";
@@ -25,10 +25,18 @@ public class BaseSecurityTest {
    @Autowired
    protected MockMvc mockMvc;
 
-   @Autowired
-   protected JsonHelper jsonHelper;
+//   @Autowired
+//   protected JsonHelper jsonHelper;
 
    @LocalServerPort
    protected int port;
+
+   @TestConfiguration
+   static class TestConfig {
+      @Bean
+      JsonHelper jsonHelper() {
+         return new JsonHelper();
+      }
+   }
 
 }

@@ -1,6 +1,6 @@
 package dev.agasen.core.user;
 
-import dev.agasen.api.GlobalExceptionHandling;
+import dev.agasen.platform.contracts.GlobalExceptionHandling;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

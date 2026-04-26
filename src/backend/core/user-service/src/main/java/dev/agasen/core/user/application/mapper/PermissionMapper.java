@@ -1,8 +1,8 @@
 package dev.agasen.core.user.application.mapper;
 
 
-import dev.agasen.api.core.user.permission.PermissionCreationDetails;
-import dev.agasen.api.core.user.permission.PermissionDetails;
+import dev.agasen.platform.contracts.core.user.permission.PermissionCreationDetails;
+import dev.agasen.platform.contracts.core.user.permission.PermissionDetails;
 import dev.agasen.core.user.persistence.entity.Permission;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,7 +1,7 @@
 package dev.agasen.core.product.application.mapper;
 
-import dev.agasen.api.core.product.product.ProductCreationDetails;
-import dev.agasen.api.core.product.product.ProductDetails;
+import dev.agasen.platform.contracts.core.product.product.ProductCreationDetails;
+import dev.agasen.platform.contracts.core.product.product.ProductDetails;
 import dev.agasen.core.product.domain.product.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

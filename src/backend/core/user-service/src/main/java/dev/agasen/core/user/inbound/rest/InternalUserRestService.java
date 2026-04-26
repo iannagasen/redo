@@ -1,8 +1,8 @@
 package dev.agasen.core.user.inbound.rest;
 
-import dev.agasen.api.core.user.InternalUserService;
-import dev.agasen.api.core.user.user.UserAuthInfo;
-import dev.agasen.common.http.exceptions.Exceptions;
+import dev.agasen.platform.contracts.core.user.InternalUserService;
+import dev.agasen.platform.contracts.core.user.user.UserAuthInfo;
+import dev.agasen.platform.core.http.exceptions.Exceptions;
 import dev.agasen.core.user.persistence.UserRepository;
 import dev.agasen.core.user.persistence.entity.Permission;
 import dev.agasen.core.user.persistence.entity.Role;

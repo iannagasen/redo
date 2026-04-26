@@ -1,7 +1,7 @@
 package dev.agasen.core.product.domain;
 
-import dev.agasen.api.core.product.product.ProductDetails;
-import dev.agasen.common.cache.CachingService;
+import dev.agasen.platform.contracts.core.product.product.ProductDetails;
+import dev.agasen.platform.core.cache.CachingService;
 import dev.agasen.core.product.application.mapper.ProductMapper;
 import dev.agasen.core.product.domain.product.ProductRepository;
 import org.junit.jupiter.api.extension.ExtendWith;

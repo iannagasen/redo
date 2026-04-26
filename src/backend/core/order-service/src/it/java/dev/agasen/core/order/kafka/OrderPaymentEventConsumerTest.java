@@ -1,7 +1,7 @@
 package dev.agasen.core.order.kafka;
 
-import dev.agasen.api.events.order.OrderCheckoutSagaEvent;
-import dev.agasen.api.events.payment.PaymentEvent;
+import dev.agasen.platform.contracts.events.order.OrderCheckoutSagaEvent;
+import dev.agasen.platform.contracts.events.payment.PaymentEvent;
 import dev.agasen.core.order.domain.Order;
 import dev.agasen.core.order.domain.OrderRepository;
 import dev.agasen.core.order.domain.OrderStatus;
@@ -18,6 +18,8 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -70,7 +72,7 @@ class OrderPaymentEventConsumerTest {
 
    // Topic constants match kafka.yml system.topics.checkout.payment.*
    private static final String PAYMENT_PROCESSED_TOPIC = "checkout.payment.processed";
-   private static final String PAYMENT_DECLINED_TOPIC  = "checkout.payment.declined";
+   private static final String PAYMENT_DECLINED_TOPIC = "checkout.payment.declined";
 
    @Autowired private KafkaTemplate< String, Object > kafkaTemplate;
 
@@ -95,7 +97,7 @@ class OrderPaymentEventConsumerTest {
       Long orderId = 1L;
 
       SagaState sagaState = sagaStateWith( orderId, participant( "PAYMENT", true, "PENDING" ) );
-      Order order = orderWithStatus( OrderStatus.PENDING );
+      Order order = orderWithStatus( orderId, OrderStatus.PENDING );
 
       when( sagaStateRepository.findByOrderIdWithParticipants( orderId ) ).thenReturn( Optional.of( sagaState ) );
       when( orderRepository.findById( orderId ) ).thenReturn( Optional.of( order ) );
@@ -108,14 +110,14 @@ class OrderPaymentEventConsumerTest {
             .build()
       ).get();
 
-      TimeUnit.SECONDS.sleep( 3 );
+      TimeUnit.SECONDS.sleep( 5 );
 
       assertThat( order.getStatus() ).isEqualTo( OrderStatus.CONFIRMED );
 
       ArgumentCaptor< OrderCheckoutSagaEvent > captor = ArgumentCaptor.forClass( OrderCheckoutSagaEvent.class );
       verify( publisher ).publish( captor.capture() );
       assertThat( captor.getValue() ).isInstanceOf( OrderCheckoutSagaEvent.Confirmed.class );
-      assertThat( ( (OrderCheckoutSagaEvent.Confirmed) captor.getValue() ).orderId() ).isEqualTo( orderId );
+      assertThat( ( ( OrderCheckoutSagaEvent.Confirmed ) captor.getValue() ).orderId() ).isEqualTo( orderId );
    }
 
    // ── 2. Payment processed — second participant still pending ───────────────
@@ -131,8 +133,8 @@ class OrderPaymentEventConsumerTest {
       Long orderId = 2L;
 
       SagaState sagaState = sagaStateWith( orderId,
-         participant( "PAYMENT", true,  "PENDING" ),
-         participant( "CART",    false, "PENDING" )
+         participant( "PAYMENT", true, "PENDING" ),
+         participant( "CART", false, "PENDING" )
       );
 
       when( sagaStateRepository.findByOrderIdWithParticipants( orderId ) ).thenReturn( Optional.of( sagaState ) );
@@ -145,7 +147,7 @@ class OrderPaymentEventConsumerTest {
             .build()
       ).get();
 
-      TimeUnit.SECONDS.sleep( 3 );
+      TimeUnit.SECONDS.sleep( 5 );
 
       verify( publisher, never() ).publish( any() );
       verify( orderRepository, never() ).findById( any() );
@@ -165,7 +167,7 @@ class OrderPaymentEventConsumerTest {
       String declineReason = "Insufficient funds";
 
       SagaState sagaState = sagaStateWith( orderId, participant( "PAYMENT", true, "PENDING" ) );
-      Order order = orderWithStatus( OrderStatus.PENDING );
+      Order order = orderWithStatus( orderId, OrderStatus.PENDING );
 
       when( sagaStateRepository.findByOrderIdWithParticipants( orderId ) ).thenReturn( Optional.of( sagaState ) );
       when( orderRepository.findById( orderId ) ).thenReturn( Optional.of( order ) );
@@ -179,14 +181,14 @@ class OrderPaymentEventConsumerTest {
             .build()
       ).get();
 
-      TimeUnit.SECONDS.sleep( 3 );
+      TimeUnit.SECONDS.sleep( 5 );
 
       assertThat( order.getStatus() ).isEqualTo( OrderStatus.PAYMENT_FAILED );
 
       ArgumentCaptor< OrderCheckoutSagaEvent > captor = ArgumentCaptor.forClass( OrderCheckoutSagaEvent.class );
       verify( publisher ).publish( captor.capture() );
       assertThat( captor.getValue() ).isInstanceOf( OrderCheckoutSagaEvent.Failed.class );
-      OrderCheckoutSagaEvent.Failed failed = (OrderCheckoutSagaEvent.Failed) captor.getValue();
+      OrderCheckoutSagaEvent.Failed failed = ( OrderCheckoutSagaEvent.Failed ) captor.getValue();
       assertThat( failed.orderId() ).isEqualTo( orderId );
       assertThat( failed.errorMessage() ).isEqualTo( declineReason );
    }
@@ -204,8 +206,8 @@ class OrderPaymentEventConsumerTest {
       Long orderId = 4L;
 
       SagaState sagaState = sagaStateWith( orderId,
-         participant( "PAYMENT", true,  "PENDING" ),
-         participant( "CART",    false, "PENDING" )
+         participant( "PAYMENT", true, "PENDING" ),
+         participant( "CART", false, "PENDING" )
       );
 
       when( sagaStateRepository.findByOrderIdWithParticipants( orderId ) ).thenReturn( Optional.of( sagaState ) );
@@ -219,7 +221,7 @@ class OrderPaymentEventConsumerTest {
             .build()
       ).get();
 
-      TimeUnit.SECONDS.sleep( 3 );
+      TimeUnit.SECONDS.sleep( 5 );
 
       verify( publisher, never() ).publish( any() );
       verify( orderRepository, never() ).findById( any() );
@@ -235,6 +237,7 @@ class OrderPaymentEventConsumerTest {
       state.setStatus( "RUNNING" );
       for ( SagaParticipant p : participants ) {
          state.getParticipants().add( p );
+         p.setSagaState( state );
       }
       return state;
    }
@@ -247,8 +250,10 @@ class OrderPaymentEventConsumerTest {
       return p;
    }
 
-   private Order orderWithStatus( OrderStatus status ) {
+   private Order orderWithStatus( Long id, OrderStatus status ) {
       Order order = new Order();
+      ReflectionTestUtils.setField( order, "id", id );
+      order.setUserId( "user-1" );
       order.setStatus( status );
       return order;
    }

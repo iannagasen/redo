@@ -1,7 +1,7 @@
 package dev.agasen.core.oauth;
 
-import dev.agasen.common.context.user.UserContextConfiguration;
-import dev.agasen.common.context.user.UserIdResolver;
+import dev.agasen.platform.core.context.user.UserContextConfiguration;
+import dev.agasen.platform.core.context.user.UserIdResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.context.SecurityContextHolder;

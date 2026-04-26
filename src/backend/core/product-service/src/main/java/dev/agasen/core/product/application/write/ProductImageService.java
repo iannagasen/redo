@@ -1,8 +1,7 @@
 package dev.agasen.core.product.application.write;
 
-import dev.agasen.common.file.FileReference;
-import dev.agasen.common.file.FileStoragePort;
-import dev.agasen.common.file.UploadDirective;
+import dev.agasen.platform.core.storage.FileStoragePort;
+import dev.agasen.platform.core.storage.UploadDirective;
 import dev.agasen.core.product.domain.product.Product;
 import dev.agasen.core.product.domain.product.ProductRepository;
 import dev.agasen.core.product.infrastructure.s3.ProductImageBucket;

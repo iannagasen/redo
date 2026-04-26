@@ -1,8 +1,8 @@
 package dev.agasen.core.user.application.mapper;
 
-import dev.agasen.api.core.user.role.RoleDetails;
-import dev.agasen.api.core.user.user.UserCreationDetails;
-import dev.agasen.api.core.user.user.UserDetails;
+import dev.agasen.platform.contracts.core.user.role.RoleDetails;
+import dev.agasen.platform.contracts.core.user.user.UserCreationDetails;
+import dev.agasen.platform.contracts.core.user.user.UserDetails;
 import dev.agasen.core.user.persistence.entity.User;
 import dev.agasen.core.user.persistence.entity.UserRole;
 import org.mapstruct.Mapper;

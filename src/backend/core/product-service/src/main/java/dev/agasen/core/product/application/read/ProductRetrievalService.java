@@ -1,15 +1,15 @@
 package dev.agasen.core.product.application.read;
 
-import dev.agasen.api.core.product.product.ProductDetails;
-import dev.agasen.common.cache.CachingService;
-import dev.agasen.common.file.FileReference;
-import dev.agasen.common.file.FileStoragePort;
-import dev.agasen.common.http.pagination.PagedResult;
+import dev.agasen.platform.contracts.core.product.product.ProductDetails;
+import dev.agasen.platform.core.cache.CachingService;
+import dev.agasen.platform.core.http.pagination.PagedResult;
 import dev.agasen.core.product.application.mapper.ProductMapper;
 import dev.agasen.core.product.domain.product.Product;
 import dev.agasen.core.product.domain.product.ProductRepository;
 import dev.agasen.core.product.infrastructure.cache.PageProductDetailsCachingServiceConfig;
 import dev.agasen.core.product.infrastructure.s3.ProductImageBucket;
+import dev.agasen.platform.core.storage.FileReference;
+import dev.agasen.platform.core.storage.FileStoragePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;

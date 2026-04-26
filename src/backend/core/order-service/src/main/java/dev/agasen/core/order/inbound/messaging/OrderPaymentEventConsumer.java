@@ -1,8 +1,8 @@
 package dev.agasen.core.order.inbound.messaging;
 
-import dev.agasen.api.events.order.OrderCheckoutSagaEvent;
-import dev.agasen.api.events.payment.PaymentEvent;
-import dev.agasen.common.event.EventPublisher;
+import dev.agasen.platform.contracts.events.order.OrderCheckoutSagaEvent;
+import dev.agasen.platform.contracts.events.payment.PaymentEvent;
+import dev.agasen.platform.core.event.EventPublisher;
 import dev.agasen.core.order.domain.OrderRepository;
 import dev.agasen.core.order.domain.OrderStatus;
 import dev.agasen.core.order.domain.saga.SagaStateRepository;
@@ -55,8 +55,7 @@ public class OrderPaymentEventConsumer {
    }
 
    @KafkaListener( topics = { "${system.topics.checkout.payment.refunded}" } )
-   public void onPaymentDeclined( PaymentEvent.Refunded event ) {
-
+   public void onPaymentRefunded( PaymentEvent.Refunded event ) {
    }
 
 }

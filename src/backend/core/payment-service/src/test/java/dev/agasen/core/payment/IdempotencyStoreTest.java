@@ -1,6 +1,6 @@
 package dev.agasen.core.payment;
 
-import dev.agasen.api.core.payment.read.PaymentDetails;
+import dev.agasen.platform.contracts.core.payment.read.PaymentDetails;
 import dev.agasen.core.payment.application.IdempotencyStore;
 import dev.agasen.core.payment.repository.IdempotencyRecordRepository;
 import dev.agasen.core.payment.repository.entity.IdempotencyRecord;

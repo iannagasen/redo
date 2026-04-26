@@ -1,7 +1,7 @@
 package dev.agasen.core.order.application.mapper;
 
-import dev.agasen.api.core.order.read.OrderDetails;
-import dev.agasen.api.core.order.read.OrderItemDetails;
+import dev.agasen.platform.contracts.core.order.read.OrderDetails;
+import dev.agasen.platform.contracts.core.order.read.OrderItemDetails;
 import dev.agasen.core.order.domain.Order;
 import dev.agasen.core.order.domain.OrderItem;
 

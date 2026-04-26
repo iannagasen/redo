@@ -48,16 +48,16 @@ PaymentCommandService
 
 ### Key Classes
 
-| Class | Role |
-|---|---|
-| `PaymentGatewayClient` | Facade interface — swap gateways without touching business logic |
-| `GatewayPaymentRequest` | Internal request model sent to the gateway |
-| `GatewayPaymentResponse` | Internal response: `success`, `gatewayRef`, `failureReason` |
+| Class                      | Role                                                                               |
+|----------------------------|------------------------------------------------------------------------------------|
+| `PaymentGatewayClient`     | Facade interface — swap gateways without touching business logic                   |
+| `GatewayPaymentRequest`    | Internal request model sent to the gateway                                         |
+| `GatewayPaymentResponse`   | Internal response: `success`, `gatewayRef`, `failureReason`                        |
 | `MockPaymentGatewayClient` | Simulates a real gateway. Card `4000000000000002` → declined, all others → success |
-| `PaymentCommandService` | Orchestrates: save → call gateway → update status → publish event |
-| `PaymentRetrievalService` | Read-only queries |
-| `PaymentEventPublisher` | Thin wrapper around `KafkaTemplate` |
-| `PaymentEventConsumer` | **In order-service** — consumes `payment.result` and updates order status |
+| `PaymentCommandService`    | Orchestrates: save → call gateway → update status → publish event                  |
+| `PaymentRetrievalService`  | Read-only queries                                                                  |
+| `PaymentEventPublisher`    | Thin wrapper around `KafkaTemplate`                                                |
+| `PaymentEventConsumer`     | **In order-service** — consumes `payment.result` and updates order status          |
 
 ### Adding a Real Gateway
 
@@ -117,11 +117,11 @@ dev.agasen.core.payment/
 
 All endpoints are secured (JWT required). Context path: `/payment`.
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/api/v1/payments` | Initiate a payment for an order |
-| `GET` | `/api/v1/payments` | List current user's payments |
-| `GET` | `/api/v1/payments/{id}` | Get a specific payment |
+| Method | Path                    | Description                     |
+|--------|-------------------------|---------------------------------|
+| `POST` | `/api/v1/payments`      | Initiate a payment for an order |
+| `GET`  | `/api/v1/payments`      | List current user's payments    |
+| `GET`  | `/api/v1/payments/{id}` | Get a specific payment          |
 
 ### POST /api/v1/payments — Request Body
 
@@ -154,10 +154,10 @@ All endpoints are secured (JWT required). Context path: `/payment`.
 
 ### Mock Card Numbers
 
-| Card Number | Result |
-|---|---|
+| Card Number        | Result                 |
+|--------------------|------------------------|
 | `4000000000000002` | FAILED (card declined) |
-| Any other number | CAPTURED (success) |
+| Any other number   | CAPTURED (success)     |
 
 ---
 
@@ -191,7 +191,7 @@ Published to topic `payment.result` after every payment attempt.
 Defined in `platform:api` as a Java record:
 
 ```java
-// dev.agasen.api.core.event.PaymentEvent
+// event.core.dev.agasen.platform.contracts.PaymentEvent
 record PaymentEvent(
     Long orderId,
     Long paymentId,
@@ -236,15 +236,15 @@ env:
 
 ### Environment Variables (Docker / k8s)
 
-| Variable | Default | Description |
-|---|---|---|
-| `DB_HOST` | `postgres` | PostgreSQL host |
-| `DB_PORT` | `5432` | PostgreSQL port |
-| `DB_USER` | `product_user` | DB username |
-| `DB_PASSWORD` | `product_password` | DB password |
-| `KAFKA_BOOTSTRAP_SERVERS` | `kafka:9092` | Kafka broker address |
-| `INTERNAL_AUTH_SERVER_BASE_URL` | `http://auth-service:8080` | Auth server for JWKS |
-| `SPRING_PROFILES_ACTIVE` | — | Set to `docker` in k8s |
+| Variable                        | Default                    | Description            |
+|---------------------------------|----------------------------|------------------------|
+| `DB_HOST`                       | `postgres`                 | PostgreSQL host        |
+| `DB_PORT`                       | `5432`                     | PostgreSQL port        |
+| `DB_USER`                       | `product_user`             | DB username            |
+| `DB_PASSWORD`                   | `product_password`         | DB password            |
+| `KAFKA_BOOTSTRAP_SERVERS`       | `kafka:9092`               | Kafka broker address   |
+| `INTERNAL_AUTH_SERVER_BASE_URL` | `http://auth-service:8080` | Auth server for JWKS   |
+| `SPRING_PROFILES_ACTIVE`        | —                          | Set to `docker` in k8s |
 
 ---
 

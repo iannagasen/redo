@@ -1,0 +1,83 @@
+plugins {
+    id 'java'
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dep.management)
+    alias(libs.plugins.protobuf)
+}
+
+group = 'dev.agasen'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(26)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':src:backend:platform:platform-core')
+
+    implementation libs.spring.starter.web
+    implementation libs.spring.starter.validation
+    implementation libs.spring.data.commons
+
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
+
+    implementation libs.grpc.protobuf
+    implementation libs.grpc.stub
+    implementation libs.protobuf.java
+    compileOnly libs.javax.annotation.api
+
+    testImplementation libs.spring.starter.test
+    testRuntimeOnly libs.junit.launcher
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['--enable-preview']
+    options.release = 26
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    jvmArgs(['--enable-preview'])
+}
+
+jar {
+    enabled = true
+    archiveClassifier = ''
+}
+
+bootJar {
+    enabled = false
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.25.3"
+    }
+    generateProtoTasks {
+        all()*.plugins {
+            grpc {}
+        }
+    }
+}
+
+// Gradle 9: 'plugins {}' bare keyword inside protobuf {} is intercepted as a script-level block.
+// Assigning to a local variable gives us an explicit receiver, which bypasses that interception.
+def protobufExt = project.extensions.getByName("protobuf")
+protobufExt.plugins {
+    grpc {
+        artifact = "io.grpc:protoc-gen-grpc-java:1.68.1"
+    }
+}

@@ -1,10 +1,10 @@
 package dev.agasen.core.user.inbound.grpc;
 
-import dev.agasen.api.grpc.user.UserAuthInfo;
-import dev.agasen.api.grpc.user.UserAuthInfoRequest;
-import dev.agasen.api.grpc.user.UserAuthServiceGrpc;
 import dev.agasen.core.user.persistence.UserRepository;
 import dev.agasen.core.user.persistence.entity.User;
+import dev.agasen.platform.contracts.api.grpc.user.UserAuthInfo;
+import dev.agasen.platform.contracts.api.grpc.user.UserAuthInfoRequest;
+import dev.agasen.platform.contracts.api.grpc.user.UserAuthServiceGrpc;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import org.jspecify.annotations.NonNull;

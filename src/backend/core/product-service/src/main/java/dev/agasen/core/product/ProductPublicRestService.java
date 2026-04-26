@@ -1,6 +1,6 @@
 package dev.agasen.core.product;
 
-import dev.agasen.api.core.product.ProductPublicApi;
+import dev.agasen.platform.contracts.core.product.ProductPublicApi;
 import dev.agasen.core.product.application.read.BrandRetrievalService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

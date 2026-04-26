@@ -9,9 +9,20 @@ subprojects {
         sourceSets {
             integrationTest {
                 java.srcDir 'src/it/java'
-                resources.srcDir 'src/it/resources'
+                // src/it/resources is listed first so it takes priority over src/main/resources
+                resources.srcDirs 'src/it/resources', 'src/main/resources'
                 compileClasspath += sourceSets.main.output + sourceSets.test.output
-                runtimeClasspath += sourceSets.main.output + sourceSets.test.output
+                // Only add main classesDirs (not resourcesDir) to avoid duplicating resources
+                // that are already processed into build/resources/integrationTest via srcDirs above
+                runtimeClasspath += sourceSets.main.output.classesDirs + sourceSets.test.output
+            }
+        }
+
+        // Prevent duplicate resource errors (e.g. Liquibase) when the same file exists
+        // in both src/it/resources and src/main/resources
+        tasks.withType(ProcessResources).configureEach {
+            if (name == 'processIntegrationTestResources') {
+                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
             }
         }
 

@@ -1,6 +1,6 @@
 package dev.agasen.core.product.domain.product;
 
-import dev.agasen.common.persistence.entity.BaseEntity;
+import dev.agasen.platform.core.persistence.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

@@ -21,7 +21,7 @@ spring:
       enable-auto-commit: false
       properties:
         # Trust both PaymentEvent subtypes and OrderCheckoutSagaEvent subtypes
-        spring.json.trusted.packages: "dev.agasen.api.events.payment,dev.agasen.api.events.order"
+        spring.json.trusted.packages: "dev.agasen.platform.contracts.events.payment,dev.agasen.platform.contracts.events.order"
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -37,6 +37,24 @@ env:
     url:
       internal:
         auth: http://localhost:9999
+        payment: http://localhost:9999
+        product: http://localhost:9999
+
+system:
+  topics:
+    checkout:
+      order:
+        created: checkout.order.created
+        confirmed: checkout.order.confirmed
+        cancelled: checkout.order.cancelled
+        failed: checkout.order.failed
+      payment:
+        processed: checkout.payment.processed
+        refunded: checkout.payment.refunded
+        declined: checkout.payment.declined
+      cart:
+        cleared: checkout.cart.cleared
+        restored: checkout.cart.restored
 
 logging:
   level:

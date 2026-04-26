@@ -1,7 +1,7 @@
 package dev.agasen.core.cart.application.read;
 
-import dev.agasen.api.core.cart.read.CartDetails;
-import dev.agasen.api.core.cart.read.CartItemDetails;
+import dev.agasen.platform.contracts.core.cart.read.CartDetails;
+import dev.agasen.platform.contracts.core.cart.read.CartItemDetails;
 import dev.agasen.core.cart.domain.Cart;
 import dev.agasen.core.cart.domain.CartItem;
 import dev.agasen.core.cart.domain.CartRepository;

@@ -1,7 +1,7 @@
 package dev.agasen.core.product.infrastructure.s3;
 
-import dev.agasen.common.file.FileStoragePort;
-import dev.agasen.common.integrations.s3.S3FileStorageAdapter;
+import dev.agasen.platform.core.storage.FileStoragePort;
+import dev.agasen.platform.core.storage.s3.S3FileStorageAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
@@ -21,12 +21,12 @@ public class S3Config {
    public S3Client s3Client( ProductImageBucket productImageBucket ) {
       S3ClientBuilder builder = S3Client.builder()
          .region( Region.of( productImageBucket.region() ) )
-         .forcePathStyle( true );// required for LocalStack, works fine with real AWS
+         .forcePathStyle( true );
 
       if ( productImageBucket.endpointOverride().isPresent() ) {
          builder.endpointOverride( URI.create( productImageBucket.endpointOverride().get() ) )
             .credentialsProvider( StaticCredentialsProvider.create(
-               AwsBasicCredentials.create( "test", "test" ) // why is this hardcoded
+               AwsBasicCredentials.create( "test", "test" )
             ) );
       }
 
@@ -46,7 +46,7 @@ public class S3Config {
       if ( productImageBucket.endpointOverride().isPresent() ) {
          builder.endpointOverride( URI.create( productImageBucket.endpointOverride().get() ) )
             .credentialsProvider( StaticCredentialsProvider.create(
-               AwsBasicCredentials.create( "test", "test" ) // why is this hardcoded
+               AwsBasicCredentials.create( "test", "test" )
             ) );
       }
 

@@ -15,14 +15,14 @@ public class BaseIntegrationTest {
 
    @Container
    public static GenericContainer< ? > redis = new GenericContainer<>( DockerImageName.parse( "redis:6.0.3" ) )
-         .withExposedPorts( 6379 )
-         .withReuse( true );
+      .withExposedPorts( 6379 )
+      .withReuse( true );
 
    @Container
    public static PostgreSQLContainer< ? > postgres = new PostgreSQLContainer<>( "postgres:17-alpine" )
-         .withDatabaseName( "test-db" )
-         .withUsername( "user" )
-         .withPassword( "password" );
+      .withDatabaseName( "test-db" )
+      .withUsername( "user" )
+      .withPassword( "password" );
 
 
    @DynamicPropertySource

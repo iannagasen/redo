@@ -1,7 +1,7 @@
 package dev.agasen.core.order.application.read;
 
-import dev.agasen.api.core.order.read.OrderDetails;
-import dev.agasen.common.http.exceptions.Exceptions;
+import dev.agasen.platform.contracts.core.order.read.OrderDetails;
+import dev.agasen.platform.core.http.exceptions.Exceptions;
 import dev.agasen.core.order.application.mapper.OrderDetailsMapper;
 import dev.agasen.core.order.domain.OrderRepository;
 import lombok.RequiredArgsConstructor;

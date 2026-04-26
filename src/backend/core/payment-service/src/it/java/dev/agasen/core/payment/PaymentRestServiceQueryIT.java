@@ -5,7 +5,8 @@ import dev.agasen.core.payment.application.PaymentInitiator;
 import dev.agasen.core.payment.application.PaymentRetriever;
 import dev.agasen.core.payment.event.PaymentEventPublisher;
 import dev.agasen.core.payment.gateway.PaymentGatewayClient;
-import dev.agasen.common.http.exceptions.NotFoundException;
+import dev.agasen.platform.core.http.exceptions.NotFoundException;
+import dev.agasen.platform.contracts.GlobalExceptionHandling;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Integration tests verifying that query endpoints return 404 (not 500) when a payment
- * does not exist. Relies on {@link dev.agasen.api.GlobalExceptionHandling} being
+ * does not exist. Relies on {@link GlobalExceptionHandling} being
  * registered via platform:api auto-configuration.
  */
 @SpringBootTest

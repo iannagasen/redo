@@ -1,12 +1,10 @@
 package dev.agasen.core.oauth.outbound.rest;
 
-import dev.agasen.api.core.user.user.UserAuthInfo;
+import dev.agasen.platform.contracts.core.user.user.UserAuthInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,14 +17,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static dev.agasen.common.utility.CollectionsHelper.isNullOrEmpty;
-import static dev.agasen.common.utility.CollectionsHelper.listOrEmpty;
-import static dev.agasen.common.utility.StringHelper.blankCoalescing;
 
 @Service
 @RequiredArgsConstructor

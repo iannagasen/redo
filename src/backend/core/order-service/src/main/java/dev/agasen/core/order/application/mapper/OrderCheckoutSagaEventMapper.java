@@ -1,6 +1,6 @@
 package dev.agasen.core.order.application.mapper;
 
-import dev.agasen.api.events.order.OrderCheckoutSagaEvent;
+import dev.agasen.platform.contracts.events.order.OrderCheckoutSagaEvent;
 import dev.agasen.core.order.domain.Order;
 
 import java.time.Instant;

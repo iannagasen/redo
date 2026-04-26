@@ -1,10 +1,12 @@
 package dev.agasen.core.order.application.write;
 
-import dev.agasen.api.core.order.write.CheckoutRequest;
-import dev.agasen.api.core.order.write.CreateOrderRequest;
-import dev.agasen.api.core.payment.write.InitiatePaymentRequest;
-import dev.agasen.api.events.order.OrderCheckoutSagaEvent;
-import dev.agasen.common.event.EventPublisher;
+import dev.agasen.core.order.domain.saga.SagaStateRepository;
+import dev.agasen.platform.contracts.core.order.write.CheckoutRequest;
+import dev.agasen.platform.contracts.core.order.write.CreateOrderRequest;
+import dev.agasen.platform.contracts.core.order.write.OrderItemRequest;
+import dev.agasen.platform.contracts.core.payment.write.InitiatePaymentRequest;
+import dev.agasen.platform.contracts.events.order.OrderCheckoutSagaEvent;
+import dev.agasen.platform.core.event.EventPublisher;
 import dev.agasen.core.order.fixtures.OrderDetailsTestBuilder;
 import dev.agasen.core.order.fixtures.OrderItemDetailsTestBuilder;
 import org.junit.jupiter.api.Test;
@@ -31,8 +33,9 @@ class OrderCheckoutSagaInitiatorTest {
    EventPublisher< OrderCheckoutSagaEvent > eventPublisher = published::add;
 
    OrderCreationService orderCreationService = mock( OrderCreationService.class );
+   SagaStateRepository sagaStateRepository = mock( SagaStateRepository.class );
 
-   OrderCheckoutSagaInitiator service = new OrderCheckoutSagaInitiator( eventPublisher, orderCreationService );
+   OrderCheckoutSagaInitiator service = new OrderCheckoutSagaInitiator( eventPublisher, orderCreationService, sagaStateRepository );
 
    @Test
    void checkout_publishesExactlyOneEvent() {
@@ -77,7 +80,7 @@ class OrderCheckoutSagaInitiatorTest {
    // ── helpers ──────────────────────────────────────────────────────────────
 
    private CheckoutRequest buildRequest() {
-      var item = new dev.agasen.api.core.order.write.OrderItemRequest();
+      var item = new OrderItemRequest();
       item.setProductId( 1L );
       item.setProductName( "Widget" );
       item.setBrand( "Acme" );

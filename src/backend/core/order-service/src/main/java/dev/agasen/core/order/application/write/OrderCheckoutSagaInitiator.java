@@ -1,12 +1,13 @@
 package dev.agasen.core.order.application.write;
 
-import dev.agasen.api.core.order.read.OrderDetails;
-import dev.agasen.api.core.order.write.CheckoutRequest;
-import dev.agasen.api.events.order.OrderCheckoutSagaEvent;
+import dev.agasen.platform.contracts.core.order.read.OrderDetails;
+import dev.agasen.platform.contracts.core.order.write.CheckoutRequest;
+import dev.agasen.platform.contracts.events.order.OrderCheckoutSagaEvent;
 import dev.agasen.core.order.domain.saga.SagaParticipant;
 import dev.agasen.core.order.domain.saga.SagaState;
 import dev.agasen.core.order.domain.saga.SagaStateRepository;
 import dev.agasen.core.order.outbound.messaging.OrderCheckoutSagaEventPublisher;
+import dev.agasen.platform.core.event.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,8 +46,9 @@ public class OrderCheckoutSagaInitiator {
       new ParticipantSpec( "CART", false )
    );
 
-   private final OrderCheckoutSagaEventPublisher eventPublisher;
+   private final EventPublisher< OrderCheckoutSagaEvent > eventPublisher;
    private final OrderCreationService orderCreationService;
+   private final SagaStateRepository sagaStateRepository;
 
    public OrderDetails checkout( CheckoutRequest request ) {
       var orderDetails = orderCreationService.createOrder( request.orderDetails() );
@@ -80,8 +82,6 @@ public class OrderCheckoutSagaInitiator {
    private static final String PENDING = "PENDING";
    private static final String SUCCESS = "SUCCESS";
 
-   private final SagaStateRepository sagaStateRepository;
-
    /**
     * Creates a new saga state row and one participant row per spec.
     * Called by the saga entry point when the order is first persisted.
@@ -102,8 +102,8 @@ public class OrderCheckoutSagaInitiator {
          state.getParticipants().add( p );
       } );
 
-      SagaState saved = sagaStateRepository.save( state );
-      log.info( "Saga initiated: sagaId={}, orderId={}, type={}", saved.getSagaId(), orderId, sagaType );
-      return saved;
+      sagaStateRepository.save( state );
+      log.info( "Saga initiated: sagaId={}, orderId={}, type={}", state.getSagaId(), orderId, sagaType );
+      return state;
    }
 }

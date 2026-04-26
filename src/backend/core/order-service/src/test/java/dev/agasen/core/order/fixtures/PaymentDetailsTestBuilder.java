@@ -1,6 +1,6 @@
 package dev.agasen.core.order.fixtures;
 
-import dev.agasen.api.core.payment.read.PaymentDetails;
+import dev.agasen.platform.contracts.core.payment.read.PaymentDetails;
 
 import java.math.BigDecimal;
 

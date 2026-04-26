@@ -1,8 +1,8 @@
 package dev.agasen.core.oauth.outbound.grpc;
 
-import dev.agasen.api.grpc.user.UserAuthInfo;
-import dev.agasen.api.grpc.user.UserAuthInfoRequest;
-import dev.agasen.api.grpc.user.UserAuthServiceGrpc;
+import dev.agasen.platform.contracts.api.grpc.user.UserAuthInfo;
+import dev.agasen.platform.contracts.api.grpc.user.UserAuthInfoRequest;
+import dev.agasen.platform.contracts.api.grpc.user.UserAuthServiceGrpc;
 import io.grpc.StatusRuntimeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

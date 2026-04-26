@@ -1,7 +1,7 @@
 package dev.agasen.core.cart;
 
-import dev.agasen.api.core.cart.CartQueryApi;
-import dev.agasen.api.core.cart.read.CartDetails;
+import dev.agasen.platform.contracts.core.cart.CartQueryApi;
+import dev.agasen.platform.contracts.core.cart.read.CartDetails;
 import dev.agasen.core.cart.application.read.CartRetrievalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;

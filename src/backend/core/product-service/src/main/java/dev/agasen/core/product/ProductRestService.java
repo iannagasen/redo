@@ -1,9 +1,9 @@
 package dev.agasen.core.product;
 
-import dev.agasen.api.core.product.ProductApi;
-import dev.agasen.api.core.product.product.ProductCreationDetails;
-import dev.agasen.api.core.product.product.ProductDetails;
-import dev.agasen.common.http.pagination.PagedResult;
+import dev.agasen.platform.contracts.core.product.ProductApi;
+import dev.agasen.platform.contracts.core.product.product.ProductCreationDetails;
+import dev.agasen.platform.contracts.core.product.product.ProductDetails;
+import dev.agasen.platform.core.http.pagination.PagedResult;
 import dev.agasen.core.product.application.read.BrandRetrievalService;
 import dev.agasen.core.product.application.read.ProductRetrievalService;
 import dev.agasen.core.product.application.write.ProductCreationService;

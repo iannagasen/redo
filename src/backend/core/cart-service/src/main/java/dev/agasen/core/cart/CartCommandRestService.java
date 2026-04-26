@@ -1,10 +1,10 @@
 package dev.agasen.core.cart;
 
-import dev.agasen.api.core.cart.CartCommandApi;
-import dev.agasen.api.core.cart.read.CartDetails;
-import dev.agasen.api.core.cart.write.AddCartItemRequest;
-import dev.agasen.api.core.cart.write.UpdateCartItemRequest;
+import dev.agasen.platform.contracts.core.cart.read.CartDetails;
+import dev.agasen.platform.contracts.core.cart.write.AddCartItemRequest;
+import dev.agasen.platform.contracts.core.cart.write.UpdateCartItemRequest;
 import dev.agasen.core.cart.application.write.CartCommandService;
+import dev.agasen.platform.contracts.core.cart.CartCommandApi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;

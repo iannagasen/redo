@@ -1,10 +1,10 @@
 package dev.agasen.core.product.infrastructure.cache;
 
-import dev.agasen.api.core.product.product.ProductDetails;
-import dev.agasen.common.cache.CachingService;
-import dev.agasen.common.cache.CachingTemplate;
-import dev.agasen.common.cache.redis.RedisCachingTemplate;
-import dev.agasen.common.http.pagination.PagedResult;
+import dev.agasen.platform.contracts.core.product.product.ProductDetails;
+import dev.agasen.platform.core.cache.CachingService;
+import dev.agasen.platform.core.cache.CachingTemplate;
+import dev.agasen.platform.core.cache.redis.RedisCachingTemplate;
+import dev.agasen.platform.core.http.pagination.PagedResult;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

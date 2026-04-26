@@ -25,8 +25,8 @@
             <option value="$PROJECT_DIR$/src/backend/infra/auth-server" />
             <option value="$PROJECT_DIR$/src/backend/infra/k8s-admin" />
             <option value="$PROJECT_DIR$/src/backend/platform" />
-            <option value="$PROJECT_DIR$/src/backend/platform/api" />
-            <option value="$PROJECT_DIR$/src/backend/platform/common" />
+            <option value="$PROJECT_DIR$/src/backend/platform/platform-contracts" />
+            <option value="$PROJECT_DIR$/src/backend/platform/platform-core" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="true" />

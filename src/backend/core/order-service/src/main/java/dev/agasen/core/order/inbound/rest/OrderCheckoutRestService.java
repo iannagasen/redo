@@ -1,8 +1,8 @@
 package dev.agasen.core.order.inbound.rest;
 
-import dev.agasen.api.core.order.OrderCheckoutApi;
-import dev.agasen.api.core.order.read.OrderDetails;
-import dev.agasen.api.core.order.write.CheckoutRequest;
+import dev.agasen.platform.contracts.core.order.OrderCheckoutApi;
+import dev.agasen.platform.contracts.core.order.read.OrderDetails;
+import dev.agasen.platform.contracts.core.order.write.CheckoutRequest;
 import dev.agasen.core.order.application.write.OrderCheckoutSagaInitiator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

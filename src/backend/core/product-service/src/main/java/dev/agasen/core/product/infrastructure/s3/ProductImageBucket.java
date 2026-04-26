@@ -1,6 +1,6 @@
 package dev.agasen.core.product.infrastructure.s3;
 
-import dev.agasen.common.integrations.s3.S3BucketContext;
+import dev.agasen.platform.core.storage.s3.S3BucketContext;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Optional;

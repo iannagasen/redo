@@ -1,6 +1,6 @@
 package dev.agasen.core.order.kafka;
 
-import dev.agasen.api.core.event.PaymentEvent;
+import dev.agasen.platform.contracts.core.event.PaymentEvent;
 import dev.agasen.core.order.application.write.OrderCreationService;
 import dev.agasen.core.order.domain.Order;
 import dev.agasen.core.order.domain.OrderRepository;

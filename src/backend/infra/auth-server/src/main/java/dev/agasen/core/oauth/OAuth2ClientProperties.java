@@ -7,9 +7,9 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
-import static dev.agasen.common.utility.CollectionsHelper.isNullOrEmpty;
-import static dev.agasen.common.utility.CollectionsHelper.listOrEmpty;
-import static dev.agasen.common.utility.StringHelper.blankCoalescing;
+import static dev.agasen.platform.core.utility.CollectionsHelper.isNullOrEmpty;
+import static dev.agasen.platform.core.utility.CollectionsHelper.listOrEmpty;
+import static dev.agasen.platform.core.utility.StringHelper.blankCoalescing;
 
 @ConfigurationProperties( prefix = "oauth2" )
 public record OAuth2ClientProperties(

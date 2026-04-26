@@ -1,5 +1,5 @@
-include ':src:backend:platform:common'
-include ':src:backend:platform:api'
+include ':src:backend:platform:platform-core'
+include ':src:backend:platform:platform-contracts'
 
 include ':src:backend:core:product-service'
 include ':src:backend:core:user-service'

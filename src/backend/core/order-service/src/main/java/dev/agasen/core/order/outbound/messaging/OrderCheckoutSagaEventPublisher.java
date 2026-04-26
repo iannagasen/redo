@@ -1,8 +1,8 @@
 package dev.agasen.core.order.outbound.messaging;
 
-import dev.agasen.api.events.OrderCheckoutSaga;
-import dev.agasen.api.events.order.OrderCheckoutSagaEvent;
-import dev.agasen.common.event.EventPublisher;
+import dev.agasen.platform.contracts.events.OrderCheckoutSaga;
+import dev.agasen.platform.contracts.events.order.OrderCheckoutSagaEvent;
+import dev.agasen.platform.core.event.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

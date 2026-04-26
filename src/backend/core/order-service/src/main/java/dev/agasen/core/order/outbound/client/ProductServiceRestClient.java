@@ -1,8 +1,8 @@
 package dev.agasen.core.order.outbound.client;
 
-import dev.agasen.api.core.payment.PaymentApi;
-import dev.agasen.api.core.product.ProductApi;
-import dev.agasen.common.context.user.UserContext;
+import dev.agasen.platform.contracts.core.payment.PaymentApi;
+import dev.agasen.platform.contracts.core.product.ProductApi;
+import dev.agasen.platform.core.context.user.UserContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

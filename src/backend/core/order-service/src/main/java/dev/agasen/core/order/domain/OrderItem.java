@@ -1,6 +1,6 @@
 package dev.agasen.core.order.domain;
 
-import dev.agasen.common.persistence.entity.BaseEntity;
+import dev.agasen.platform.core.persistence.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

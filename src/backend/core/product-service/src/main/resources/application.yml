@@ -82,5 +82,7 @@ spring.data.redis:
 
 storage:
   s3:
+    bucket-name: shopbuddy-products
+    region: us-east-1
     endpoint-override: http://localstack:4566
     base-url: http://localhost:4566/shopbuddy-products

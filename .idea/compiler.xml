@@ -12,11 +12,11 @@
         <module name="Ecommerce-redo.src.backend.bff.storefront-bff.main" />
         <module name="Ecommerce-redo.src.backend.core.order-service.main" />
         <module name="Ecommerce-redo.src.backend.core.cart-service.integrationTest" />
-        <module name="Ecommerce-redo.src.backend.platform.api.main" />
         <module name="Ecommerce-redo.src.backend.core.payment-service.test" />
         <module name="Ecommerce-redo.src.backend.core.payment-service.main" />
         <module name="Ecommerce-redo.src.backend.core.user-service.test" />
         <module name="Ecommerce-redo.src.backend.core.user-service.integrationTest" />
+        <module name="Ecommerce-redo.src.backend.platform.platform-contracts.main" />
         <module name="Ecommerce-redo.src.backend.core.cart-service.test" />
         <module name="Ecommerce-redo.src.backend.core.cart-service.main" />
         <module name="Ecommerce-redo.src.backend.infra.auth-server.main" />
@@ -75,7 +75,6 @@
       <module name="Ecommerce-redo.src.backend.infra.k8s-admin.integrationTest" options="-parameters" />
       <module name="Ecommerce-redo.src.backend.infra.k8s-admin.main" options="-parameters" />
       <module name="Ecommerce-redo.src.backend.infra.k8s-admin.test" options="-parameters" />
-      <module name="Ecommerce-redo.src.backend.platform.api" options="-parameters --enable-preview" />
       <module name="Ecommerce-redo.src.backend.platform.api.integrationTest" options="-parameters --enable-preview" />
       <module name="Ecommerce-redo.src.backend.platform.api.main" options="-parameters --enable-preview" />
       <module name="Ecommerce-redo.src.backend.platform.api.test" options="-parameters --enable-preview" />
@@ -83,6 +82,14 @@
       <module name="Ecommerce-redo.src.backend.platform.common.integrationTest" options="-parameters --enable-preview" />
       <module name="Ecommerce-redo.src.backend.platform.common.main" options="-parameters --enable-preview" />
       <module name="Ecommerce-redo.src.backend.platform.common.test" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.platform-contracts" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.platform-contracts.integrationTest" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.platform-contracts.main" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.platform-contracts.test" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.platform-core" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.platform-core.integrationTest" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.platform-core.main" options="-parameters --enable-preview" />
+      <module name="Ecommerce-redo.src.backend.platform.platform-core.test" options="-parameters --enable-preview" />
       <module name="api" options="-parameters" />
       <module name="api-gateway" options="-parameters" />
       <module name="api-gateway_main" options="-parameters" />
@@ -104,6 +111,7 @@
       <module name="order-service" options="-parameters" />
       <module name="order-service_main" options="-parameters" />
       <module name="order-service_test" options="-parameters" />
+      <module name="platform-contracts" options="-parameters --enable-preview" />
       <module name="product-service" options="-parameters" />
       <module name="product-service_main" options="-parameters" />
       <module name="product-service_test" options="-parameters" />

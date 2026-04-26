@@ -7,7 +7,7 @@ spring.kafka:
     value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
     enable-auto-commit: false
     properties:
-      spring.json.trusted.packages: "dev.agasen.api.events.payment"
+      spring.json.trusted.packages: "dev.agasen.platform.contracts.events.payment"
   producer:
     key-serializer: org.apache.kafka.common.serialization.StringSerializer
     value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

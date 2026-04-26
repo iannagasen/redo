@@ -1,14 +1,14 @@
 package dev.agasen.core.user.inbound.rest;
 
-import dev.agasen.api.core.user.UserService;
-import dev.agasen.api.core.user.user.*;
-import dev.agasen.common.http.exceptions.Exceptions;
+import dev.agasen.platform.contracts.core.user.UserService;
+import dev.agasen.platform.core.http.exceptions.Exceptions;
 import dev.agasen.core.user.application.mapper.UserMapper;
 import dev.agasen.core.user.persistence.RoleRepository;
 import dev.agasen.core.user.persistence.UserRepository;
 import dev.agasen.core.user.persistence.entity.Role;
 import dev.agasen.core.user.persistence.entity.User;
 import dev.agasen.core.user.persistence.entity.UserRole;
+import dev.agasen.platform.contracts.core.user.user.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

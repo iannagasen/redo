@@ -1,6 +1,6 @@
 package dev.agasen.core.oauth.outbound.grpc;
 
-import dev.agasen.api.grpc.user.UserAuthServiceGrpc;
+import dev.agasen.platform.contracts.api.grpc.user.UserAuthServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import org.springframework.beans.factory.annotation.Value;
