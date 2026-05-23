@@ -1,4 +1,4 @@
-package dev.agasen.core.product.infrastructure.openapi;
+package dev.agasen.core.product.config.openapi;
 
 import lombok.Getter;
 import lombok.Setter;

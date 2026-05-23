@@ -1,4 +1,4 @@
-package dev.agasen.core.product.infrastructure.security;
+package dev.agasen.core.product.config.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;

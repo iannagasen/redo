@@ -6,8 +6,8 @@ import dev.agasen.platform.core.http.pagination.PagedResult;
 import dev.agasen.core.product.application.mapper.ProductMapper;
 import dev.agasen.core.product.domain.product.Product;
 import dev.agasen.core.product.domain.product.ProductRepository;
-import dev.agasen.core.product.infrastructure.cache.PageProductDetailsCachingServiceConfig;
-import dev.agasen.core.product.infrastructure.s3.ProductImageBucket;
+import dev.agasen.core.product.outbound.cache.PageProductDetailsCachingServiceConfig;
+import dev.agasen.core.product.outbound.s3.ProductImageBucket;
 import dev.agasen.platform.core.storage.FileReference;
 import dev.agasen.platform.core.storage.FileStoragePort;
 import lombok.RequiredArgsConstructor;
@@ -69,9 +69,9 @@ public class ProductRetrievalService {
 
    private ProductDetails toDetailsWithImageUrl( Product product ) {
       ProductDetails details = productMapper.toDomain( product );
-      if ( product.getImageKey() != null ) {
-         details.setImageUrl( productImageFileStoragePort.getAccessUri( new FileReference( product.getImageKey() ) ).toString() );
-      }
+//      if ( product.getImageKey() != null ) {
+//         details.setImageUrl( productImageFileStoragePort.getAccessUri( new FileReference( product.getImageKey() ) ).toString() );
+//      }
       return details;
    }
 }

@@ -1,5 +1,5 @@
 meta {
-  name: Get Upload URL
+  name: Create Upload URL
   type: http
   seq: 2
 }
@@ -22,4 +22,5 @@ script:post-response {
   // Save for use in the next two requests
   bru.setVar("presigned_url", res.body.destination);
   bru.setVar("image_key", res.body.fileReference.path);
+  bru.setVar("image_download_url", res.body.fileReference.baseUrl + "/" + res.body.fileReference.path);
 }

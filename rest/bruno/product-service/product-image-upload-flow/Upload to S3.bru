@@ -6,7 +6,7 @@ meta {
 
 put {
   url: {{presigned_url}}
-  body: text
+  body: file
   auth: none
 }
 
@@ -16,4 +16,8 @@ headers {
 
 body:text {
   fake image content for local testing
+}
+
+body:file {
+  file: @file(C:\Users\ianna\Pictures\Camera Roll\WIN_20260111_10_13_54_Pro.jpg) @contentType(image/jpeg)
 }

@@ -1,0 +1,15 @@
+meta {
+  name: Download from S3
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{image_download_url}}
+  body: file
+  auth: none
+}
+
+body:text {
+  fake image content for local testing
+}

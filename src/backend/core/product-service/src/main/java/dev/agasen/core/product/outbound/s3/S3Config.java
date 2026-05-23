@@ -1,4 +1,4 @@
-package dev.agasen.core.product.infrastructure.s3;
+package dev.agasen.core.product.outbound.s3;
 
 import dev.agasen.platform.core.storage.FileStoragePort;
 import dev.agasen.platform.core.storage.s3.S3FileStorageAdapter;

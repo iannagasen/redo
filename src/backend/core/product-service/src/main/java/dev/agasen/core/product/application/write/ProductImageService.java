@@ -4,7 +4,7 @@ import dev.agasen.platform.core.storage.FileStoragePort;
 import dev.agasen.platform.core.storage.UploadDirective;
 import dev.agasen.core.product.domain.product.Product;
 import dev.agasen.core.product.domain.product.ProductRepository;
-import dev.agasen.core.product.infrastructure.s3.ProductImageBucket;
+import dev.agasen.core.product.outbound.s3.ProductImageBucket;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,5 +37,4 @@ public class ProductImageService {
       product.setImageKey( imageKey );
       productRepository.save( product );
    }
-
 }

@@ -1,4 +1,4 @@
-package dev.agasen.core.product;
+package dev.agasen.core.product.inbound.rest;
 
 import dev.agasen.platform.contracts.core.product.ProductPublicApi;
 import dev.agasen.core.product.application.read.BrandRetrievalService;

@@ -7,6 +7,7 @@
 * Cart Service: While the frontend can use local storage, a backend Cart Service (using Redis) is better for
   cross-device persistence and "saved for later" features.
     * You'd switch to PostgreSQL (or add it alongside Redis) if you needed:
+
     - Order history — a placed order should be permanent, which is why checkout would write to a separate orders
       service with Postgres
     - Analytics — "what do users abandon most?" requires historical cart data
@@ -61,3 +62,5 @@
 5. DevEx (Development Experience)
 
 * Setup Agent for Angular Skills
+
+Versioning of images in S3

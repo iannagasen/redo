@@ -1,4 +1,4 @@
-package dev.agasen.core.product.infrastructure.openapi;
+package dev.agasen.core.product.config.openapi;
 
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;

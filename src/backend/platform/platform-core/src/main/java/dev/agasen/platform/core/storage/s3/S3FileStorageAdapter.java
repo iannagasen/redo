@@ -3,8 +3,11 @@ package dev.agasen.platform.core.storage.s3;
 import dev.agasen.platform.core.storage.FileReference;
 import dev.agasen.platform.core.storage.FileStoragePort;
 import dev.agasen.platform.core.storage.UploadDirective;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
@@ -42,7 +45,7 @@ public class S3FileStorageAdapter< T extends S3BucketContext > implements FileSt
 
       try {
          return new UploadDirective(
-            new FileReference( key ),
+            new FileReference( key, bucketContext.baseUrl() ),
             presigned.url().toURI(),
             UploadDirective.FileUploadMethod.PUT,
             Map.of( "Content-Type", "application/octet-stream" )
@@ -64,5 +67,4 @@ public class S3FileStorageAdapter< T extends S3BucketContext > implements FileSt
          .key( fileReference.path() )
          .build() );
    }
-
 }
